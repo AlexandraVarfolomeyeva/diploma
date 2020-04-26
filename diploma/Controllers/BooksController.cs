@@ -88,7 +88,7 @@ namespace BookShop.Controllers
                 isDeleted=item.isDeleted
                 };
                 _context.Book.Add(book);
-                for (int i = 0; i < item.Authors.Length; i++)
+                for (int i = 0; i < item.idAuthors.Length; i++)
                 {
                     BookAuthor bookauthor = new BookAuthor()
                     {
@@ -97,7 +97,7 @@ namespace BookShop.Controllers
                     };
                     _context.BookAuthor.Add(bookauthor);
                 }
-                for (int i = 0; i < item.Genres.Length; i++)
+                for (int i = 0; i < item.idGenres.Length; i++)
                 {
                     BookGenre bookgenre = new BookGenre()
                     {

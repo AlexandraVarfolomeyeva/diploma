@@ -73,7 +73,6 @@ namespace BookShop.Controllers
 
         }
 
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBookView([FromRoute] int id)
         {//получение книги по id
