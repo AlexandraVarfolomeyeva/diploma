@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using diploma.Models;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace diploma.Controllers
 {
@@ -31,6 +33,28 @@ namespace diploma.Controllers
 
         public IActionResult Privacy()
         {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Index(IFormFile file)
+        {
+            if (file != null )
+                try
+                {
+                  //  string path = Path.Combine(Server.MapPath("~/Img"),
+                   //                            Path.GetFileName(file.FileName));
+                 //   file.SaveAs(path);
+                    ViewBag.Message = "File uploaded successfully";
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Message = "ERROR:" + ex.Message.ToString();
+                }
+            else
+            {
+                ViewBag.Message = "You have not specified a file.";
+            }
             return View();
         }
 
