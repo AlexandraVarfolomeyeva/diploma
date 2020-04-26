@@ -70,12 +70,11 @@
     }*@
 <hr/>
 <div class="row">
-    @using BookShop.Models;
     @foreach (BookView s in ViewBag.Books)
     {
-        <div class="col-md-3 col-sm">
-            <img src="@s.image" width="150" height="215" alt="@s.Title">
-            <h5>
+        <div class="col-md-3 col-sm bg-white border-bottom shadow-sm">
+            <img class="center-block img-top-bottom-space" src="@s.image" width="150" height="215" alt="@s.Title">
+            <h5 >
                 @s.Title
             </h5>
 
@@ -98,12 +97,14 @@
             <h5>
                 Цена:  @s.Cost
             </h5>
-            @*if (Role === "user") {
-                x += "<button onclick=\"add(" + items[i].id + "," + items[i].cost + ");\" class=\"btn btn-dark\"> Купить </button> <br />";
-                }
-                if (Role === "admin") {
-                x += "<button onclick=\"editBook(" + items[i].id + ");\" class=\"btn btn-dark\"> Редактировать </button>";
-                x += "<button onclick=\"deleteBook(" + items[i].id + ");\" class=\"btn btn-dark\"> Удалить </button>";*@
-        </div>
+            @if (ViewBag.Username == "admin")
+            {
+                <button onclick="editBook(@s.Id);" class="btn btn-dark"> Редактировать </button>
+                <button onclick="deleteBook(@s.Id);" class="btn btn-dark"> Удалить </button>
+            } else if (ViewBag.Username != "Войти")
+            {
+                <button onclick="add(@s.Id,@s.Cost);" class="btn btn-dark"> Купить </button> <br />
+            }
+              </div>
     }
 </div>

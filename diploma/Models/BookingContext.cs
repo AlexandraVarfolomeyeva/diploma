@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace BookShop.Models
+namespace diploma.Models
 {
     public partial class BookingContext : IdentityDbContext<User>
     {

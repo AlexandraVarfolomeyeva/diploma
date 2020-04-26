@@ -7,11 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using diploma.Models;
 using System.IO;
 using Microsoft.AspNetCore.Http;
-using BookShop.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using BookShop;
 
 namespace diploma.Controllers
 {

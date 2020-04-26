@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BookShop.Models;
+using diploma.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace BookShop.Controllers
+namespace diploma.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookShopController : ControllerBase
+    public class diplomaController : ControllerBase
     {
         private readonly BookingContext _context;
-        public BookShopController(BookingContext context)
+        public diplomaController(BookingContext context)
         {
             _context = context;
             if (_context.User.Count() == 0)
@@ -27,7 +27,7 @@ namespace BookShop.Controllers
                 //Name ="name",
                 //Password="password",
                 //Phone=" ",
-                //Url = "http:\\BookShop.net"
+                //Url = "http:\\diploma.net"
                 });
                 _context.SaveChanges();
             }

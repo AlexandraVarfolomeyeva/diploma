@@ -18,39 +18,18 @@
     </environment>
 </head>
 <body>
-    @*<nav class="navbar navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand h1 my-2 mr-md-auto font-weight-normal align-items-center text-dark">Фантазия</a>
-                </div>
-                <div class="navbar-collapse navbar-right  collapse">
-                    <ul class="nav navbar-nav media-right">
-                        <li><a asp-area="" asp-controller="Home" asp-action="PriceAndDelivery">Доставка и оплата</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Контакты</a></li>
 
-                    </ul>
-                    <ul class="nav navbar-nav media-right">
-                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Войти</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>*@
     <div class="container">
         <div class=" d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-            <a class="h1 my-2 mr-md-auto font-weight-normal align-items-center text-dark" asp-area="" asp-controller="Home" asp-action="Index">Фантазия</a>
-            <nav class="my-2 my-md-0 mr-md-3">
-                <a class="p-2 text-dark textNav" asp-area="" asp-controller="Home" asp-action="PriceAndDelivery">Доставка и оплата</a>
-                <a class="p-2 text-dark textNav" asp-area="" asp-controller="Home" asp-action="Contact">Контакты</a>
-                <a class="p-2 text-dark textNav" asp-area="" asp-controller="Home" asp-action="LogIn" id="logIn">  @ViewBag.Username </a>
-            </nav>
+                <img class="mb-2" src="~/images/fantasia.png" alt="" width="24" height="24">
+                <a class="h1 my-2 left-space mr-md-auto font-weight-normal align-items-center text-dark" asp-area="" asp-controller="Home" asp-action="Index">Фантазия</a>
+                <nav class="my-2 my-md-0 mr-md-3 right">
+                    <a class="p-2 text-dark textNav" asp-area="" asp-controller="Home" asp-action="PriceAndDelivery">Доставка и оплата</a>
+                    <a class="p-2 text-dark textNav" asp-area="" asp-controller="Home" asp-action="Contact">Контакты</a>
+                    <a class="p-2 text-dark textNav" asp-area="" asp-controller="Account" asp-action="Index">  @ViewBag.Username </a>
+                </nav>
+            </div>
         </div>
-    </div>
 
 
     <partial name="_CookieConsentPartial" />

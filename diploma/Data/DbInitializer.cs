@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BookShop.Models;
+using diploma.Models;
 
-namespace BookShop.Data
+namespace diploma.Data
 {
     public static class DbInitializer
     {
@@ -34,9 +34,9 @@ namespace BookShop.Data
             //{
             //    var users = new User[]
             //    {
-            //    //new User {Url="http://BookShop.msdn.com/donald", Address="Lake", Login="donald", Name="donaldduck", Password="1234", Phone="123409"},
-            //    //new User {Url="http://BookShop.msdn.com/mikky", Address="hole", Login="mikky", Name="mikkymouse", Password="4567", Phone="456787"},
-            //    //new User {Url="http://BookShop.msdn.com/miny", Address="hole", Login="miny", Name="minymouse", Password="7890", Phone="789065"}
+            //    //new User {Url="http://diploma.msdn.com/donald", Address="Lake", Login="donald", Name="donaldduck", Password="1234", Phone="123409"},
+            //    //new User {Url="http://diploma.msdn.com/mikky", Address="hole", Login="mikky", Name="mikkymouse", Password="4567", Phone="456787"},
+            //    //new User {Url="http://diploma.msdn.com/miny", Address="hole", Login="miny", Name="minymouse", Password="7890", Phone="789065"}
 
             //    };
             //    foreach (User b in users)

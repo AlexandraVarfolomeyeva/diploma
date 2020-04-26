@@ -10,6 +10,15 @@ body {
     font-size: 1.2rem;
 }
 
+.left-space {
+    padding-left: 15px;
+}
+
+.img-top-bottom-space {
+    padding-top: 5px;
+    padding-bottom: 15px;
+}
+
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {

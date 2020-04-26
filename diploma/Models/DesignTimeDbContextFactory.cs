@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace BookShop.Models
+namespace diploma.Models
 { 
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<BookingContext>
     {

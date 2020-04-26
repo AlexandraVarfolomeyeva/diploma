@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookShop.Models
+namespace diploma.Models
 {
     public class User : IdentityUser
     {
