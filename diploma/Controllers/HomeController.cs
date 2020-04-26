@@ -9,8 +9,9 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using BookShop.Models;
 using Microsoft.EntityFrameworkCore;
-using BookShop;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using BookShop;
 
 namespace diploma.Controllers
 {
@@ -18,16 +19,44 @@ namespace diploma.Controllers
     {
 
         private readonly BookingContext _context;
+        private readonly UserManager<User> _userManager;
         IHostingEnvironment _appEnvironment;
 
-        public HomeController(BookingContext context, IHostingEnvironment appEnvironment)
+        public HomeController(BookingContext context,
+     UserManager<User> userManager, IHostingEnvironment appEnvironment)
         {
             _context = context;
+            _userManager = userManager;
             _appEnvironment = appEnvironment;
+            //ViewBag.Username = GetUserName();
+        }
+
+
+        private Task<User> GetCurrentUserAsync() =>
+      _userManager.GetUserAsync(HttpContext.User);
+
+        private async Task<string> GetUserName()
+        {
+            try
+            {
+                User usr = await _userManager.GetUserAsync(HttpContext.User);
+                if (usr == null)
+                {
+                    return "Войти";
+                }
+                else
+                { return usr.UserName; }
+            } catch (Exception ex)
+            {
+            
+                Log.Write(ex);
+                return "Войти";
+            }
         }
 
         public IActionResult Index()
         {
+            ViewBag.Username = GetUserName().Result;
                 IEnumerable<Book> books = _context.Book.Include(p => p.BookOrders).Where(d => d.isDeleted == false);
                 BookView[] bookViews = new BookView[books.Count()];
                 int i = 0;
@@ -70,6 +99,7 @@ namespace diploma.Controllers
 
         public IActionResult About()
         {
+            ViewBag.Username = GetUserName().Result;
             ViewData["Message"] = "Your application description page.";
 
             return View();
@@ -77,6 +107,7 @@ namespace diploma.Controllers
 
         public IActionResult Contact()
         {
+            ViewBag.Username = GetUserName().Result;
             ViewData["Message"] = "Your contact page.";
 
             return View();
@@ -84,6 +115,7 @@ namespace diploma.Controllers
 
         public IActionResult Privacy()
         {
+            ViewBag.Username = GetUserName().Result;
             return View();
         }
 
