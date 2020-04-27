@@ -26,8 +26,7 @@ namespace diploma.Controllers
             _userManager = userManager;
             _context = context; // получаем контекст базы данных
         }
-        public static event IdDelegate IDEvent; //событие по получению id текущего пользователя из AccountController
-
+      
         private Task<User> GetCurrentUserAsync() =>
 _userManager.GetUserAsync(HttpContext.User);
 

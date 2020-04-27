@@ -24,14 +24,54 @@ namespace diploma.Controllers
                 _signInManager = signInManager;
             }
 
-        public IActionResult Index()
+        private Task<User> GetCurrentUserAsync() =>
+    _userManager.GetUserAsync(HttpContext.User);
+
+        private async Task<string> GetUserName()
         {
+            try
+            {
+                User usr = await _userManager.GetUserAsync(HttpContext.User);
+                if (usr == null)
+                {
+                    return "Войти";
+                }
+                else
+                { return usr.UserName; }
+            }
+            catch (Exception ex)
+            {
+
+                Log.Write(ex);
+                return "Войти";
+            }
+        }
+
+        public IActionResult Index(string message, IEnumerable<string> error)
+        {
+            if (message!="" && message !=null) {
+                ViewBag.Message = message;
+                ViewBag.Error = error;
+            } else
+            {
+                ViewBag.Message = "";
+                ViewBag.Error = "";
+            }
+            ViewBag.Username = GetUserName().Result;
             return View();
         }
-        
-            [HttpPost]
-            //[Route("api/Account/Register")]
-            public async Task<IActionResult> Register([ FromBody ]
+        [HttpGet]
+        public ActionResult Register()
+        {
+            IEnumerable<City> b = _context.City;
+            ViewBag.Cities = b;
+            ViewBag.Username = GetUserName().Result;
+            return View();
+        }
+
+        [HttpPost]
+            //[Route("api/Account/Register")][ FromBody ]
+            public async Task<IActionResult> Register(
             RegisterViewModel model)
             {
                 try
@@ -77,8 +117,8 @@ namespace diploma.Controllers
                             _context.Order.Add(order); //добавление заказа в БД
                             await _context.SaveChangesAsync();//асинхронное сохранение изменений
                             Log.WriteSuccess(" OrdersController.Create", "добавление заказа " + order.Id + " в БД");
-                            return Ok(msg);
-                        }
+                            return RedirectToAction("Index", "Home");
+                    }
                         else
                         {//вывод ошибок при неудаче
                             foreach (var error in result.Errors)
@@ -93,8 +133,8 @@ namespace diploma.Controllers
                                 error = ModelState.Values.SelectMany(e =>
                                 e.Errors.Select(er => er.ErrorMessage))
                             };
-                            return BadRequest(errorMsg);
-                        }
+                        return RedirectToAction("Index", "Account");
+                    }
                     }
                     else
                     {//если неверно введены данные
@@ -105,8 +145,8 @@ namespace diploma.Controllers
                             error = ModelState.Values.SelectMany(e =>
                             e.Errors.Select(er => er.ErrorMessage))
                         };
-                        return BadRequest(errorMsg);
-                    }
+                    return RedirectToAction("Index", "Account");
+                }
                 }
                 catch (Exception ex)
                 {
@@ -117,14 +157,27 @@ namespace diploma.Controllers
                         error = ModelState.Values.SelectMany(e =>
                         e.Errors.Select(er => er.ErrorMessage))
                     };
-                    return BadRequest(errorMsg);
-                }
+                return RedirectToAction("Index", "Account");
+            }
             }
 
+        public class Msg
+        {
+            public string message;
+            public IEnumerable<string> error;
+        }
+
+        Msg mess = null;
+        [HttpGet]
+        public ActionResult ErrorMsg()
+        {
+            return PartialView();
+        }
+
             [HttpPost]
-            //[Route("api/Account/Login")]
-            //[ValidateAntiForgeryToken][FromBody]
-            public async Task<IActionResult> LogIn( LoginViewModel model)
+            ////[Route("api/Account/Login")]
+            //[ValidateAntiForgeryToken][FromBody] 
+            public async Task<IActionResult> LogIn(LoginViewModel model)
             {//вход в систему
                 if (ModelState.IsValid)
                 {
@@ -145,31 +198,33 @@ namespace diploma.Controllers
                     {//если неудачно
                         ModelState.AddModelError("", "Неправильный логин и (или) пароль");
                         Log.WriteSuccess("AccountController.Login", "Неправильный логин и (или) пароль.");
-                        var errorMsg = new
-                        {
+                    Msg msg = new Msg()
+                    {
                             message = "Вход не выполнен.",
                             error = ModelState.Values.SelectMany(e =>
                             e.Errors.Select(er => er.ErrorMessage))
                         };
-                        return BadRequest(errorMsg);
-                    }
+                    mess = msg;
+                    return RedirectToAction("Index", "Account", new { mess.message, mess.error });
+                }
                 }
                 else
                 {
                     Log.WriteSuccess("AccountController.Login", "Вход не выполнен.");
-                    var errorMsg = new
-                    {
+                Msg msg = new Msg()
+                {
                         message = "Вход не выполнен.",
                         error = ModelState.Values.SelectMany(e =>
                         e.Errors.Select(er => er.ErrorMessage))
                     };
-                    return BadRequest(errorMsg);
-                }
+                mess = msg;
+                return RedirectToAction("Index", "Account", new { mess.message, mess.error });
+            }
             }
 
 
             [HttpPost]
-            [Route("api/Account/LogOff")]
+            //[Route("api/Account/LogOff")]
             //[ValidateAntiForgeryToken]
             public async Task<IActionResult> LogOff()
             {//выход из системы
@@ -202,11 +257,7 @@ namespace diploma.Controllers
                 };
                 return Ok(msg);
             }
-            private Task<User> GetCurrentUserAsync() =>
-            _userManager.GetUserAsync(HttpContext.User);
-
-
-
+  
             [HttpGet]
             [Route("api/Account/CurrentUserInfo")]
             public async Task<IActionResult> GetCurrentUserInfo()

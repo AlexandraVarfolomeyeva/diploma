@@ -1,0 +1,11 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<h4>@ViewBag.Message</h4>
+<ul>
+@foreach (string a in ViewBag.Error)
+{
+    <li>@a</li>
+}
+</ul>
