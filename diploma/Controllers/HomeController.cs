@@ -29,6 +29,29 @@ namespace diploma.Controllers
             //ViewBag.Username = GetUserName();
         }
 
+        private async Task<int> GetCurrentOrder()
+        {
+            try
+            {
+                User usr = await _userManager.GetUserAsync(HttpContext.User);
+            if (usr != null)
+            {
+                string id = usr.Id;
+                IEnumerable<Order> orders = _context.Order.Where(p => p.UserId == id && p.Active == 1);
+                return orders.FirstOrDefault().Id;
+            }
+            else
+            {
+                return 0;
+            }
+            }
+            catch (Exception ex)
+            {
+
+                Log.Write(ex);
+                return 0;
+            }
+        }
 
         private Task<User> GetCurrentUserAsync() =>
       _userManager.GetUserAsync(HttpContext.User);
@@ -54,6 +77,7 @@ namespace diploma.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.CurrentOrder = GetCurrentOrder().Result;
             ViewBag.Username = GetUserName().Result;
                 IEnumerable<Book> books = _context.Book.Include(p => p.BookOrders).Where(d => d.isDeleted == false);
                 BookView[] bookViews = new BookView[books.Count()];

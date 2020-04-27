@@ -103,7 +103,7 @@
                 <button onclick="deleteBook(@s.Id);" class="btn btn-dark"> Удалить </button>
             } else if (ViewBag.Username != "Войти")
             {
-                <button onclick="add(@s.Id,@s.Cost);" class="btn btn-dark"> Купить </button> <br />
+                <button onclick="add(@s.Id,@s.Cost,@ViewBag.CurrentOrder);" class="btn btn-dark"> Купить </button> <br />
             }
               </div>
     }
