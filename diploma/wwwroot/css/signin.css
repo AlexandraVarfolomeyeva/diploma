@@ -73,3 +73,7 @@ button {
         font-size: 3.5rem;
     }
 }
+
+.invalid-feedback{
+    color:red;
+}

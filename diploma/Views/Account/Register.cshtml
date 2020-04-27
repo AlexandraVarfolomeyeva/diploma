@@ -1,4 +1,4 @@
-﻿
+﻿@model diploma.Models.RegisterViewModel
 @{
     ViewData["Title"] = "Регистрация";
 }
@@ -12,91 +12,69 @@
                 <br /> Поле UserName может содержать только идущие подряд латинские буквы и цифры.
             </p>
         </div>
-        @*@{Html.RenderPartial("Partial");}action="javascript:void(0);"*@
+
+        @*@{Html.RenderPartial("Partial");}action="javascript:void(0);"*@  @**@
         <form class="needs-validation" id="regForm" novalidate method="post" asp-controller="Account" asp-action="Register">
-
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="mb-3">
-                <label for="fio">ФИО: </label>
-
-                <input type="text" autocomplete="off" id="fio" name="Fio" class="form-control" placeholder="Иванов Иван Иванович" required>
-
-                <div class="invalid-feedback" style="width: 100%;">
-                    Поле "ФИО" не было заполнено или было заполнено неверно.
-                </div>
+                @Html.LabelFor(model => model.Fio)
+                @Html.EditorFor(model => model.Fio, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                <span asp-validation-for="Fio" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label for="email">Email: </label>
-
-                <input type="email" autocomplete="off" id="email" name="Email" class="form-control" placeholder="you@example.com" required>
-                <div class="invalid-feedback" style="width: 100%;">
-                    Поле "Email" не было заполнено или было заполнено неверно.
-                </div>
+                @Html.LabelFor(model => model.Email)
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label for="name"> UserName: </label>
-
-                <input type="text" autocomplete="off" id="name" name="UserName" class="form-control" placeholder="UserName" required>
-                <div class="invalid-feedback" style="width: 100%;">
-                    Поле "UserName" не было заполнено или было заполнено неверно.
-                </div>
+                @Html.LabelFor(model => model.UserName)
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label for="phone">Номер телефона: </label>
+                @Html.LabelFor(model => model.PhoneNumber)
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">+7</span>
                     </div>
-                    <input type="number" autocomplete="off" id="phone" name="PhoneNumber" class="form-control" placeholder="Номер телефона" required>
-                    <div class="invalid-feedback" style="width: 100%;">
-                        Поле "Номер телефона" не было заполнено или было заполнено неверно.
-                    </div>
-                </div>
+                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    
+                </div><span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label for="city">Город: </label>
-                <select class="custom-select" id="citySelect" name="IdCity">
+                @Html.LabelFor(model => model.IdCity)
+                <select class="custom-select" id="citySelect" asp-for="IdCity" name="IdCity">
                     @foreach (City s in ViewBag.Cities)
                     {
                         <option value="@s.Id">@s.Name</option>
                     }
                 </select>
-                    <div class="invalid-feedback" style="width: 100%;">
-                        Поле "Город" не было заполнено или было заполнено неверно.
-                    </div>
-</div>
-            <div class="mb-3">
-                <label for="address">Адрес: </label>
-
-                <input type="text" id="address" autocomplete="off" name="Address" class="form-control" placeholder="ул. Рабфаковская, д.30, кв. 74" required>
-                <div class="invalid-feedback" style="width: 100%;">
-                    Поле "Адрес" не было заполнено или было заполнено неверно.
-                </div>
             </div>
             <div class="mb-3">
-                <label for="password">Пароль: </label>
-
-                <input type="password" id="password" name="Password" class="form-control" required>
-                <div class="invalid-feedback" style="width: 100%;">
-                    Поле "Пароль" не было заполнено или было заполнено неверно.
-                </div>
+                @Html.LabelFor(model => model.Address)
+                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
             </div>
             <div class="mb-3">
-                <label for="passwordConfirm">Подтверждение пароля: </label>
-
-                <input type="password" id="passwordConfirm" name="PasswordConfirm" class="form-control" required>
-                <div class="invalid-feedback" style="width: 100%;">
-                    Поле "Подтверждение пароля" обязательно к заполнению.
-                </div>
-
+                @Html.LabelFor(model => model.Password)
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                @Html.LabelFor(model => model.PasswordConfirm)
+                @Html.EditorFor(model => model.PasswordConfirm, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
             </div>
             <br />
             <input class="btn btn-primary btn-lg btn-block" type="submit" onsubmit="return validateForm()" value="Регистрация">
+          @*  <button class="btn btn-primary btn-lg btn-block" id="registerBtn" type="submit" onsubmit="return validateForm()">Регистрация</button>*@
         </form>
     </div>
     <div class="col-md-4 order-md-2 mb-4">
         <img class="img-register" src="~/images/register.jpg">
     </div>
 </div>
-<environment include="Development">
-    <script src="~/js/Validation.js" asp-append-version="true"></script>
-</environment>
+@*<environment include="Development">
+        <script src="~/js/Validation.js" asp-append-version="true"></script>
+        <script src="~/js/Account.js" asp-append-version="true"></script>
+    </environment>*@

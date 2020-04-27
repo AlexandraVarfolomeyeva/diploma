@@ -70,11 +70,15 @@ namespace diploma.Controllers
         }
 
         [HttpPost]
-            //[Route("api/Account/Register")][ FromBody ]
-            public async Task<IActionResult> Register(
+        [ValidateAntiForgeryToken]
+        //[Route("api/Account/Register")][ FromBody ]
+        public async Task<IActionResult> Register(
             RegisterViewModel model)
             {
-                try
+            IEnumerable<City> d = _context.City;
+            ViewBag.Cities = d;
+            ViewBag.Username = GetUserName().Result;
+            try
                 {
                     if (ModelState.IsValid)
                     {//добавление нового пользователя при регистрации
@@ -91,6 +95,7 @@ namespace diploma.Controllers
                         // Добавление нового пользователя
                         var result = await _userManager.CreateAsync(user,
                         model.Password);
+                        await _signInManager.SignOutAsync();
                         await _signInManager.SignInAsync(user, false);// установка куки
                         if (result.Succeeded)//если успешно
                         {
@@ -102,7 +107,7 @@ namespace diploma.Controllers
                                 message = "Добавлен новый пользователь: " + user.UserName
                             };
 
-                            IEnumerable<City> b = _context.City.Where(c => c.Id == user.IdCity);
+                            IEnumerable<City> b = d.Where(c => c.Id == user.IdCity);
                             Order order = new Order()
                             {
                                 User = user,
@@ -117,7 +122,8 @@ namespace diploma.Controllers
                             _context.Order.Add(order); //добавление заказа в БД
                             await _context.SaveChangesAsync();//асинхронное сохранение изменений
                             Log.WriteSuccess(" OrdersController.Create", "добавление заказа " + order.Id + " в БД");
-                            return RedirectToAction("Index", "Home");
+                        //return Ok(msg);
+                        return RedirectToAction("Index", "Home");
                     }
                         else
                         {//вывод ошибок при неудаче
@@ -133,7 +139,7 @@ namespace diploma.Controllers
                                 error = ModelState.Values.SelectMany(e =>
                                 e.Errors.Select(er => er.ErrorMessage))
                             };
-                        return RedirectToAction("Index", "Account");
+                        return View(model);
                     }
                     }
                     else
@@ -145,7 +151,7 @@ namespace diploma.Controllers
                             error = ModelState.Values.SelectMany(e =>
                             e.Errors.Select(er => er.ErrorMessage))
                         };
-                    return RedirectToAction("Index", "Account");
+                    return View(model);
                 }
                 }
                 catch (Exception ex)
@@ -157,7 +163,7 @@ namespace diploma.Controllers
                         error = ModelState.Values.SelectMany(e =>
                         e.Errors.Select(er => er.ErrorMessage))
                     };
-                return RedirectToAction("Index", "Account");
+                 return View(model);
             }
             }
 
@@ -175,8 +181,9 @@ namespace diploma.Controllers
         }
 
             [HttpPost]
+            [ValidateAntiForgeryToken]
             ////[Route("api/Account/Login")]
-            //[ValidateAntiForgeryToken][FromBody] 
+            //[FromBody] 
             public async Task<IActionResult> LogIn(LoginViewModel model)
             {//вход в систему
                 if (ModelState.IsValid)

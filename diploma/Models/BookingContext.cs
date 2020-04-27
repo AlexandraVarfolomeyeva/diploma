@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using diploma.Models;
 
 
 namespace diploma.Models
@@ -78,6 +79,8 @@ namespace diploma.Models
                 entity.HasOne(a => a.Book).WithMany(a => a.BookGenres).HasForeignKey(a => a.IdBook);
             });
         }
+
+        public DbSet<diploma.Models.RegisterViewModel> RegisterViewModel { get; set; }
     }
 
 
