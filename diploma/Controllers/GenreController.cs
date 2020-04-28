@@ -26,7 +26,7 @@ namespace diploma.Controllers
             try
             {//возвращаем список всех заказов для текущего пользователя
                 Log.WriteSuccess("Genres.GetAll", "возвращаем список всех авторов.");
-                return _context.Genre.Include(p => p.BookGenres);
+                return _context.Genre.Include(p => p.BookGenres).OrderBy(b=>b.Name);
             }
             catch (Exception ex)
             {//если что-то пошло не так, выводим исключение в консоль

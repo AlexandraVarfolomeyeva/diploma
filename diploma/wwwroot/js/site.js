@@ -46,3 +46,33 @@ function add(id, sum,order) {
         request.send(JSON.stringify(bookOrder));//добавление строки заказа
     } catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!"+e); }
 }
+
+function deleteBook(id) {//удаление книги -- метод, доступный только администратору
+    try {
+        var request = new XMLHttpRequest();
+        var url = "/api/Books/" + id;
+        request.open("DELETE", url, false);
+        request.onload = function () {
+            // Обработка кода ответа
+            var msg = "";
+            if (request.status === 401) {
+                msg = "У вас не хватает прав для удаления";
+            } else if (request.status === 204) {
+                window.location.href = "/Home/Index";
+                loadBooks();
+            } else {
+                msg = "Неизвестная ошибка";
+            }
+            document.querySelector("#actionMsg").innerHTML = msg;
+        };
+        request.send();
+    }
+    catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!"); }
+}
+
+function editBook(id) {//редактирование книги -- метод, доступный только администратору
+    try {
+        window.location.href = "/Admin/AddBook?&" + id;
+    }
+    catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!"); }
+}

@@ -151,31 +151,7 @@ namespace diploma.Controllers
             ViewBag.Username = GetUserName().Result;
             return View();
         }
-
-        [HttpPost]
-        public async Task<ActionResult> UploadFile(IFormFile file)
-        {
-            //Task<ActionResult>
-            if (file != null )
-                try
-                {
-                    string path = Path.Combine(_appEnvironment.WebRootPath+"\\img\\", Path.GetFileName(file.FileName));
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-                    ViewBag.Message = "File uploaded successfully";
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.Message = "ERROR:" + ex.Message.ToString();
-                }
-            else
-            {
-                ViewBag.Message = "You have not specified a file.";
-            }
-            return RedirectToAction("Index");
-        }
+       
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

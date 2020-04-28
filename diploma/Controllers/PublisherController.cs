@@ -28,7 +28,7 @@ namespace diploma.Controllers
             try
             {//возвращаем список всех заказов для текущего пользователя
                 Log.WriteSuccess("PublisherController.GetAll", "возвращаем список всех издателей.");
-                return _context.Publisher.Include(p => p.Books);
+                return _context.Publisher.Include(p => p.Books).OrderBy(p=>p.Name);
             }
             catch (Exception ex)
             {//если что-то пошло не так, выводим исключение в консоль

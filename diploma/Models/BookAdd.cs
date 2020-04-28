@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,5 +21,5 @@ namespace diploma.Models
         public string[] Authors { get; set; }
         public int[] idGenres { get; set; }
         public string[] Genres { get; set; }
-    }
+}
 }

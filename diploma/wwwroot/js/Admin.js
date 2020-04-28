@@ -1,11 +1,11 @@
 ﻿!function (e) { "function" != typeof e.matches && (e.matches = e.msMatchesSelector || e.mozMatchesSelector || e.webkitMatchesSelector || function (e) { for (var t = this, o = (t.document || t.ownerDocument).querySelectorAll(e), n = 0; o[n] && o[n] !== t;)++n; return Boolean(o[n]) }), "function" != typeof e.closest && (e.closest = function (e) { for (var t = this; t && 1 === t.nodeType;) { if (t.matches(e)) return t; t = t.parentNode } return null }) }(window.Element.prototype);
 
 
-const uriBooks = "api/Books/";
+const uriBooks = "/api/Books/";
 const uriView = "/api/View/";
-const uriAuthors = "api/Authors/";
-const uriPublishers = "api/Publisher/";
-const uriGenres = "api/Genre/";
+const uriAuthors = "/api/Authors/";
+const uriPublishers = "/api/Publisher/";
+const uriGenres = "/api/Genre/";
 var idBook;
 var selectedPub;
 var authors = [];
@@ -219,7 +219,8 @@ function createPublisher() {
 }
 
 function getImg() {
-    var x = document.getElementById("inputImg");
+    document.getElementById("ImgForm").submit();
+    var x = document.getElementById("file");
     document.getElementById('labelImg').innerHTML = x.files[0].name;
     document.getElementById('bookImg').src = window.URL.createObjectURL(x.files[0]);
 }
@@ -252,7 +253,9 @@ function addBook() {
         var publisherSelect = document.querySelector("#publisherSelect").value; ///publisherSelect
         var cost = document.querySelector("#cost").value;
         var stored = document.querySelector("#Stored").value;
-        var x = document.getElementById("inputImg");
+        var x = document.getElementById("file");
+
+        var file = document.getElementById("ImgForm");
 
         var author = [];
         var genre = [];
@@ -275,7 +278,7 @@ function addBook() {
         request.onload = function () {
             // Обработка кода ответа
             if (request.status == 201) {
-                window.location.href = "index.html";
+                window.location.href = "/Home/Index";
             } else {
                 alert("Error");
             }
@@ -338,7 +341,8 @@ function saveBook() {
 
         var author = [];
         var genre = [];
-        var inputImg = "../img/" + document.getElementById('labelImg').innerHTML;
+        var file = document.getElementById("labelImg").innerHTML;
+        var inputImg = "../img/" + file;
 
         for (i in authors) {
             author.push(authors[i].value);
@@ -354,7 +358,7 @@ function saveBook() {
         request.onload = function () {
             // Обработка кода ответа
             if (request.status == 204) {
-                window.location.href = "index.html";
+                window.location.href = "/Home/Index";
             } else {
                 alert("Error");
             }

@@ -29,11 +29,10 @@ namespace diploma.Controllers
           try
             {//возвращаем список всех заказов для текущего пользователя
              Log.WriteSuccess("AuthorsController.GetAll", "возвращаем список всех авторов.");
-             return _context.Author.Include(p => p.BookAuthors);
+             return _context.Author.Include(p => p.BookAuthors).OrderBy(p=>p.Name);
             }
             catch (Exception ex)
             {//если что-то пошло не так, выводим исключение в консоль
-                Console.WriteLine("Возникла ошибка при получении списка всех авторов.");
                 Log.Write(ex);
                 return null;
             }

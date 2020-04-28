@@ -10,7 +10,7 @@ function logOff() {
         request.open("POST", "api/account/logoff");
         request.onload = function () {
             if (this.status == 200) {
-                window.location.href = "index.html";
+                window.location.href = "/Home/Index";
             }
         };
         request.setRequestHeader("Content-Type",

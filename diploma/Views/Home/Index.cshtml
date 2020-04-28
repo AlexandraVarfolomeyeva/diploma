@@ -60,18 +60,7 @@
        }
     </div>
 </div> 
-@*<h2>Basic File Upload</h2>
-    @using (Html.BeginForm("UploadFile",
-                      "Home",
-                      FormMethod.Post,
-                      new { enctype = "multipart/form-data" }))
-    {
-        <label for="file">Upload Image:</label>
-        <input type="file" name="file" id="file" /><br><br>
-        <input type="submit" value="Upload Image" />
-        <br><br>
-        @ViewBag.Message
-    }*@
+
 <hr />
 <div class="row">
     @foreach (BookView s in ViewBag.Books)
@@ -105,6 +94,7 @@
             {
                 <button onclick="editBook(@s.Id);" class="btn btn-dark"> Редактировать </button>
                 <button onclick="deleteBook(@s.Id);" class="btn btn-dark"> Удалить </button>
+                <a></a>
             }
             else if (ViewBag.Username != "Войти" && ViewBag.CurrentOrder != null)
             {
