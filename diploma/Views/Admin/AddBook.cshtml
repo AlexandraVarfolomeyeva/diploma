@@ -3,7 +3,7 @@
     ViewData["Title"] = "Редактирование книги";
 }
 
-
+@model BookAdd;
 
 <div class="modal1" data-modal="1">
     <!--   Svg иконка для закрытия окна  -->
@@ -50,8 +50,7 @@
         <form class="needs-validation" id="addForm" action="javascript:void(0);" novalidate>
             <div class="mb-3">
                 <label for="title">Название: </label>
-
-                <input type="text" autocomplete="off" id="title" name="title" class="form-control" placeholder="Название" required>
+               <input type="text" autocomplete="off" id="title" name="title" class="form-control" placeholder="Название" required>
                 <div class="invalid-feedback" style="width: 100%;">
                     Поле "Название" не было заполнено или было заполнено неверно.
                 </div>
@@ -130,21 +129,20 @@
             <input type="file" class="custom-file-input" aria-describedby="inputGroupFileAddon03" id="inputImg" accept=".png, .jpg, .jpeg" onchange="getImg()">
             <label id="labelImg" class="custom-file-label" for="inputImg">Выбрать файл</label>
         </div>*@
-            @*@using (Html.BeginForm("UploadFile",
-                        "Home",
-                        FormMethod.Post,
-                        new { enctype = "multipart/form-data", id = "ImgForm" }))
-        {*@
-            <form method="post" enctype="multipart/form-data" id="ImgForm">
+            @using (Html.BeginForm("AddBook",
+                     "Admin",
+                     FormMethod.Post,
+                     new { enctype = "multipart/form-data", id = "ImgForm" })){
                 <div class="custom-file">
                     @*<input type="file" name="file" id="file" /><br><br>*@
                     <input type="file" class="custom-file-input" aria-describedby="inputGroupFileAddon03" name="file" id="file" accept=".png, .jpg, .jpeg" onchange="getImg()">
                     <label id="labelImg" class="custom-file-label" for="file">Выбрать файл</label>
                 </div>
-            </form>
-            @* } *@
+            }
+        
         </div>
-            </div>
+        
+    </div>
 
 </div>
 <div class="row">
