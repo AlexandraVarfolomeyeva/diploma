@@ -3,7 +3,18 @@
 
 // Write your JavaScript code.
 const uriBookOrder = "/api/BookOrder/";
+const uriIndex = "/Home/Index/";
 
+function reloadPage() {
+    try {
+        var request = new XMLHttpRequest();
+        request.open("GET", uriIndex,true);
+        request.onload = function () {
+           
+        };
+        request.send();
+    } catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!" + e); }
+}
 
 //id -- книги ; sum -- цена книги
 function add(id, sum,order) {
@@ -21,7 +32,8 @@ function add(id, sum,order) {
         request.onload = function () {
             // Обработка кода ответа
             if (request.status === 201) {
-                loadBasket();//загрузка корзины для обновления данных о заказе
+                //загрузка корзины для обновления данных о заказе
+                reloadPage();
             } else if (request.status === 401) {
                 alert("Пожалуйста, авторизируйтесь");
             } else {

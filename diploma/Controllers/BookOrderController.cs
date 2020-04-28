@@ -15,8 +15,8 @@ namespace diploma.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class BookOrderController : ControllerBase
-    {
+    public class BookOrderController : Controller
+    {//Base
         private readonly BookingContext _context;
         public BookOrderController(BookingContext context)
         {
@@ -97,7 +97,8 @@ namespace diploma.Controllers
                 _context.Order.Update(order);
                 await _context.SaveChangesAsync();
                 Log.WriteSuccess("BookOrderController.Create", "Добавлена новая строка заказа.");
-                return  CreatedAtAction("GetBookOrder", new { id = bookorder.Id }, bookorder);
+                return CreatedAtAction("GetBookOrder", new { id = bookorder.Id }, bookorder);
+                //return View("~/Home/Index");
             }
             catch (Exception ex)
             {

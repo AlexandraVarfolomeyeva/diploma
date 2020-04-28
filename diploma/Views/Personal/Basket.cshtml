@@ -1,0 +1,71 @@
+﻿@model OrderView;
+@{
+    ViewData["Title"] = "Ваша корзина";
+}
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <h2>Корзина</h2>
+
+    @if (Model.Amount != 0)
+    {
+        <h4>Количество: @Html.DisplayFor(model => model.Amount)</h4>
+        <h4>Сумма заказа: @Html.DisplayFor(model => model.SumOrder)</h4>
+        <p>Сумма заказа не включает в себя стоимость доставки.</p>
+        <p>
+            Доставка в город  @Html.DisplayFor(model => model.City) прибудет ориентировочно  @Html.DisplayFor(model => model.DateDelivery).
+            Стоимость доставки @Html.DisplayFor(model => model.SumDelivery) рублей.
+        </p>
+        <button onclick="deleteAll(@Model.Id);">Очистить корзину</button>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Книга</th>
+                    <th scope="col">Количество</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (BookOrderView i in Model.BookOrders)
+                {
+                    <tr>
+                        <td>
+                            <a>  @i.Book.Title</a> <br />
+                            @foreach (string c in i.Book.Authors)
+                            {
+                                <a>
+                                    @c;
+                                </a>
+                            }
+                        </td>
+                        <td>@i.Amount</td>
+                        <td><button>+</button></td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h4>Корзина пуста!</h4>
+    }
+</div>
+<script src="~/js/Basket.js" asp-append-version="true"></script>

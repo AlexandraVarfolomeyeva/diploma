@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Главная";
 }
-
+@{Html.RenderPartial("BasketDiv");}
 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -68,13 +68,13 @@
         <br><br>
         @ViewBag.Message
     }*@
-<hr/>
+<hr />
 <div class="row">
     @foreach (BookView s in ViewBag.Books)
     {
-        <div class="col-md-3 col-sm bg-white border-bottom shadow-sm">
+        <div class="col-md-3 col-sm bg-white border-bottom shadow-sm div-container-book">
             <img class="center-block img-top-bottom-space" src="@s.image" width="150" height="215" alt="@s.Title">
-            <h5 >
+            <h5>
                 @s.Title
             </h5>
 
@@ -101,10 +101,11 @@
             {
                 <button onclick="editBook(@s.Id);" class="btn btn-dark"> Редактировать </button>
                 <button onclick="deleteBook(@s.Id);" class="btn btn-dark"> Удалить </button>
-            } else if (ViewBag.Username != "Войти")
-            {
-                <button onclick="add(@s.Id,@s.Cost,@ViewBag.CurrentOrder);" class="btn btn-dark"> Купить </button> <br />
             }
-              </div>
+            else if (ViewBag.Username != "Войти" && ViewBag.CurrentOrder != null)
+            {
+                <button onclick="add(@s.Id,@s.Cost,@ViewBag.CurrentOrder.Id);" class="btn btn-dark"> Купить </button> <br />
+            }
+        </div>
     }
 </div>

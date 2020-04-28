@@ -26,10 +26,9 @@ namespace diploma.Controllers
             _context = context;
             _userManager = userManager;
             _appEnvironment = appEnvironment;
-            //ViewBag.Username = GetUserName();
         }
 
-        private async Task<int> GetCurrentOrder()
+        private async Task<Order> GetCurrentOrder()
         {
             try
             {
@@ -38,18 +37,18 @@ namespace diploma.Controllers
             {
                 string id = usr.Id;
                 IEnumerable<Order> orders = _context.Order.Where(p => p.UserId == id && p.Active == 1);
-                return orders.FirstOrDefault().Id;
+                return orders.FirstOrDefault();
             }
             else
             {
-                return 0;
+                return null;
             }
             }
             catch (Exception ex)
             {
 
                 Log.Write(ex);
-                return 0;
+                return null;
             }
         }
 
@@ -75,9 +74,13 @@ namespace diploma.Controllers
             }
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Index(int? page)
         {
-            ViewBag.CurrentOrder = GetCurrentOrder().Result;
+            int pageSize = 4;
+            int pageNumber = (page ?? 1);
+            Order order = GetCurrentOrder().Result;
+            ViewBag.CurrentOrder = order;
             ViewBag.Username = GetUserName().Result;
                 IEnumerable<Book> books = _context.Book.Include(p => p.BookOrders).Where(d => d.isDeleted == false);
                 BookView[] bookViews = new BookView[books.Count()];
@@ -116,6 +119,8 @@ namespace diploma.Controllers
                 }
                 IEnumerable<BookView> views = bookViews;
                 ViewBag.Books = bookViews;
+           
+            //return View(bookViews.ToPagedList(pageNumber, pageSize));
             return View();
         }
 
@@ -125,6 +130,12 @@ namespace diploma.Controllers
             ViewData["Message"] = "Your application description page.";
 
             return View();
+        }
+
+        public IActionResult BasketDiv(Order order)
+        {
+            Order CurrentOrder = order;
+            return PartialView(CurrentOrder);
         }
 
         public IActionResult Contact()
