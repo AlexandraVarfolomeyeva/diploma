@@ -5,6 +5,7 @@
 const uriBookOrder = "/api/BookOrder/";
 const uriIndex = "/Home/Index/";
 
+
 function reloadPage() {
     try {
         var request = new XMLHttpRequest();

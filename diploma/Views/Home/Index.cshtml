@@ -8,9 +8,6 @@
         <li data-target="#myCarousel" data-slide-to="1"></li>
         <li data-target="#myCarousel" data-slide-to="2"></li>
     </ol>
-
-
-
     <div class="carousel-inner" role="listbox">
         <div class="item active">
             <img src="~/images/banner1.svg" alt="ASP.NET" class="img-responsive" />
@@ -55,7 +52,14 @@
         <span class="sr-only">Next</span>
     </a>
 </div>
-
+<div class="col-md-4 order-md-2 mb-4 ">
+    <div id="adminDiv" class="text-right">
+       @if (ViewBag.Username == "admin")
+       {
+           <a class="btn btn-dark" asp-area = "" asp-controller="Admin" asp-action = "AddBook">Добавить</a>
+       }
+    </div>
+</div> 
 @*<h2>Basic File Upload</h2>
     @using (Html.BeginForm("UploadFile",
                       "Home",

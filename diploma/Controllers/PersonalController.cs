@@ -140,7 +140,7 @@ _userManager.GetUserAsync(HttpContext.User);
                 if (item == null)
                 {
                     Log.WriteSuccess(" PersonalController.Delete", "Order не найден.");
-                    return RedirectToAction("Basket", "Personal", new { item ,a="Заказ не найден!" });
+                    return RedirectToAction("Basket", new { item ,a="Заказ не найден!" });
                 }
                 foreach (BookOrder i in lines) { 
                     _context.BookOrder.Remove(i);
@@ -149,11 +149,12 @@ _userManager.GetUserAsync(HttpContext.User);
                 item.SumOrder = 0;
               _context.Order.Update(item);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Basket", "Personal");
+                OrderView j = await GetCurrentOrder();
+                return RedirectToAction("Basket", new { j });
             } catch (Exception ex)
             {
                 Log.Write(ex);
-                return RedirectToAction("Basket", "Personal", new { b=new OrderView(), a="Ошибка"+ex });
+                return RedirectToAction("Basket", new { b=new OrderView(), a="Ошибка"+ex });
             }
         }
 
@@ -162,6 +163,15 @@ _userManager.GetUserAsync(HttpContext.User);
            OrderView j= await GetCurrentOrder();
            ViewBag.Username = GetUserName().Result;
             return View(j);
+        }
+
+        [HttpGet]
+        public IActionResult Info()
+        {
+            IEnumerable<City> b = _context.City;
+            ViewBag.Cities = b;
+            ViewBag.Username = GetUserName().Result;
+            return View();
         }
     }
 }

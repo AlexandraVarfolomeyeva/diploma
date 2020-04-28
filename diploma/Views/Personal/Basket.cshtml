@@ -38,6 +38,8 @@
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">Книга</th>
+                    <th scope="col">Цена</th>
+                    <th scope="col">Стоимость</th>
                     <th scope="col">Количество</th>
                     <th scope="col"></th>
                 </tr>
@@ -45,19 +47,21 @@
             <tbody>
                 @foreach (BookOrderView i in Model.BookOrders)
                 {
-                    <tr>
-                        <td>
-                            <a>  @i.Book.Title</a> <br />
-                            @foreach (string c in i.Book.Authors)
-                            {
-                                <a>
-                                    @c;
-                                </a>
-                            }
-                        </td>
-                        <td>@i.Amount</td>
-                        <td><button>+</button></td>
-                    </tr>
+                <tr>
+                    <td>
+                        <a>  @i.Book.Title</a> <br />
+                        @foreach (string c in i.Book.Authors)
+                        {
+                            <a>
+                                @c;
+                            </a>
+                        }
+                    </td>
+                    <td>@i.Book.Cost</td>
+                    <td>@{int a = i.Book.Cost * i.Amount;}</td>
+                    <td>@i.Amount</td>
+                    <td><button>+</button></td>
+                </tr>
 
                 }
             </tbody>
