@@ -1,0 +1,27 @@
+﻿@model BookAdd;
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<h2>Book</h2>
+<img class="center-block img-top-bottom-space" src="~/img/@Model.image" width="150" height="215" alt="@Model.Title">
+<h3>@Model.Title</h3>
+<h6>
+    @foreach (string c in Model.Authors)
+    {
+        <a>
+            @c;
+        </a>
+    }
+</h6>
+<h6>
+    @foreach (string c in Model.Genres)
+    {
+        <a>
+            @c;
+        </a>
+    }
+</h6>
+<h5>
+    Цена:  @Model.Cost
+</h5>

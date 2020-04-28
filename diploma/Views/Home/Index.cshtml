@@ -66,10 +66,10 @@
     @foreach (BookView s in ViewBag.Books)
     {
         <div class="col-md-3 col-sm bg-white border-bottom shadow-sm div-container-book">
-            <img class="center-block img-top-bottom-space" src="@s.image" width="150" height="215" alt="@s.Title">
-            <h5>
+            <img class="center-block img-top-bottom-space" src="~/img/@s.image" width="150" height="215" alt="@s.Title">
+            <a href="~/Admin/Book/@s.Id">
                 @s.Title
-            </h5>
+            </a>
 
             <h6>
                 @foreach (string c in s.Authors)

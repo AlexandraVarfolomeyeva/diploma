@@ -260,10 +260,10 @@ function addBook() {
         var author = [];
         var genre = [];
         if (x.files.length == 0) {
-            var inputImg = "../img/empty.png";
+            var inputImg = "empty.png";
         }
         else {
-            var inputImg = "../img/" + x.files[0].name;
+            var inputImg = + x.files[0].name;
         }
         for (i in authors) {
             author.push(authors[i].value);
@@ -342,7 +342,7 @@ function saveBook() {
         var author = [];
         var genre = [];
         var file = document.getElementById("labelImg").innerHTML;
-        var inputImg = "../img/" + file;
+        var inputImg = file;
 
         for (i in authors) {
             author.push(authors[i].value);
