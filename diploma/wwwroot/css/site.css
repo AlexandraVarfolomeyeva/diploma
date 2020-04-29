@@ -73,3 +73,19 @@ body {
 .search-div{
     padding: 3.5em;
 }
+
+.annotation-div {
+    padding: 3.5em;
+    font-family: 'Times New Roman';
+    font-size: 1.3rem;
+    background-color: #FEFDFF;
+    text-align:justify;
+}
+
+.title-book {
+    text-align: center;
+    font-family: 'Times New Roman';
+    font-size: 2rem;
+    padding: 1%;
+    padding-left:5%;
+}

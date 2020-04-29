@@ -69,8 +69,10 @@
 <div class="row">
     @foreach (BookView s in ViewBag.Books)
     {
-        <div class="col-md-3 col-sm bg-white border-bottom shadow-sm div-container-book">
+    <div class="col-md-3 col-sm bg-white border-bottom shadow-sm div-container-book">
+        <a href="~/Admin/Book/@s.Id">
             <img class="center-block img-top-bottom-space" src="~/img/@s.image" width="150" height="215" alt="@s.Title">
+        </a>
             <a href="~/Admin/Book/@s.Id">
                 @s.Title
             </a>
@@ -104,6 +106,6 @@
             {
                 <button id=@s.Id onclick="add(@s.Id,@s.Cost,@ViewBag.CurrentOrder.Id);" class="btn btn-dark"> Купить </button> <br />
             }
-        </div>
+    </div>
     }
 </div>
