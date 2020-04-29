@@ -19,3 +19,14 @@ function logOff() {
     }
     catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!"); }
 }
+
+//function update() {
+//        $.ajax({
+//            url: '/Personal/Info',
+//            type: 'PUT',
+//            data: $('#infoForm').serialize(),
+//            success: function (data) {
+//                alert("asdc");
+//            }
+//        });
+//}

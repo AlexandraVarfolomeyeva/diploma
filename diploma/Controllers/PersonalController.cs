@@ -169,12 +169,66 @@ _userManager.GetUserAsync(HttpContext.User);
         }
 
         [HttpGet]
-        public IActionResult Info()
+        public async Task<IActionResult> Info()
         {
             IEnumerable<City> b = _context.City;
             ViewBag.Cities = b;
+            User usr = await _userManager.GetUserAsync(HttpContext.User);
+            if (usr == null)
+            {
+                ViewBag.Username = "Войти";
+            }
+            else {
+                ViewBag.Username = usr.UserName;
+            }
+            InfoViewModel user = new InfoViewModel()
+            {
+                Address = usr.Address,
+                Fio = usr.Fio,
+                Email = usr.Email,
+                IdCity = usr.IdCity,
+                PhoneNumber = usr.PhoneNumber,
+                UserName = usr.UserName
+            };
+
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Info(InfoViewModel model)
+        {
+            IEnumerable<City> d = _context.City;
+            ViewBag.Cities = d;
             ViewBag.Username = GetUserName().Result;
-            return View();
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    User usr = await _userManager.GetUserAsync(HttpContext.User);
+                    usr.Address = model.Address;
+                    usr.Email = model.Email;
+                    usr.Fio = model.Fio;
+                    usr.IdCity = model.IdCity;
+                    usr.PhoneNumber = model.PhoneNumber;
+                    usr.UserName = model.UserName;
+                  
+                    IdentityResult i = await _userManager.UpdateAsync(usr);
+                    if (i.Succeeded)
+                    { return RedirectToAction("Index", "Home"); }
+                    else {
+                        //return View(model);
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    return View(model);
+                }
+            }catch (Exception ex)
+            {
+                return View(model);
+            }
         }
     }
 }
