@@ -1,6 +1,7 @@
 ﻿uriDeleteAll = "/Personal/DeleteAll/"
 
 
+
 function deleteAll(id) {
     //добавление к заказу книги
     //добавляем новое поле в промежуточную таблицу
@@ -10,13 +11,24 @@ function deleteAll(id) {
         request.open("DELETE", url, false);
         request.onload = function () {
             // Обработка кода ответа
-            //if (request.status === 401) {
-            //    msg = "У вас не хватает прав для удаления";
-            //} else if (request.status === 204) {
-            //    msg = "Запись удалена";
-            //} else {
-            //    msg = "Неизвестная ошибка";
-            //}
+            if (request.status === 401) {
+                msg = "У вас не хватает прав для удаления";
+            } else if (request.status === 204) {
+                msg = "Запись удалена";
+                //$.ajax({
+                //    type: "GET",
+                //    url: "Personal/Basket",
+                //    dataType: "html",
+                //    success: function (result) {
+                //        $("#BasketContent").html(result);
+                //        //$("#SmallCartCount").text($("#SmallCartList .SmallCartCount").val());
+                //        //$("#SmallCartPrice").text($("#SmallCartList .SmallCartPrice").val());
+                //    }
+                //});
+                window.location.href = "/Personal/Basket";
+            } else {
+                msg = "Неизвестная ошибка";
+            }
         };
         request.send();
 

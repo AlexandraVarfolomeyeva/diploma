@@ -63,3 +63,13 @@ body {
         display: none;
     }
 }
+
+.basket-div {
+    padding: 1em;
+    margin: 0;
+    background-color: white;
+}
+
+.search-div{
+    padding: 3.5em;
+}

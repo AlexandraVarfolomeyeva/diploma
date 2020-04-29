@@ -230,10 +230,10 @@ namespace diploma.Controllers
             }
 
 
-            [HttpPost]
-            //[Route("api/Account/LogOff")]
-            //[ValidateAntiForgeryToken]
-            public async Task<IActionResult> LogOff()
+        [HttpPost]
+        //[Route("/api/Account/LogOff")]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOff()
             {//выход из системы
              // Удаление куки
                 await _signInManager.SignOutAsync();

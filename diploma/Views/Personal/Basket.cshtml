@@ -21,7 +21,7 @@
         </div>
     </div>
 </div>
-<div class="content">
+<div class="content" id="BasketContent">
     <h2>Корзина</h2>
 
     @if (Model.Amount != 0)
@@ -39,7 +39,6 @@
                 <tr>
                     <th scope="col">Книга</th>
                     <th scope="col">Цена</th>
-                    <th scope="col">Стоимость</th>
                     <th scope="col">Количество</th>
                     <th scope="col"></th>
                 </tr>
@@ -58,9 +57,14 @@
                         }
                     </td>
                     <td>@i.Book.Cost</td>
-                    <td>@{int a = i.Book.Cost * i.Amount;}</td>
                     <td>@i.Amount</td>
-                    <td><button>+</button></td>
+                    <td>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <button class="btn btn-secondary">+</button>
+                            <button class="btn btn-secondary">-</button>
+                            <button class="btn btn-secondary">Удалить</button>
+                        </div>
+                    </td>
                 </tr>
 
                 }

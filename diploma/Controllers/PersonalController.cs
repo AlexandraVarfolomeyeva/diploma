@@ -140,7 +140,8 @@ _userManager.GetUserAsync(HttpContext.User);
                 if (item == null)
                 {
                     Log.WriteSuccess(" PersonalController.Delete", "Order не найден.");
-                    return RedirectToAction("Basket", new { item ,a="Заказ не найден!" });
+                    //return RedirectToAction("Basket", new { item ,a="Заказ не найден!" });
+                    return NotFound();
                 }
                 foreach (BookOrder i in lines) { 
                     _context.BookOrder.Remove(i);
@@ -150,11 +151,13 @@ _userManager.GetUserAsync(HttpContext.User);
               _context.Order.Update(item);
                 await _context.SaveChangesAsync();
                 OrderView j = await GetCurrentOrder();
-                return RedirectToAction("Basket", new { j });
+                //return RedirectToAction("Basket", new { j });
+                return NoContent();
             } catch (Exception ex)
             {
                 Log.Write(ex);
-                return RedirectToAction("Basket", new { b=new OrderView(), a="Ошибка"+ex });
+                return BadRequest(ex);
+                //return RedirectToAction("Basket", new { b=new OrderView(), a="Ошибка"+ex });
             }
         }
 

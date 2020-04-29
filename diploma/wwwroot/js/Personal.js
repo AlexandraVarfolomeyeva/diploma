@@ -1,13 +1,13 @@
 ﻿document.querySelector("#logoffBtn").addEventListener("click",
     logOff);
 document.addEventListener("DOMContentLoaded", function () {
-    getUserInfo();
+ 
 });
 
 function logOff() {
     try {
         var request = new XMLHttpRequest();
-        request.open("POST", "api/account/logoff");
+        request.open("POST", "/Account/LogOff");
         request.onload = function () {
             if (this.status == 200) {
                 window.location.href = "/Home/Index";

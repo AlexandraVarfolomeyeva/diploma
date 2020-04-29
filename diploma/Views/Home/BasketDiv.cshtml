@@ -1,16 +1,23 @@
-﻿<div class="row" id="partialViewDiv">
-    <div class="col-md-10 bg-info active-cyan-3 ">
+﻿<div class="row basket-div center-block" id="partialViewDiv">
+    <div class="col-md-9 active-cyan-3 search-div">
         <input class="form-control" autocomplete="off" type="text" placeholder="Search" aria-label="Search">
     </div>
-    <div class="col-md-2 bg-danger">
+    <div class="col-md-3">
         @if (@ViewBag.CurrentOrder != null)
         {
-
-            <a class="h5" asp-area="" asp-controller="Personal" asp-action="Basket">Корзина</a>
-            @*@Html.EditorFor(model => model.Amount);
-            @Html.EditorFor(model => model.SumOrder);*@
-            <p>Количество: @ViewBag.CurrentOrder.Amount</p>
-            <p>Сумма: @ViewBag.CurrentOrder.SumOrder</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <a class="h5" asp-area="" asp-controller="Personal" asp-action="Basket">
+                     @*   <img src="~/images/corzina.png" alt="Корзина" height="80" wight="80">*@
+                        <img src="~/images/unnamed.png" alt="Корзина" height="104" wight="80">
+                    </a>
+                </div>
+                <div class="col-md-8  text-align: center;">
+                    <a class="h5" asp-area="" asp-controller="Personal" asp-action="Basket">Корзина</a>
+                    <p>Количество: @ViewBag.CurrentOrder.Amount</p>
+                    <p>Сумма: @ViewBag.CurrentOrder.SumOrder</p>
+                </div>
+            </div>
         }
         else
         {

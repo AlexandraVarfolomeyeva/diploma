@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Главная";
 }
-@{Html.RenderPartial("BasketDiv");}
+
 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -52,15 +52,17 @@
         <span class="sr-only">Next</span>
     </a>
 </div>
-<div class="col-md-4 order-md-2 mb-4 ">
-    <div id="adminDiv" class="text-right">
-       @if (ViewBag.Username == "admin")
-       {
-           <a class="btn btn-dark" asp-area = "" asp-controller="Admin" asp-action = "AddBook">Добавить</a>
-       }
+    @{Html.RenderPartial("BasketDiv");}
+<div class="row">
+    <div class="col-md-4 order-md-2 mb-4 ">
+        <div id="adminDiv" class="text-right">
+            @if (ViewBag.Username == "admin")
+            {
+                <a class="btn btn-dark" asp-area="" asp-controller="Admin" asp-action="AddBook">Добавить</a>
+            }
+        </div>
     </div>
-</div> 
-
+</div>
 <hr />
 <div class="row">
     @foreach (BookView s in ViewBag.Books)

@@ -26,22 +26,22 @@
 
     <div class="container">
         <div class=" d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-                <img class="mb-2" src="~/images/fantasia.png" alt="" width="24" height="24">
-                <a class="h1 my-2 left-space mr-md-auto font-weight-normal align-items-center text-dark" asp-area="" asp-controller="Home" asp-action="Index">Фантазия</a>
-                <nav class="my-2 my-md-0 mr-md-3 right">
-                    <a class="p-2 text-dark textNav" asp-area="" asp-controller="Home" asp-action="PriceAndDelivery">Доставка и оплата</a>
-                    <a class="p-2 text-dark textNav" asp-area="" asp-controller="Home" asp-action="Contact">Контакты</a>
-                    @if (ViewBag.Username == "Войти")
-                    {
-                        <a class="p-2 text-dark textNav" asp-area="" asp-controller="Account" asp-action="Index">  @ViewBag.Username </a>
-                    }
-                    else
-                    {
+            <img class="mb-2" src="~/images/fantasia.png" alt="" width="24" height="24">
+            <a class="h1 my-2 left-space mr-md-auto font-weight-normal align-items-center text-dark" asp-area="" asp-controller="Home" asp-action="Index">Фантазия</a>
+            <nav class="my-2 my-md-0 mr-md-3 right">
+                <a class="p-2 text-dark textNav" asp-area="" asp-controller="Home" asp-action="PriceAndDelivery">Доставка и оплата</a>
+                <a class="p-2 text-dark textNav" asp-area="" asp-controller="Home" asp-action="Contact">Контакты</a>
+                @if (ViewBag.Username == "Войти")
+                {
+                    <a class="p-2 text-dark textNav" asp-area="" asp-controller="Account" asp-action="Index">  @ViewBag.Username </a>
+                }
+                else
+                {
                     <a class="p-2 text-dark textNav" asp-area="" asp-controller="Personal" asp-action="Info">  @ViewBag.Username </a>
                 }
-                </nav>
-            </div>
+            </nav>
         </div>
+    </div>
 
 
     <partial name="_CookieConsentPartial" />
@@ -98,7 +98,6 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
         <script src="~/js/bootstrap.js" asp-append-version="true"></script>
     </environment>
-
     @RenderSection("Scripts", required: false)
 </body>
 </html>
