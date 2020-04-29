@@ -100,7 +100,7 @@
             }
             else if (ViewBag.Username != "Войти" && ViewBag.CurrentOrder != null)
             {
-                <button onclick="add(@s.Id,@s.Cost,@ViewBag.CurrentOrder.Id);" class="btn btn-dark"> Купить </button> <br />
+                <button id=@s.Id onclick="add(@s.Id,@s.Cost,@ViewBag.CurrentOrder.Id);" class="btn btn-dark"> Купить </button> <br />
             }
         </div>
     }

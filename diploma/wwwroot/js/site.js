@@ -18,7 +18,9 @@ function reloadPage() {
 }
 
 //id -- книги ; sum -- цена книги
-function add(id, sum,order) {
+function add(id, sum, order) {
+    var button = document.getElementById(id);
+    button.setAttribute('onclick', '');
     //добавление к заказу книги
     //добавляем новое поле в промежуточную таблицу
     try {
@@ -34,6 +36,9 @@ function add(id, sum,order) {
             // Обработка кода ответа
             if (request.status === 201) {
                 //загрузка корзины для обновления данных о заказе
+                button.innerHTML = "Перейти к корзине";
+                button.setAttribute('class', 'btn btn-light');
+                button.setAttribute('onclick', 'GetBasket()');
                 reloadPage();
             } else if (request.status === 401) {
                 alert("Пожалуйста, авторизируйтесь");
@@ -75,4 +80,9 @@ function editBook(id) {//редактирование книги -- метод, 
         window.location.href = "/Admin/AddBook?&" + id;
     }
     catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!"); }
+}
+
+function GetBasket()
+{
+    window.location.href = "/Personal/Basket";
 }
