@@ -75,20 +75,18 @@ namespace diploma.Controllers
                     return BadRequest(ModelState);
                 }
             
-                IEnumerable<BookOrder> books = _context.BookOrder.Where(a => a.IdBook == item.IdBook);
-                foreach (BookOrder book  in books)
+                BookOrder book = _context.BookOrder.Where(a => a.IdBook == item.IdBook && a.IdOrder == item.IdOrder).FirstOrDefault();
+                if (book != null)
                 {
                     book.Amount++;
                     _context.BookOrder.Update(book);
-                }
+                } else { 
                 BookOrder bookorder = new BookOrder()
                     {
                         IdBook = item.IdBook,
                         IdOrder = item.IdOrder,
                         Amount = 1
                     };
-                if (!books.Any()) {
-               
                     _context.BookOrder.Add(bookorder);
                 }
                 Order order = _context.Order.Find(item.IdOrder);
@@ -97,7 +95,7 @@ namespace diploma.Controllers
                 _context.Order.Update(order);
                 await _context.SaveChangesAsync();
                 Log.WriteSuccess("BookOrderController.Create", "Добавлена новая строка заказа.");
-                return CreatedAtAction("GetBookOrder", new { id = bookorder.Id }, bookorder);
+                return Ok();
                 //return View("~/Home/Index");
             }
             catch (Exception ex)

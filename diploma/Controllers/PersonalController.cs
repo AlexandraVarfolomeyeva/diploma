@@ -64,8 +64,11 @@ _userManager.GetUserAsync(HttpContext.User);
                                     SumOrder = j.SumOrder
                                 };
                     List<BookOrderView> bo = new List<BookOrderView>();
+                    int sum = 0;
+                    int amount = 0;
                     foreach (BookOrder o in j.BookOrders)
                     {
+                        amount += o.Amount;
                         BookOrderView n = new BookOrderView
                         {
                             Id = o.Id,
@@ -83,6 +86,7 @@ _userManager.GetUserAsync(HttpContext.User);
                             Title = item.Title,
                             Year = item.Year
                         };
+                        sum += item.Cost*o.Amount;
                         Publisher publisher = _context.Publisher.Find(item.IdPublisher);
                         List<string> au = new List<string>();
                         List<string> ge = new List<string>();
@@ -104,6 +108,12 @@ _userManager.GetUserAsync(HttpContext.User);
                         n.Book = b;
                         bo.Add(n);
                     }
+                    orderView.Amount = amount;
+                    j.Amount = amount;
+                    orderView.SumOrder = sum;
+                    j.SumOrder = sum;
+                    _context.Order.Update(j);
+                    await _context.SaveChangesAsync();
                     orderView.BookOrders = bo;
                    City city = _context.City.Where(a => a.Id == usr.IdCity).FirstOrDefault();
                     orderView.City = city.Name;

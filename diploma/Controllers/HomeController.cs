@@ -138,6 +138,13 @@ namespace diploma.Controllers
             return PartialView(CurrentOrder);
         }
 
+        public ActionResult GetView()
+        {
+            Order model = GetCurrentOrder().Result;
+            return PartialView("BasketDiv",model);
+        }
+
+
         public IActionResult Contact()
         {
             ViewBag.Username = GetUserName().Result;

@@ -5,16 +5,14 @@
 const uriBookOrder = "/api/BookOrder/";
 const uriIndex = "/Home/Index/";
 
+document.addEventListener("DOMContentLoaded", function () {
+    $(".js___basket").load("/Home/GetView");
+});
 
 function reloadPage() {
     try {
-        var request = new XMLHttpRequest();
-        request.open("GET", uriIndex,true);
-        request.onload = function () {
-           
-        };
-        request.send();
-    } catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!" + e); }
+        $(".js___basket").load("/Home/GetView");
+    } catch (e) {  }
 }
 
 //id -- книги ; sum -- цена книги
@@ -34,12 +32,13 @@ function add(id, sum, order) {
         request.open("POST", uriBookOrder);
         request.onload = function () {
             // Обработка кода ответа
-            if (request.status === 201) {
+            if (request.status === 200) {
                 //загрузка корзины для обновления данных о заказе
+                reloadPage();
                 button.innerHTML = "Перейти к корзине";
                 button.setAttribute('class', 'btn btn-light');
                 button.setAttribute('onclick', 'GetBasket()');
-                reloadPage();
+                
             } else if (request.status === 401) {
                 alert("Пожалуйста, авторизируйтесь");
             } else {
