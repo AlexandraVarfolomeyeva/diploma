@@ -6,10 +6,10 @@ const uriBookOrder = "/api/BookOrder/";
 const uriIndex = "/Home/Index/";
 
 document.addEventListener("DOMContentLoaded", function () {
-    $(".js___basket").load("/Home/GetView");
+    reloadBasket();
 });
 
-function reloadPage() {
+function reloadBasket() {
     try {
         $(".js___basket").load("/Home/GetView");
     } catch (e) {  }
@@ -34,7 +34,7 @@ function add(id, sum, order) {
             // Обработка кода ответа
             if (request.status === 200) {
                 //загрузка корзины для обновления данных о заказе
-                reloadPage();
+                reloadBasket();
                 button.innerHTML = "Перейти к корзине";
                 button.setAttribute('class', 'btn btn-light');
                 button.setAttribute('onclick', 'GetBasket()');

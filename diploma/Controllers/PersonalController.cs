@@ -134,6 +134,14 @@ _userManager.GetUserAsync(HttpContext.User);
             }
         }
 
+        public ActionResult GetView()
+        {
+            OrderView j = GetCurrentOrder().Result;
+            return PartialView("BasketTable", j);
+        }
+
+
+
         [HttpDelete("{id}")]
         [Route("[controller]/DeleteAll/{id}")]
         public async Task<IActionResult> DeleteAll([FromRoute] int id)
@@ -171,11 +179,10 @@ _userManager.GetUserAsync(HttpContext.User);
             }
         }
 
-        public async Task<IActionResult> Basket(OrderView order, string message)
+        public IActionResult Basket(string message)
         {
-           OrderView j= await GetCurrentOrder();
-           ViewBag.Username = GetUserName().Result;
-            return View(j);
+            ViewBag.Username = GetUserName().Result;
+            return View();
         }
 
         [HttpGet]

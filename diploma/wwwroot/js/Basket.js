@@ -1,6 +1,14 @@
 ﻿uriDeleteAll = "/Personal/DeleteAll/"
 
+function reloadBasketTable() {
+    try {
+        $(".js__get_basket_table").load("/Personal/GetView");
+    } catch (e) { }
+}
 
+document.addEventListener("DOMContentLoaded", function () {
+    reloadBasketTable();
+});
 
 function deleteAll(id) {
     //добавление к заказу книги
@@ -15,6 +23,7 @@ function deleteAll(id) {
                 msg = "У вас не хватает прав для удаления";
             } else if (request.status === 204) {
                 msg = "Запись удалена";
+                reloadBasketTable();
                 //$.ajax({
                 //    type: "GET",
                 //    url: "Personal/Basket",
@@ -25,7 +34,7 @@ function deleteAll(id) {
                 //        //$("#SmallCartPrice").text($("#SmallCartList .SmallCartPrice").val());
                 //    }
                 //});
-                window.location.href = "/Personal/Basket";
+                //window.location.href = "/Personal/Basket";
             } else {
                 msg = "Неизвестная ошибка";
             }
