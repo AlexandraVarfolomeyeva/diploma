@@ -2,26 +2,39 @@
 @{
     ViewData["Title"] = Model.Title;
 }
+<div>
+    <div class="js___basket">
+    </div>
+       
+        <div class="row">
+            <h3>@Model.Title</h3>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <img class="center-block img-top-bottom-space" src="~/img/@Model.image" width="150" height="215" alt="@Model.Title">
+            </div><div class="col-md-8">
+                <h6>
+                    @foreach (string c in Model.Authors)
+                    {
+                        <a>
+                            @c;
+                        </a>
+                    }
+                </h6>
+                <h6>
+                    @foreach (string c in Model.Genres)
+                    {
+                        <a>
+                            @c;
+                        </a>
+                    }
+                </h6>
+                <h5>
+                    Цена:  @Model.Cost
+                </h5>
+            </div>
+        </div>
+        <div class="row">
 
-<h2>Book</h2>
-<img class="center-block img-top-bottom-space" src="~/img/@Model.image" width="150" height="215" alt="@Model.Title">
-<h3>@Model.Title</h3>
-<h6>
-    @foreach (string c in Model.Authors)
-    {
-        <a>
-            @c;
-        </a>
-    }
-</h6>
-<h6>
-    @foreach (string c in Model.Genres)
-    {
-        <a>
-            @c;
-        </a>
-    }
-</h6>
-<h5>
-    Цена:  @Model.Cost
-</h5>
+        </div>
+    </div>

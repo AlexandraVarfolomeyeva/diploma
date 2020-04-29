@@ -54,9 +54,10 @@ namespace diploma.Controllers
 
         [HttpGet]
         //[Route("/Admin/Book/{id}")][FromRoute]
-        public async Task<IActionResult> Book(int id, BookAdd book)
+        public async Task<IActionResult> Book(int id)
         {
             ViewBag.Username = GetUserName().Result;
+
             try
             {
                 if (!ModelState.IsValid)

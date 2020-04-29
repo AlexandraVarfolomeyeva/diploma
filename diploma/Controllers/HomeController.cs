@@ -80,7 +80,6 @@ namespace diploma.Controllers
             int pageSize = 4;
             int pageNumber = (page ?? 1);
             Order order = GetCurrentOrder().Result;
-            ViewBag.CurrentOrder = order;
             ViewBag.Username = GetUserName().Result;
                 IEnumerable<Book> books = _context.Book.Include(p => p.BookOrders).Where(d => d.isDeleted == false);
                 BookView[] bookViews = new BookView[books.Count()];
