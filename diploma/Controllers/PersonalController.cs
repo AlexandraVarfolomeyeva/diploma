@@ -45,6 +45,40 @@ _userManager.GetUserAsync(HttpContext.User);
             }
         }
 
+
+        private BookView GetViewByBook(Book book)
+        {
+            Publisher publisher = _context.Publisher.Find(book.IdPublisher);
+            List<string> au = new List<string>();
+            List<string> ge = new List<string>();
+            IEnumerable<BookAuthor> bookauthors = _context.BookAuthor.Where(d => d.IdBook == book.Id);
+            IEnumerable<BookGenre> bookgenres = _context.BookGenre.Where(d => d.IdBook == book.Id);
+            foreach (BookAuthor line in bookauthors)
+            {
+                Author author = _context.Author.Find(line.IdAuthor);
+                au.Add(author.Name);
+            }
+            foreach (BookGenre line in bookgenres)
+            {
+                Genre genre = _context.Genre.Find(line.IdGenre);
+                ge.Add(genre.Name);
+            }
+            BookView view = new BookView()
+            {
+                Content = book.Content,
+                Cost = book.Cost,
+                Id = book.Id,
+                image = book.image,
+                Stored = book.Stored,
+                Title = book.Title,
+                Year = book.Year,
+                Publisher = publisher.Name,
+                Authors=au.ToArray(),
+                Genres= ge.ToArray()
+             };
+            return view;
+        }
+
         private async Task<OrderView> GetCurrentOrder()
         {
             try
@@ -75,37 +109,8 @@ _userManager.GetUserAsync(HttpContext.User);
                             Amount = o.Amount
                         };
                         Book item = _context.Book.Where(book => book.isDeleted == false && book.Id==o.IdBook).FirstOrDefault();
-
-                        BookView b = new BookView()
-                        {
-                            Id = item.Id,
-                            Content = item.Content,
-                            Cost = item.Cost,
-                            image = item.image,
-                            Stored = item.Stored,
-                            Title = item.Title,
-                            Year = item.Year
-                        };
                         sum += item.Cost*o.Amount;
-                        Publisher publisher = _context.Publisher.Find(item.IdPublisher);
-                        List<string> au = new List<string>();
-                        List<string> ge = new List<string>();
-                        b.Publisher = publisher.Name;
-                        IEnumerable<BookAuthor> bookauthors = _context.BookAuthor.Where(d => d.IdBook == item.Id);
-                        IEnumerable<BookGenre> bookgenres = _context.BookGenre.Where(d => d.IdBook == item.Id);
-                        foreach (BookAuthor line in bookauthors)
-                        {
-                            Author author = _context.Author.Find(line.IdAuthor);
-                            au.Add(author.Name);
-                        }
-                        b.Authors = au.ToArray();
-                        foreach (BookGenre line in bookgenres)
-                        {
-                            Genre genre = _context.Genre.Find(line.IdGenre);
-                            ge.Add(genre.Name);
-                        }
-                        b.Genres = ge.ToArray();
-                        n.Book = b;
+                        n.Book = GetViewByBook(item);
                         bo.Add(n);
                     }
                     orderView.Amount = amount;
@@ -160,6 +165,39 @@ _userManager.GetUserAsync(HttpContext.User);
                         }
                         _context.SaveChanges();
                         return PartialView("_BasketHistory", orders);
+                    }
+                case "_DetailsOrder":
+                    {
+                        Order order = _context.Order.Find(Convert.ToInt32(message));
+                
+                        User usr = GetCurrentUserAsync().Result;
+                        City city = _context.City.Find(usr.IdCity);
+
+                        OrderView model = new OrderView()
+                        {
+                            Active = order.Active,
+                            DateDelivery = order.DateDelivery,
+                            Amount = order.Amount,
+                            DateOrder = order.DateOrder,
+                            SumOrder = order.SumOrder,
+                            Id = order.Id,
+                            City = city.Name,
+                            SumDelivery = city.DeliverySum
+                        };
+                        IEnumerable<BookOrder> bo = _context.BookOrder.Where(i=>i.IdOrder==order.Id).Include(b=>b.Book);
+                        List<BookOrderView> boo = new List<BookOrderView>();
+                        foreach (BookOrder b in bo)
+                        {
+                            BookOrderView o = new BookOrderView()
+                            {
+                                Amount = b.Amount,
+                                Id = b.Id,
+                                Book = GetViewByBook(b.Book)
+                            };
+                            boo.Add(o);
+                        }
+                        model.BookOrders = boo;
+                        return PartialView("_DetailsOrder", model);
                     }
                 default:
                     {

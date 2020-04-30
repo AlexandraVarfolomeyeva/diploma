@@ -1,0 +1,51 @@
+﻿@model OrderView;
+@if (Model != null)
+{
+<div>
+    <!--   Svg иконка для закрытия окна  -->
+  
+    <p class="h3">Детали заказа</p>
+    <br />
+    @Model.Amount
+    @Model.City
+    @Model.DateDelivery
+    @Model.DateOrder
+    @Model.SumDelivery
+    @Model.SumOrder
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Книга</th>
+                <th scope="col">Цена</th>
+                <th scope="col">Количество</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (BookOrderView i in Model.BookOrders)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="Book" asp-controller="Admin" asp-route-id="@i.Book.Id"> @i.Book.Title</a> <br />
+                        @foreach (string c in i.Book.Authors)
+                        {
+                            <a>
+                                @c;
+                            </a>
+                        }
+                    </td>
+                    <td>@i.Book.Cost</td>
+                    <td>
+                        <p>
+                            @i.Amount
+                        </p>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+
+    <br>
+    @*<button class="btn btn-dark" onclick="Cancel();">Отменить заказ</button>*@
+</div>
+}

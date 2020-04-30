@@ -14,7 +14,7 @@
         <tbody>
             @foreach (Order o in Model)
             {
-                <tr>
+                <tr onclick="GetDetails(@o.Id);">
 
                     <td>@o.DateOrder.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"))</td>
                     <td>@o.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"))</td>

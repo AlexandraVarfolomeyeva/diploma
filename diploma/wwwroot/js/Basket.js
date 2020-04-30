@@ -4,6 +4,14 @@ uriIncrease = "/Personal/Increase/"
 uriDeleteItem = "/Personal/DeleteItem/"
 uriMakeOrder = "/Personal/MakeOrder/"
 
+function GetDetails(id) {
+    try {
+        $(".js__details_history").load("/Personal/GetView", { viewName: "_DetailsOrder", message: id });
+        modalElem = document.querySelector('.modal1[data-modal="3"]');
+        modalElem.classList.add('active');
+        document.querySelector('#overlay-modal').classList.add('active');
+    } catch (e) { }
+}
 
 function reloadBasketTable() {
     try {
@@ -28,6 +36,23 @@ function reloadHistory() {
 document.addEventListener("DOMContentLoaded", function () {
     reloadBasketTable();
     reloadHistory();
+
+    var overlay = document.querySelector('#overlay-modal'),
+    closeButtons = document.querySelectorAll('.js-modal-close');
+
+    overlay.addEventListener('click', function () {
+        document.querySelector('.modal1.active').classList.remove('active');
+        this.classList.remove('active');
+    });
+
+    closeButtons.forEach(function (item) {
+        item.addEventListener('click', function (e) {
+            var parentModal = this.closest('.modal1');
+
+            parentModal.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    }); // end foreach  
 });
 
 function Increase(id) {
