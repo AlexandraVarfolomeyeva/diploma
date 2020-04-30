@@ -66,52 +66,6 @@
     </div>
 </div>
 <hr />
-<div class="row">
-    @foreach (BookView s in ViewBag.Books)
-    {
-    <div class="col-md-3 col-sm bg-white border-bottom shadow-sm div-container-book">
-        <a href="~/Admin/Book/@s.Id">
-            <img class="center-block img-top-bottom-space" src="~/img/@s.image" width="150" height="215" alt="@s.Title">
-        </a>
-            <a href="~/Admin/Book/@s.Id">
-                @s.Title
-            </a>
-
-            <h6>
-                @foreach (string c in s.Authors)
-                {
-                    <a>
-                        @c;
-                    </a>
-                }
-            </h6>
-            <h6>
-                @foreach (string c in s.Genres)
-                {
-                    <a>
-                        @c;
-                    </a>
-                }
-            </h6>
-            <h5>
-                Цена:  @s.Cost
-            </h5>
-            @if (ViewBag.Username == "admin")
-            {
-                <button onclick="editBook(@s.Id);" class="btn btn-dark"> Редактировать </button>
-                <button onclick="deleteBook(@s.Id);" class="btn btn-dark"> Удалить </button>
-                <a></a>
-            }
-            else if (ViewBag.Username != "Войти" && ViewBag.CurrentOrder != null)
-            {
-                if (s.Stored > 0)
-                { <button id=@s.Id onclick="add(@s.Id,@s.Cost,@ViewBag.CurrentOrder.Id);" class="btn btn-dark"> Купить </button> <br />
-                }
-                else { <p class="text-muted">
-                           Нет на складе
-                      </p>
-                }
-            }
-    </div>
-    }
+<div class="js__bookList">
+    @Html.Partial("_BookList")
 </div>

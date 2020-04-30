@@ -3,11 +3,12 @@ const uriIndex = "/Home/Index/";
 
 document.addEventListener("DOMContentLoaded", function () {
     reloadBasket();
+    $(".js__bookList").load("/Home/GetView", {viewName:"_BookList"});
 });
 
 function reloadBasket() {
     try {
-        $(".js___basket").load("/Home/GetView");
+        $(".js___basket").load("/Home/GetView", { viewName: "_BasketDiv" });
     } catch (e) {  }
 }
 
