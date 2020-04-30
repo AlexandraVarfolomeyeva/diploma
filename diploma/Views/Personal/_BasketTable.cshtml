@@ -1,4 +1,5 @@
 ﻿@model OrderView;
+@using System.Globalization;
 <div>
     <h2>Корзина</h2>
     @if (Model != null)
@@ -9,7 +10,9 @@
             <h4>Сумма заказа: <span id="SumOrder">@Html.DisplayFor(model => model.SumOrder)</span></h4>
             <p>Сумма заказа не включает в себя стоимость доставки.</p>
             <p>
-                Доставка в город @Html.DisplayFor(model => model.City) прибудет ориентировочно @Html.DisplayFor(model => model.DateDelivery).
+                @{string date = Model.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
+                Доставка в город @Html.DisplayFor(model => model.City) прибудет ориентировочно @date
+
                 Стоимость доставки @Html.DisplayFor(model => model.SumDelivery) рублей.
             </p>
             <button class="btn btn-light" onclick="deleteAll(@Model.Id);">Очистить корзину</button>

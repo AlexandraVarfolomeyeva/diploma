@@ -115,7 +115,7 @@ _userManager.GetUserAsync(HttpContext.User);
                     _context.Order.Update(j);
                     await _context.SaveChangesAsync();
                     orderView.BookOrders = bo;
-                   City city = _context.City.Where(a => a.Id == usr.IdCity).FirstOrDefault();
+                   City city = _context.City.Find(usr.IdCity);
                     orderView.City = city.Name;
                     orderView.SumDelivery = city.DeliverySum;
                     orderView.DateDelivery = DateTime.Now.AddDays(city.DeliveryTime);
@@ -258,10 +258,57 @@ _userManager.GetUserAsync(HttpContext.User);
                 return Ok();
             } catch (Exception ex)
             {
+                Log.Write(ex);
                 return BadRequest(ex);
             }
         }
-        
+
+        [HttpPut]
+        public async Task<ActionResult> MakeOrder(int id)
+        {
+            try
+            {
+                Order o = _context.Order.Find(id);
+                o.Active = 0;
+                o.DateOrder = DateTime.Now;
+                _context.Order.Update(o);
+                IEnumerable<BookOrder> bo = _context.BookOrder.Where(b => b.IdOrder == o.Id);
+                foreach (BookOrder b in bo)
+                {
+                    Book book = _context.Book.Find(b.IdBook);
+                    if (book.Stored >= b.Amount) {
+                        book.Stored -= b.Amount;
+                        _context.Book.Update(book);
+                    } else
+                    {
+                        Log.WriteSuccess("PersonalController.MakeOrder", "Не хватает книг на складе! "+ book.Title+ ". Id " + book.Id);
+                        return BadRequest("Не хватает книг на складе!");
+                    }
+                }
+
+                User user = await _userManager.GetUserAsync(HttpContext.User);
+                City city = _context.City.Find(user.IdCity);
+                Order order = new Order()
+                {
+                    UserId = user.Id,
+                    Active = 1,
+                    Amount = 0,
+                    DateDelivery = DateTime.Now.AddDays(city.DeliveryTime),
+                    DateOrder = DateTime.Now,
+                    SumOrder=0
+                };
+              
+                Log.WriteSuccess(" PersonalController.MakeOrder", "Id user" + order.UserId);
+                _context.Order.Add(order); //добавление заказа в БД    
+                Log.WriteSuccess(" PersonalController.MakeOrder", "Создан новый заказ.");
+                await _context.SaveChangesAsync();
+                return NoContent();
+            } catch (Exception ex)
+            {
+                Log.Write(ex);
+                return BadRequest(ex);
+            }
+        }
 
         [HttpDelete("{id}")]
         [Route("[controller]/DeleteAll/{id}")]

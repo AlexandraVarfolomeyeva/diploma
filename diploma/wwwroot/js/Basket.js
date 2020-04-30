@@ -2,6 +2,7 @@
 uriDecrease = "/Personal/Decrease/"
 uriIncrease = "/Personal/Increase/"
 uriDeleteItem = "/Personal/DeleteItem/"
+uriMakeOrder = "/Personal/MakeOrder/"
 
 
 function reloadBasketTable() {
@@ -107,4 +108,19 @@ function deleteAll(id) {
         request.send();
 
     } catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!" + e); }
+}
+
+function OrderBooks(id) {
+    reloadMessage("");
+    $.ajax({
+        url: uriMakeOrder + id,
+        type: "PUT",
+        success: response => {
+            reloadBasketTable();
+            reloadMessage("Успешно заказано!");
+        },
+        error: response => {
+            alert("Error" + response.responseText);
+        }
+    });
 }
