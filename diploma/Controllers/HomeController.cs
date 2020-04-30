@@ -140,7 +140,7 @@ namespace diploma.Controllers
         public ActionResult GetView()
         {
             Order model = GetCurrentOrder().Result;
-            return PartialView("BasketDiv",model);
+            return PartialView("_BasketDiv",model);
         }
 
 

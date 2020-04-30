@@ -47,12 +47,14 @@ namespace diploma.Controllers
             }
         }
 
-        public IActionResult Index(string message, IEnumerable<string> error)
+        public IActionResult LoginForm(string message, IEnumerable<string> error)
         {
-            if (message!="" && message !=null) {
+            if (message != "" && message != null)
+            {
                 ViewBag.Message = message;
                 ViewBag.Error = error;
-            } else
+            }
+            else
             {
                 ViewBag.Message = "";
                 ViewBag.Error = "";
@@ -167,13 +169,7 @@ namespace diploma.Controllers
             }
             }
 
-        public class Msg
-        {
-            public string message;
-            public IEnumerable<string> error;
-        }
 
-        Msg mess = null;
         [HttpGet]
         public ActionResult ErrorMsg()
         {
@@ -205,27 +201,25 @@ namespace diploma.Controllers
                     {//если неудачно
                         ModelState.AddModelError("", "Неправильный логин и (или) пароль");
                         Log.WriteSuccess("AccountController.Login", "Неправильный логин и (или) пароль.");
-                    Msg msg = new Msg()
+                    MessageError msg = new MessageError()
                     {
                             message = "Вход не выполнен.",
                             error = ModelState.Values.SelectMany(e =>
                             e.Errors.Select(er => er.ErrorMessage))
                         };
-                    mess = msg;
-                    return RedirectToAction("Index", "Account", new { mess.message, mess.error });
+                   return RedirectToAction("LoginForm", "Account", new { msg.message, msg.error });
                 }
                 }
                 else
                 {
                     Log.WriteSuccess("AccountController.Login", "Вход не выполнен.");
-                Msg msg = new Msg()
+                MessageError msg = new MessageError()
                 {
                         message = "Вход не выполнен.",
                         error = ModelState.Values.SelectMany(e =>
                         e.Errors.Select(er => er.ErrorMessage))
                     };
-                mess = msg;
-                return RedirectToAction("Index", "Account", new { mess.message, mess.error });
+                return RedirectToAction("LoginForm", "Account", new { msg.message, msg.error });
             }
             }
 

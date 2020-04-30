@@ -1,4 +1,8 @@
 ﻿uriDeleteAll = "/Personal/DeleteAll/"
+uriDecrease = "/Personal/Decrease/"
+uriIncrease = "/Personal/Increase/"
+uriDeleteItem = "/Personal/DeleteItem/"
+
 
 function reloadBasketTable() {
     try {
@@ -9,6 +13,46 @@ function reloadBasketTable() {
 document.addEventListener("DOMContentLoaded", function () {
     reloadBasketTable();
 });
+
+function Increase(id) {
+        $.ajax({
+            url: uriIncrease+id,
+            type: "PUT",
+            success: response => {
+                document.getElementById(id).innerHTML = response.bookAmount;
+                document.getElementById("Amount").innerHTML = response.orderAmount;
+                document.getElementById("SumOrder").innerHTML = response.sumOrder;
+            },
+            error: response => {         
+                    alert("Error" + response.responseText);
+            }
+        });
+
+}
+
+function Decrease(id) {
+    $.ajax({
+        url: uriDecrease + id,
+        type: "PUT",
+        success: response => {
+            document.getElementById(id).innerHTML = response.bookAmount;
+            document.getElementById("Amount").innerHTML = response.orderAmount;
+            document.getElementById("SumOrder").innerHTML = response.sumOrder;
+            if (response.bookAmount == 0) {
+                reloadBasketTable();
+            }
+        },
+        error: response => {
+            alert("Error" + response.responseText);
+        }
+    });
+
+}
+
+function DeleteItem(id) {
+
+}
+
 
 function deleteAll(id) {
     //добавление к заказу книги

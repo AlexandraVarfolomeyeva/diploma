@@ -137,10 +137,103 @@ _userManager.GetUserAsync(HttpContext.User);
         public ActionResult GetView()
         {
             OrderView j = GetCurrentOrder().Result;
-            return PartialView("BasketTable", j);
+            return PartialView("_BasketTable", j);
         }
 
 
+        [HttpPut]
+        public async Task<ActionResult> Decrease(int id)
+        {
+            try
+            {
+                BookOrder j = _context.BookOrder.Find(id);
+                Book b = _context.Book.Find(j.IdBook);
+                j.Amount--;
+                if (j.Amount > 0)
+                {
+                    _context.BookOrder.Update(j);
+                    Order o = _context.Order.Find(j.IdOrder);
+                    o.SumOrder -= b.Cost;
+                    o.Amount -= 1;
+                    _context.Order.Update(o);
+                    await _context.SaveChangesAsync();
+                    Resp obj = new Resp()
+                    {
+                        OrderAmount = o.Amount,
+                        SumOrder = o.SumOrder,
+                        BookAmount = j.Amount
+                    };
+                    return Ok(obj);
+                    //return Ok(j.Amount.ToString());
+                }
+                else
+                {
+                    _context.BookOrder.Remove(j);
+                    Order o = _context.Order.Find(j.IdOrder);
+                    o.SumOrder -= b.Cost;
+                    o.Amount -= 1;
+                    _context.Order.Update(o);
+                    await _context.SaveChangesAsync();
+                    Resp obj = new Resp()
+                    {
+                        OrderAmount = o.Amount,
+                        SumOrder = o.SumOrder,
+                        BookAmount = 0
+                    };
+                    return Ok(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        public class Resp {
+            public int OrderAmount;
+            public float SumOrder;
+            public int BookAmount;
+        }
+        [HttpPut]
+        public async Task<ActionResult> Increase(int id)
+        {
+            try
+            {
+                BookOrder j = _context.BookOrder.Find(id);
+                Book b = _context.Book.Find(j.IdBook);
+                j.Amount++;
+                if (j.Amount <= b.Stored)
+                {
+                    _context.BookOrder.Update(j);
+                    Order o = _context.Order.Find(j.IdOrder);
+                    o.SumOrder += b.Cost;
+                    o.Amount += 1;
+                    _context.Order.Update(o);
+                    await _context.SaveChangesAsync();
+                    Resp obj = new Resp()
+                    {
+                        OrderAmount = o.Amount,
+                        SumOrder = o.SumOrder,
+                        BookAmount = j.Amount
+                    };
+                    return Ok(obj);
+                }
+                else
+                {
+                    Order o = _context.Order.Find(j.IdOrder);
+                    Resp obj = new Resp()
+                    {
+                        OrderAmount = o.Amount,
+                        SumOrder = o.SumOrder,
+                        BookAmount = b.Stored
+                    };
+                    return Ok(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
 
         [HttpDelete("{id}")]
         [Route("[controller]/DeleteAll/{id}")]

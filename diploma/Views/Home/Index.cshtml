@@ -53,7 +53,7 @@
     </a>
 </div>
 <div class="js___basket">
-    @{Html.Partial("BasketDiv");}
+    @{Html.Partial("_BasketDiv");}
 </div>
 <div class="row">
     <div class="col-md-4 order-md-2 mb-4 ">
@@ -104,7 +104,13 @@
             }
             else if (ViewBag.Username != "Войти" && ViewBag.CurrentOrder != null)
             {
-                <button id=@s.Id onclick="add(@s.Id,@s.Cost,@ViewBag.CurrentOrder.Id);" class="btn btn-dark"> Купить </button> <br />
+                if (s.Stored > 0)
+                { <button id=@s.Id onclick="add(@s.Id,@s.Cost,@ViewBag.CurrentOrder.Id);" class="btn btn-dark"> Купить </button> <br />
+                }
+                else { <p class="text-muted">
+                           Нет на складе
+                      </p>
+                }
             }
     </div>
     }
