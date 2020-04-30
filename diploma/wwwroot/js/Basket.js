@@ -50,7 +50,16 @@ function Decrease(id) {
 }
 
 function DeleteItem(id) {
-
+    $.ajax({
+        url: uriDeleteItem + id,
+        type: "PUT",
+        success: response => {
+                reloadBasketTable();
+        },
+        error: response => {
+            alert("Error" + response.responseText);
+        }
+    });
 }
 
 

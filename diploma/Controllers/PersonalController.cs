@@ -235,6 +235,25 @@ _userManager.GetUserAsync(HttpContext.User);
             }
         }
 
+        [HttpPut]
+        public async Task<ActionResult> DeleteItem(int id)
+        {
+            try {
+                BookOrder j = _context.BookOrder.Find(id);
+                Order o = _context.Order.Find(j.IdOrder);
+                Book b = _context.Book.Find(j.IdBook);
+                o.SumOrder -= j.Amount*b.Cost;
+                o.Amount -= j.Amount;
+                _context.BookOrder.Remove(j);
+                await _context.SaveChangesAsync();
+                return Ok();
+            } catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        
+
         [HttpDelete("{id}")]
         [Route("[controller]/DeleteAll/{id}")]
         public async Task<IActionResult> DeleteAll([FromRoute] int id)
