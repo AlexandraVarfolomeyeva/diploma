@@ -29,7 +29,7 @@ function Increase(id) {
         success: response => {
             reloadBasketTable();
             if (response == true) {
-                    alert("На складе больше нет!");
+                reloadMessage("На складе больше нет!");
                     }
             },
         error: response => {

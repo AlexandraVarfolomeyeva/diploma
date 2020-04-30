@@ -21,9 +21,12 @@
     </div>
 </div>
 <div class="content" id="BasketContent">
-  
+
     <div class="js__get_basket_table">
-         @{Html.Partial("_BasketTable");}
+        @{Html.Partial("_BasketTable");}
+    </div>
+    <div class="js__get_basket_message">
+        @{Html.Partial("_AdminMsg");}
     </div>
 </div>
 <script src="~/js/Basket.js" asp-append-version="true"></script>

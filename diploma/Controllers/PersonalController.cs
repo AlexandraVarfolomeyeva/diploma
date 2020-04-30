@@ -202,12 +202,11 @@ _userManager.GetUserAsync(HttpContext.User);
                     _context.Order.Update(o);
                     _context.BookOrder.Update(j);
                     await _context.SaveChangesAsync();
-                    return Ok();
+                    return Ok(false);
                 }
                 else
                 {
-                    Order o = _context.Order.Find(j.IdOrder);
-                    return Ok();
+                    return Ok(true);
                 }
             }
             catch (Exception ex)
