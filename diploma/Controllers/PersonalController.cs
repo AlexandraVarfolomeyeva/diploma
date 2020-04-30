@@ -136,15 +136,36 @@ _userManager.GetUserAsync(HttpContext.User);
 
         public ActionResult GetView(string viewName, string message)
         {
-            if (viewName == "_BasketTable")
+            switch (viewName)
             {
-                OrderView j = GetCurrentOrder().Result;
-                return PartialView("_BasketTable", j);
-            } else if (viewName == "_AdminMsg")
-            {
-                return PartialView("_AdminMsg", message);
+                case "_BasketTable":
+                    {
+                        OrderView j = GetCurrentOrder().Result;
+                        return PartialView("_BasketTable", j);
+                    }
+                case "_AdminMsg":
+                    {
+                        return PartialView("_AdminMsg", message);
+                    }
+                case "_BasketHistory":
+                    {
+                        User usr = GetCurrentUserAsync().Result;
+                        IEnumerable<Order> orders = _context.Order.Where(h=>h.UserId==usr.Id && h.Active!=1);
+                        List<Order> ActiveOrders = _context.Order.Where(h => h.UserId == usr.Id && h.Active == 1).ToList();
+                        while (ActiveOrders.Count > 1)
+                        {
+                            Order o = ActiveOrders.Last();
+                            _context.Order.Remove(o);
+                            ActiveOrders.Remove(o);
+                        }
+                        _context.SaveChanges();
+                        return PartialView("_BasketHistory", orders);
+                    }
+                default:
+                    {
+                        return PartialView(viewName, null);
+                    }
             }
-            return PartialView(viewName, null);
         }
 
 

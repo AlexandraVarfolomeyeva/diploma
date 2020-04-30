@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Order>
+@using System.Globalization;
+@if (Model != null)
+{
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Дата заказа</th>
+                <th scope="col">Дата доставки</th>
+                <th scope="col">Количество книг</th>
+                <th scope="col">Стоимость заказа (без доставки), руб.</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Order o in Model)
+            {
+                <tr>
+
+                    <td>@o.DateOrder.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"))</td>
+                    <td>@o.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"))</td>
+                    <td>@o.Amount</td>
+                    <td>@o.SumOrder</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

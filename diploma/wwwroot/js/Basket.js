@@ -17,8 +17,17 @@ function reloadMessage(message) {
     } catch (e) { }
 }
 
+function reloadHistory() {
+    try {
+        $(".js__get_basket_history").load("/Personal/GetView", { viewName: "_BasketHistory", message: "" });
+    } catch (e) { }
+}
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
     reloadBasketTable();
+    reloadHistory();
 });
 
 function Increase(id) {
@@ -110,6 +119,7 @@ function OrderBooks(id) {
         type: "PUT",
         success: response => {
             reloadBasketTable();
+            reloadHistory();
             reloadMessage("Успешно заказано!");
         },
         error: response => {

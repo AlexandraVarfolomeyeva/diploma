@@ -30,7 +30,7 @@
                     {
                         <tr>
                             <td>
-                                <a> @i.Book.Title</a> <br />
+                                <a asp-action="Book" asp-controller="Admin" asp-route-id="@i.Book.Id"> @i.Book.Title</a> <br />
                                 @foreach (string c in i.Book.Authors)
                                 {
                                     <a>
