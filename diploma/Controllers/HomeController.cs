@@ -36,7 +36,7 @@ namespace diploma.Controllers
             if (usr != null)
             {
                 string id = usr.Id;
-                IEnumerable<Order> orders = _context.Order.Where(p => p.UserId == id && p.Active == 1);
+                IEnumerable<Order> orders = _context.Order.Where(p => p.UserId == id && p.Active == 1).Include(p=>p.BookOrders);
                 return orders.FirstOrDefault();
             }
             else

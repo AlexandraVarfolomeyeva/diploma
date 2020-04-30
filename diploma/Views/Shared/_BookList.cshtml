@@ -40,7 +40,14 @@
             else if (Model.UserName != "Войти" && Model.CurrentOrder != null)
             {
                 if (s.Stored > 0)
-                { <button id=@s.Id onclick="add(@s.Id,@s.Cost,@Model.CurrentOrder.Id);" class="btn btn-dark"> Купить </button> <br />
+                {
+                    if (!Model.CurrentOrder.BookOrders.Where(i => i.IdBook == s.Id).Any())
+                    {
+                        <button id=@s.Id onclick="add(@s.Id,@s.Cost,@Model.CurrentOrder.Id);" class="btn btn-dark"> Купить </button> <br />
+                    }
+                    else {
+                    <button class="btn btn-light" onclick="GetBasket();">Перейти к корзине</button>
+                    }
                 }
                 else
                 { <p class="text-muted">

@@ -164,13 +164,8 @@ _userManager.GetUserAsync(HttpContext.User);
                     o.Amount -= 1;
                     _context.Order.Update(o);
                     await _context.SaveChangesAsync();
-                    Resp obj = new Resp()
-                    {
-                        OrderAmount = o.Amount,
-                        SumOrder = o.SumOrder,
-                        BookAmount = j.Amount
-                    };
-                    return Ok(obj);
+                 
+                    return Ok();
                     //return Ok(j.Amount.ToString());
                 }
                 else
@@ -181,25 +176,14 @@ _userManager.GetUserAsync(HttpContext.User);
                     o.Amount -= 1;
                     _context.Order.Update(o);
                     await _context.SaveChangesAsync();
-                    Resp obj = new Resp()
-                    {
-                        OrderAmount = o.Amount,
-                        SumOrder = o.SumOrder,
-                        BookAmount = 0
-                    };
-                    return Ok(obj);
+                   
+                    return Ok();
                 }
             }
             catch (Exception ex)
             {
                 return BadRequest(ex);
             }
-        }
-        public class Resp {
-            public int OrderAmount;
-            public float SumOrder;
-            public int BookAmount;
-            public bool Overload = false;
         }
         [HttpPut]
         public async Task<ActionResult> Increase(int id)
@@ -211,31 +195,19 @@ _userManager.GetUserAsync(HttpContext.User);
                 j.Amount++;
                 if (j.Amount <= b.Stored)
                 {
-                    _context.BookOrder.Update(j);
+                    
                     Order o = _context.Order.Find(j.IdOrder);
                     o.SumOrder += b.Cost;
                     o.Amount += 1;
                     _context.Order.Update(o);
+                    _context.BookOrder.Update(j);
                     await _context.SaveChangesAsync();
-                    Resp obj = new Resp()
-                    {
-                        OrderAmount = o.Amount,
-                        SumOrder = o.SumOrder,
-                        BookAmount = j.Amount
-                    };
-                    return Ok(obj);
+                    return Ok();
                 }
                 else
                 {
                     Order o = _context.Order.Find(j.IdOrder);
-                    Resp obj = new Resp()
-                    {
-                        OrderAmount = o.Amount,
-                        SumOrder = o.SumOrder,
-                        Overload = true,
-                        BookAmount = b.Stored
-                    };
-                    return Ok(obj);
+                    return Ok();
                 }
             }
             catch (Exception ex)

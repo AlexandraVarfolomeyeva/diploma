@@ -27,15 +27,13 @@ function Increase(id) {
             url: uriIncrease+id,
             type: "PUT",
         success: response => {
-            if (response.overload == true) {
-                    reloadMessage("На складе больше нет!");
+            reloadBasketTable();
+            if (response == true) {
+                    alert("На складе больше нет!");
                     }
-                document.getElementById(id).innerHTML = response.bookAmount;
-                document.getElementById("Amount").innerHTML = response.orderAmount;
-                document.getElementById("SumOrder").innerHTML = response.sumOrder;
             },
-            error: response => {         
-                    alert("Error" + response.responseText);
+        error: response => {
+            console.log("Error " + response.responseText);
             }
         });
 
@@ -47,15 +45,10 @@ function Decrease(id) {
         url: uriDecrease + id,
         type: "PUT",
         success: response => {
-            document.getElementById(id).innerHTML = response.bookAmount;
-            document.getElementById("Amount").innerHTML = response.orderAmount;
-            document.getElementById("SumOrder").innerHTML = response.sumOrder;
-            if (response.bookAmount == 0) {
                 reloadBasketTable();
-            }
         },
         error: response => {
-            alert("Error" + response.responseText);
+            console.log("Error" + response.responseText);
         }
     });
 
@@ -70,7 +63,7 @@ function DeleteItem(id) {
                 reloadBasketTable();
         },
         error: response => {
-            alert("Error" + response.responseText);
+            console.log("Error" + response.responseText);
         }
     });
 }
