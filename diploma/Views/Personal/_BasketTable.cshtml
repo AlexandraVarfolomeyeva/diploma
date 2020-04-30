@@ -5,7 +5,7 @@
     {
         @if (Model.Amount != 0)
         {
-            <h4>Количество: <span id ="Amount">@Html.DisplayFor(model => model.Amount)</span></h4>
+            <h4>Количество: <span id="Amount">@Html.DisplayFor(model => model.Amount)</span></h4>
             <h4>Сумма заказа: <span id="SumOrder">@Html.DisplayFor(model => model.SumOrder)</span></h4>
             <p>Сумма заказа не включает в себя стоимость доставки.</p>
             <p>
@@ -36,8 +36,9 @@
                                 }
                             </td>
                             <td>@i.Book.Cost</td>
-                            <td><p id=@i.Id>
-                            @i.Amount
+                            <td>
+                                <p id=@i.Id>
+                                    @i.Amount
                                 </p>
                             </td>
                             <td>
@@ -52,6 +53,9 @@
                     }
                 </tbody>
             </table>
+            <div class="js__get_basket_message">
+            
+            </div>
             <button class="btn btn-success" onclick="OrderBooks(@Model.Id);">Заказать</button>
         }
         else

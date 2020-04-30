@@ -134,10 +134,17 @@ _userManager.GetUserAsync(HttpContext.User);
             }
         }
 
-        public ActionResult GetView()
+        public ActionResult GetView(string viewName, string message)
         {
-            OrderView j = GetCurrentOrder().Result;
-            return PartialView("_BasketTable", j);
+            if (viewName == "_BasketTable")
+            {
+                OrderView j = GetCurrentOrder().Result;
+                return PartialView("_BasketTable", j);
+            } else if (viewName == "_AdminMsg")
+            {
+                return PartialView("_AdminMsg", message);
+            }
+            return PartialView(viewName, null);
         }
 
 
@@ -192,6 +199,7 @@ _userManager.GetUserAsync(HttpContext.User);
             public int OrderAmount;
             public float SumOrder;
             public int BookAmount;
+            public bool Overload = false;
         }
         [HttpPut]
         public async Task<ActionResult> Increase(int id)
@@ -224,6 +232,7 @@ _userManager.GetUserAsync(HttpContext.User);
                     {
                         OrderAmount = o.Amount,
                         SumOrder = o.SumOrder,
+                        Overload = true,
                         BookAmount = b.Stored
                     };
                     return Ok(obj);

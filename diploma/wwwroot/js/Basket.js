@@ -6,7 +6,13 @@ uriDeleteItem = "/Personal/DeleteItem/"
 
 function reloadBasketTable() {
     try {
-        $(".js__get_basket_table").load("/Personal/GetView");
+        $(".js__get_basket_table").load("/Personal/GetView", { viewName: "_BasketTable", message: "" });
+    } catch (e) { }
+}
+
+function reloadMessage(message) {
+    try {
+        $(".js__get_basket_message").load("/Personal/GetView", { viewName: "_AdminMsg", message: message });
     } catch (e) { }
 }
 
@@ -15,10 +21,14 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function Increase(id) {
-        $.ajax({
+    reloadMessage("");
+    $.ajax({
             url: uriIncrease+id,
             type: "PUT",
-            success: response => {
+        success: response => {
+            if (response.overload == true) {
+                    reloadMessage("На складе больше нет!");
+                    }
                 document.getElementById(id).innerHTML = response.bookAmount;
                 document.getElementById("Amount").innerHTML = response.orderAmount;
                 document.getElementById("SumOrder").innerHTML = response.sumOrder;
@@ -31,6 +41,7 @@ function Increase(id) {
 }
 
 function Decrease(id) {
+    reloadMessage("");
     $.ajax({
         url: uriDecrease + id,
         type: "PUT",
@@ -50,6 +61,7 @@ function Decrease(id) {
 }
 
 function DeleteItem(id) {
+    reloadMessage("");
     $.ajax({
         url: uriDeleteItem + id,
         type: "PUT",
