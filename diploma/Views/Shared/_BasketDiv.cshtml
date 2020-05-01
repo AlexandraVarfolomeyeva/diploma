@@ -7,7 +7,7 @@
             <input class="form-control" autocomplete="off" type="text" id="search" placeholder="Search" aria-label="Search">
         </div>
         <div class="row">
-            <div>
+            <div class="col-md-6">
                 <select class="custom-select" id="Order">
                     <option value="new_first">Сначала новые</option>
                     <option value="name_desc">По названию (По убыванию)</option>
@@ -18,11 +18,15 @@
                     <option value="date_desc">По дате выпуска (По убыванию)</option>
                 </select>
             </div>
-            <div>
-                <button class="btn btn-info" onclick="Search();">Search</button>
+            <div class="form-group form-check col-md-3">
+                <input type="checkbox" class="form-check-input" id="Stored">
+                <label class="form-check-label" for="Stored">В наличии</label>
+            </div>
+                <div class="col-md-3">
+                    <button class="btn btn-info" onclick="Search();">Search</button>
+                </div>
             </div>
         </div>
-    </div>
     <div class="col-md-3">
         @if (@Model != null)
         {

@@ -147,7 +147,7 @@ namespace diploma.Controllers
             return PartialView(viewName, null);
         }
 
-        public IActionResult GetBookView(int page, string searchString, string sortOrder)
+        public IActionResult GetBookView(int page, string searchString, string sortOrder, bool Stored)
         {
             if (page<1)
             {
@@ -190,6 +190,10 @@ namespace diploma.Controllers
                 default:
                     model.Books = model.Books.OrderByDescending(s => s.Id);
                     break;
+            }
+            if (Stored)
+            {
+                model.Books = model.Books.Where(f => f.Stored > 0);
             }
             model.Books =  model.Books.ToPagedList(page, 12);
             return PartialView("_BookList", model);

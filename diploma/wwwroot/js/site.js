@@ -19,8 +19,9 @@ function Search() {
     try {
     var OrderBy = document.querySelector("#Order").value;
     var search_word = document.querySelector('#search').value;
-    var page = document.getElementById("page").innerHTML;
-        $(".js__bookList").load("/Home/GetBookView", { page: page, searchString: search_word, sortOrder: OrderBy});
+        var page = document.getElementById("page").innerHTML;
+        var Stored = document.querySelector('#Stored').checked;
+        $(".js__bookList").load("/Home/GetBookView", { page: page, searchString: search_word, sortOrder: OrderBy, Stored: Stored});
     } catch (e) { }
 }
 
