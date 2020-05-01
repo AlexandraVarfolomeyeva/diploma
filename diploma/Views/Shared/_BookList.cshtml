@@ -6,7 +6,9 @@
 @if (Model != null)
 {
     <div class="row">
-
+        @if (Model.Books.Count() == 0) {
+            <p> Извините, ничего не найдено! </p>
+        }
         @foreach (BookView s in Model.Books)
         {
             <div class="col-md-3 col-sm bg-white border-bottom shadow-sm div-container-book">

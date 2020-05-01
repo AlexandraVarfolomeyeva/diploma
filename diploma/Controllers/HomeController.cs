@@ -123,7 +123,8 @@ namespace diploma.Controllers
         {
             int pageNumber = page ?? 1;
             Order order = GetCurrentOrder().Result;
-            ViewBag.CurrentOrder = order; //
+            ViewBag.CurrentOrder = order; 
+            ViewBag.Genres = _context.Genre;
             ViewBag.Username = GetUserName().Result;
             ViewBag.pageNumber = pageNumber;
             return View();
@@ -142,12 +143,13 @@ namespace diploma.Controllers
             if (viewName == "_BasketDiv")
             {
                 Order model = GetCurrentOrder().Result;
+                ViewBag.Genres = _context.Genre.OrderBy(g=>g.Name);
                 return PartialView("_BasketDiv", model);
             } 
             return PartialView(viewName, null);
         }
 
-        public IActionResult GetBookView(int page, string searchString, string sortOrder, bool Stored)
+        public IActionResult GetBookView(int page, string searchString, string sortOrder, bool Stored, int Genre)
         {
             if (page<1)
             {
@@ -190,6 +192,20 @@ namespace diploma.Controllers
                 default:
                     model.Books = model.Books.OrderByDescending(s => s.Id);
                     break;
+            }
+            if (Genre != 0)
+            {
+                List<BookView> newBooks = new List<BookView>();
+                IEnumerable<BookGenre> bg = _context.BookGenre.Where(b => b.IdGenre == Genre);
+                foreach (BookGenre b in bg)
+                {
+                    BookView book = model.Books.Where(p=>p.Id == b.IdBook).First();
+                    if (book != null)
+                    {
+                        newBooks.Add(book);
+                    }
+                }
+                model.Books = newBooks;
             }
             if (Stored)
             {
