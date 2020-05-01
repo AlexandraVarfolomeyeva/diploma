@@ -162,12 +162,36 @@ namespace diploma.Controllers
                 UserName = GetUserName().Result
             };
             if (!String.IsNullOrEmpty(searchString))
+            { 
+                //разбили до пробела на массив слов
+                String[] words = searchString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                List<BookView> newBooks = new List<BookView>();
+                for (int i = 0; i < words.Length; i++)
+                {  //для каждого слова
+                    
+                    //пока по названию, но надо еще пройтись по авторам, и соединить
+                    List<BookView> list = model.Books.Where(s => s.Title.Contains(words[i], StringComparison.OrdinalIgnoreCase)).ToList();
+                    newBooks = newBooks.Concat(list).Distinct().ToList();
+                }
+                model.Books = newBooks;
+            }
+            if (Genre != 0)
             {
-               //пока по названию, но надо еще пройтись по авторам, и соединить
-                model.Books = model.Books.Where(s => s.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase));
-
-
-
+                List<BookView> newBooks = new List<BookView>();
+                IEnumerable<BookGenre> bg = _context.BookGenre.Where(b => b.IdGenre == Genre);
+                foreach (BookGenre b in bg)
+                {
+                    BookView book = model.Books.Where(p => p.Id == b.IdBook).First();
+                    if (book != null)
+                    {
+                        newBooks.Add(book);
+                    }
+                }
+                model.Books = newBooks;
+            }
+            if (Stored)
+            {
+                model.Books = model.Books.Where(f => f.Stored > 0);
             }
             switch (sortOrder)
             {
@@ -196,24 +220,7 @@ namespace diploma.Controllers
                     model.Books = model.Books.OrderByDescending(s => s.Id);
                     break;
             }
-            if (Genre != 0)
-            {
-                List<BookView> newBooks = new List<BookView>();
-                IEnumerable<BookGenre> bg = _context.BookGenre.Where(b => b.IdGenre == Genre);
-                foreach (BookGenre b in bg)
-                {
-                    BookView book = model.Books.Where(p=>p.Id == b.IdBook).First();
-                    if (book != null)
-                    {
-                        newBooks.Add(book);
-                    }
-                }
-                model.Books = newBooks;
-            }
-            if (Stored)
-            {
-                model.Books = model.Books.Where(f => f.Stored > 0);
-            }
+            
             model.Books =  model.Books.ToPagedList(page, 12);
             return PartialView("_BookList", model);
         }
