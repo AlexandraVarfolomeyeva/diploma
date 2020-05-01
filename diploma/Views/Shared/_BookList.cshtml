@@ -34,7 +34,8 @@
             @if (Model.UserName == "admin")
             {
                 <button onclick="editBook(@s.Id);" class="btn btn-dark"> Редактировать </button>
-                <button onclick="deleteBook(@s.Id);" class="btn btn-dark"> Удалить </button>
+                string passtitle = "\"" + s.Title + "\""; 
+                <button onclick="areYouSure(@s.Id, @passtitle);" class="btn btn-dark"> Удалить </button>
                 <a></a>
             }
             else if (Model.UserName != "Войти" && Model.CurrentOrder != null)

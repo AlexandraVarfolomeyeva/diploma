@@ -54,6 +54,40 @@ function add(id, sum, order) {
     } catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!"+e); }
 }
 
+function areYouSure(id, title) {
+    try {
+    document.getElementById("message").innerHTML = "Вы уверены, что хотите удалить книгу " + title;
+   var modalElem = document.querySelector('.modal1[data-modal="4"]');
+    modalElem.classList.add('active');
+    var overlay = document.querySelector('#overlay-modal');
+    overlay.classList.add('active');
+    let form = document.getElementById("prompt-form");
+
+    form.submit.onclick = function () {
+        modalElem.classList.remove('active');
+        overlay.classList.remove('active');
+        deleteBook(id);
+    };
+
+    form.cancel.onclick = function () {
+        modalElem.classList.remove('active');
+        overlay.classList.remove('active');
+    };
+
+    document.onkeydown = function (e) {
+        if (e.key == 'Escape') {
+            modalElem.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+        if (e.key === 13) {
+            modalElem.classList.remove('active');
+            overlay.classList.remove('active');
+            deleteBook(id);
+        }
+    };
+} catch (e) { }
+}
+
 function deleteBook(id) {//удаление книги -- метод, доступный только администратору
     try {
         var request = new XMLHttpRequest();
