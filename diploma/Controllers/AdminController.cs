@@ -122,6 +122,7 @@ namespace diploma.Controllers
         [HttpGet]
         public IActionResult AddBook()
         {
+            ViewBag.Username = GetUserName().Result;
             return View();
         }
 

@@ -3,8 +3,14 @@ const uriIndex = "/Home/Index/";
 
 document.addEventListener("DOMContentLoaded", function () {
     reloadBasket();
-    $(".js__bookList").load("/Home/GetView", {viewName:"_BookList"});
+    loadBooks();
 });
+
+function loadBooks() {
+    try {
+        $(".js__bookList").load("/Home/GetView", { viewName: "_BookList" });
+    } catch (e) { }
+}
 
 function reloadBasket() {
     try {
@@ -59,7 +65,6 @@ function deleteBook(id) {//удаление книги -- метод, досту
             if (request.status === 401) {
                 msg = "У вас не хватает прав для удаления";
             } else if (request.status === 204) {
-                window.location.href = "/Home/Index";
                 loadBooks();
             } else {
                 msg = "Неизвестная ошибка";

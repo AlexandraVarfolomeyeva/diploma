@@ -36,23 +36,6 @@ function reloadHistory() {
 document.addEventListener("DOMContentLoaded", function () {
     reloadBasketTable();
     reloadHistory();
-
-    var overlay = document.querySelector('#overlay-modal'),
-    closeButtons = document.querySelectorAll('.js-modal-close');
-
-    overlay.addEventListener('click', function () {
-        document.querySelector('.modal1.active').classList.remove('active');
-        this.classList.remove('active');
-    });
-
-    closeButtons.forEach(function (item) {
-        item.addEventListener('click', function (e) {
-            var parentModal = this.closest('.modal1');
-
-            parentModal.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-    }); // end foreach  
 });
 
 function Increase(id) {
