@@ -2,7 +2,15 @@
 
 <div class="row basket-div center-block" id="partialViewDiv">
     <div class="col-md-9 active-cyan-3 search-div">
-        <input class="form-control" autocomplete="off" type="text" placeholder="Search" aria-label="Search">
+
+        <div class="row">
+            <input class="form-control" autocomplete="off" type="text" id="search" placeholder="Search" aria-label="Search">
+        </div>
+        <div class="row">
+            <div>
+                <button class="btn btn-info" onclick="Search();">Search</button>
+            </div>
+        </div>
     </div>
     <div class="col-md-3">
         @if (@Model != null)
@@ -10,11 +18,11 @@
             <div class="row">
                 <div class="col-md-4">
                     <a class="h5" asp-area="" asp-controller="Personal" asp-action="Basket">
-                     @*   <img src="~/images/corzina.png" alt="Корзина" height="80" wight="80">*@
+                        @*   <img src="~/images/corzina.png" alt="Корзина" height="80" wight="80">*@
                         <img src="~/images/unnamed.png" alt="Корзина" height="104" wight="80">
                     </a>
                 </div>
-                <div class="col-md-8  text-align: center;">
+                <div class="col-md-8 text-center">
                     <a class="h5" asp-area="" asp-controller="Personal" asp-action="Basket">Корзина</a>
                     <p>Количество: @Model.Amount</p>
                     <p>Сумма: @Model.SumOrder</p>
@@ -23,8 +31,9 @@
         }
         else
         {
-            <p>Пожалуйста, авторизируйтесь, чтобы заказывать книги.</p>
-
+            <div class="rounded border align-middle basket-login">
+                <p class="align-middle text-center">Пожалуйста, авторизируйтесь, чтобы заказывать книги.</p>
+            </div>
         }
     </div>
 </div>

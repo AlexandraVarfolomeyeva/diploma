@@ -16,7 +16,6 @@ body {
     padding-right: 15%;
 }
 
-
 .left-space {
     padding-left: 15px;
 }
@@ -65,13 +64,19 @@ body {
 }
 
 .basket-div {
-    padding: 1em;
+    padding: 0.5em;
     margin: 0;
     background-color: white;
 }
 
 .search-div{
-    padding: 3.5em;
+    padding: 2em;
+}
+
+.basket-login{
+    padding:0.5em;
+    margin:1em;
+    background-color:#f7f7f7
 }
 
 .annotation-div {

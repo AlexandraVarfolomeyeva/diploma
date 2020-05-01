@@ -137,23 +137,50 @@ namespace diploma.Controllers
             return View();
         }
 
-        public ActionResult GetView(string viewName, int page)
+        public ActionResult GetView(string viewName)
         {
             if (viewName == "_BasketDiv")
             {
                 Order model = GetCurrentOrder().Result;
                 return PartialView("_BasketDiv", model);
-            } else if  (viewName == "_BookList")
-            {
-                BookListViewModel model = new BookListViewModel()
-                    {
-                        Books = GetBooks().ToPagedList(page, 12),
-                        CurrentOrder = GetCurrentOrder().Result,
-                        UserName = GetUserName().Result
-                    };
-               return PartialView("_BookList", model);
-            }
+            } 
             return PartialView(viewName, null);
+        }
+
+        public IActionResult GetBookView(int page, string searchString, string sortOrder)
+        {
+            if (page<1)
+            {
+                page = 1;
+            }
+            BookListViewModel model = new BookListViewModel()
+            {
+                Books = GetBooks(),
+                CurrentOrder = GetCurrentOrder().Result,
+                UserName = GetUserName().Result
+            };
+            if (!String.IsNullOrEmpty(searchString))
+            {
+               //пока по названию, но надо еще пройтись по авторам, и соединить
+                model.Books = model.Books.Where(s => s.Title.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    model.Books = model.Books.OrderByDescending(s => s.Title);
+                    break;
+                case "Date":
+                    model.Books = model.Books.OrderBy(s => s.Year);
+                    break;
+                case "date_desc":
+                    model.Books = model.Books.OrderByDescending(s => s.Year);
+                    break;
+                default:
+                    model.Books = model.Books.OrderBy(s => s.Title);
+                    break;
+            }
+            model.Books =  model.Books.ToPagedList(page, 12);
+            return PartialView("_BookList", model);
         }
 
 

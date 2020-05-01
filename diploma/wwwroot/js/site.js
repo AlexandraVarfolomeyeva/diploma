@@ -6,16 +6,26 @@ document.addEventListener("DOMContentLoaded", function () {
     loadBooks();
 });
 
+
+
 function loadBooks() {
     try {
         var page = document.getElementById("page").innerHTML;
-        $(".js__bookList").load("/Home/GetView", { viewName: "_BookList", page: page });
+        $(".js__bookList").load("/Home/GetBookView", { page: page, searchString: "", sortOrder: "" });
+    } catch (e) { }
+}
+
+function Search() {
+    try {
+    var search_word = document.querySelector('#search').value;
+    var page = document.getElementById("page").innerHTML;
+    $(".js__bookList").load("/Home/GetBookView", { page: page, searchString: search_word, sortOrder: ""});
     } catch (e) { }
 }
 
 function reloadBasket() {
     try {
-        $(".js___basket").load("/Home/GetView", { viewName: "_BasketDiv", page: 1 });
+        $(".js___basket").load("/Home/GetView", { viewName: "_BasketDiv"});
     } catch (e) {  }
 }
 
