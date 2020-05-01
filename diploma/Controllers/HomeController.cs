@@ -164,7 +164,10 @@ namespace diploma.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                //пока по названию, но надо еще пройтись по авторам, и соединить
-                model.Books = model.Books.Where(s => s.Title.Contains(searchString));
+                model.Books = model.Books.Where(s => s.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+
+
+
             }
             switch (sortOrder)
             {
