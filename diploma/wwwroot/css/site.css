@@ -3,7 +3,23 @@ for details on configuring this project to bundle and minify static web assets. 
 body {
     /*padding-top: 50px;
     padding-bottom: 20px;*/
-    font-size:1.2rem;
+    font-size: 1.2rem !important;
+}
+
+.button-gr-book {
+    position: absolute; /* добавили */
+    bottom: 5px; /* добавили */
+}
+
+.div-container-book {
+    padding-bottom: 30px;
+    position: relative;
+    text-decoration: none;
+}
+.authors {
+    font-size: 1.2rem !important;
+    font-style: normal !important;
+    text-decoration: none;
 }
 
 .textNav {
@@ -28,9 +44,7 @@ body {
     border: 1px solid #4dd0e1;
     box-shadow: 0 0 0 1px #4dd0e1;
 }
-.div-container-book{
-    padding-bottom:5px;
-}
+
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */

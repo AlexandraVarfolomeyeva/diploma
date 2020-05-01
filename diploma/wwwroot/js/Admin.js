@@ -279,7 +279,7 @@ function getBookData() {
             document.querySelector("#year").value = book.year;
             document.querySelector("#cost").value = book.cost;
             document.querySelector("#Stored").value = book.stored;
-            document.getElementById("bookImg").src = book.image;
+            document.getElementById("bookImg").src = "../img/" + book.image;
             document.getElementById('labelImg').innerHTML = book.image;
             selectedPub = book.publisher;
             for (i in book.authors) {

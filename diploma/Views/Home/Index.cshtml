@@ -85,5 +85,11 @@
     @Html.Partial("_BookList")
 </div>
 @if (ViewBag.pageNumber != null) { 
-<div class="hidden" id="page">@ViewBag.pageNumber</div>
+<div class="hidden">
+    <p id="page">@ViewBag.pageNumber</p>
+    <p id="searchStringHidden">@ViewBag.searchString</p>
+    <p id="sortOrderHidden">@ViewBag.sortOrder</p>
+    <p id="StoredHidden">@ViewBag.Stored</p>
+    <p id="GenreHidden">@ViewBag.Genre</p>
+</div>
 }

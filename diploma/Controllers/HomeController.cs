@@ -119,7 +119,7 @@ namespace diploma.Controllers
 
 
         [HttpGet]
-        public IActionResult Index(int? page)
+        public IActionResult Index(int? page, string searchString, string sortOrder, bool? Stored, int? Genre)
         {
             int pageNumber = page ?? 1;
             Order order = GetCurrentOrder().Result;
@@ -127,6 +127,11 @@ namespace diploma.Controllers
             ViewBag.Genres = _context.Genre;
             ViewBag.Username = GetUserName().Result;
             ViewBag.pageNumber = pageNumber;
+            ViewBag.searchString = searchString;
+            ViewBag.sortOrder = sortOrder;
+            ViewBag.Stored = Stored;
+            int genre = Genre ?? 0;
+            ViewBag.Genre = genre;
             return View();
         }
 
@@ -226,7 +231,14 @@ namespace diploma.Controllers
                     break;
             }
             
-            model.Books =  model.Books.ToPagedList(page, 12);
+            model.Books =  model.Books.ToPagedList(page, 4);
+
+            ViewBag.pageNumber = page;
+            ViewBag.searchString = searchString;
+            ViewBag.sortOrder = sortOrder;
+            ViewBag.Stored = Stored;
+            ViewBag.Genre = Genre;
+
             return PartialView("_BookList", model);
         }
 

@@ -11,14 +11,27 @@ document.addEventListener("DOMContentLoaded", function () {
 function loadBooks() {
     try {
         var page = document.getElementById("page").innerHTML;
-        $(".js__bookList").load("/Home/GetBookView", { page: page, searchString: "", sortOrder: "" });
+        var searchStringHidden = document.getElementById("searchStringHidden").innerHTML;
+        var sortOrderHidden = document.getElementById("sortOrderHidden").innerHTML;
+        var StoredHidden = document.getElementById("StoredHidden").innerHTML;
+        var GenreHidden = document.getElementById("GenreHidden").innerHTML;
+
+       // document.querySelector("#Order").value = sortOrderHidden;
+        //var search_word = document.querySelector('#search').value;
+        //if (search_word != "") document.querySelector('#search').value = searchStringHidden;
+        ////document.querySelector('#Stored').checked = StoredHidden;
+        //document.querySelector('#Genre').value = GenreHidden;
+
+
+        $(".js__bookList").load("/Home/GetBookView", {
+            page: page, searchString: searchStringHidden, sortOrder: sortOrderHidden, Stored: StoredHidden, Genre: GenreHidden });
     } catch (e) { }
 }
 
 function Search() {
     try {
-    var OrderBy = document.querySelector("#Order").value;
-    var search_word = document.querySelector('#search').value;
+        var OrderBy = document.querySelector("#Order").value;
+        var search_word = document.querySelector('#search').value;
         var page = document.getElementById("page").innerHTML;
         var Stored = document.querySelector('#Stored').checked;
         var Genre = document.querySelector('#Genre').value;
