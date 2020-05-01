@@ -4,6 +4,40 @@ uriIncrease = "/Personal/Increase/"
 uriDeleteItem = "/Personal/DeleteItem/"
 uriMakeOrder = "/Personal/MakeOrder/"
 
+function SureDeleteAll(id) {
+    try {
+        document.getElementById("message").innerHTML = "Вы уверены, что хотите очистить заказ?";
+        var modalElem = document.querySelector('.modal1[data-modal="5"]');
+        modalElem.classList.add('active');
+        var overlay = document.querySelector('#overlay-modal');
+        overlay.classList.add('active');
+        let form = document.getElementById("prompt-form");
+
+        form.submit.onclick = function () {
+            modalElem.classList.remove('active');
+            overlay.classList.remove('active');
+            deleteAll(id);
+        };
+
+        form.cancel.onclick = function () {
+            modalElem.classList.remove('active');
+            overlay.classList.remove('active');
+        };
+
+        document.onkeydown = function (e) {
+            if (e.key == 'Escape') {
+                modalElem.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            if (e.key === 13) {
+                modalElem.classList.remove('active');
+                overlay.classList.remove('active');
+                deleteAll(id);
+            }
+        };
+    } catch (e) { }
+}
+
 function GetDetails(id) {
     try {
         $(".js__details_history").load("/Personal/GetView", { viewName: "_DetailsOrder", message: id });

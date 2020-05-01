@@ -1,25 +1,42 @@
 ﻿@{
     ViewData["Title"] = "Ваша корзина";
 }
-<div class="overlay  js-overlay-modal" id="overlay-modal"></div>
+
+<div class="modal1" data-modal="5">
+    <!--   Svg иконка для закрытия окна  -->
+    <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
+    </svg>
+    <form id="prompt-form">
+        <p class="h3" id="message"></p>
+        <br />
+        <br>
+        <input type="button" name="submit" value="Ok">
+        <input type="button" name="cancel" value="Отмена">
+    </form>
+</div>
+
 <div class="modal1" data-modal="3">
     <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
     </svg>
-    <div class="js__details_history" >
-    @{Html.Partial("_DetailsOrder");}</div>
+    <div class="js__details_history">
+        @{Html.Partial("_DetailsOrder");}
+    </div>
 </div>
 
-    <div class="content" id="BasketContent">
+<div class="overlay  js-overlay-modal" id="overlay-modal"></div>
 
-        <div class="js__get_basket_table">
-            @{Html.Partial("_BasketTable");}
-        </div>
-        <div class="js__get_basket_message">
-            @{Html.Partial("_AdminMsg");}
-        </div>
-        <div class="js__get_basket_history">
-            @{Html.Partial("_BasketHistory");}
-        </div>
+<div class="content" id="BasketContent">
+
+    <div class="js__get_basket_table">
+        @{Html.Partial("_BasketTable");}
     </div>
-    <script src="~/js/Basket.js" asp-append-version="true"></script>
+    <div class="js__get_basket_message">
+        @{Html.Partial("_AdminMsg");}
+    </div>
+    <div class="js__get_basket_history">
+        @{Html.Partial("_BasketHistory");}
+    </div>
+</div>
+<script src="~/js/Basket.js" asp-append-version="true"></script>
