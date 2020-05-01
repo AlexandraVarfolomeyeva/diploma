@@ -3,7 +3,7 @@
 <div class="row basket-div center-block" id="partialViewDiv">
     <div class="col-md-9 active-cyan-3 search-div">
         <div class="row">
-            <input class="form-control" autocomplete="off" type="text" id="search" placeholder="Search" aria-label="Search">
+            <input class="form-control search-input" autocomplete="off" type="text" id="search" placeholder="Search" aria-label="Search">
         </div>
         <div class="row">
             <div class="col-md-3">
@@ -34,8 +34,8 @@
                 <button class="btn btn-info" onclick="Search();">Search</button>
             </div>
         </div>
-        </div>
-    <div class="col-md-3">
+    </div>
+    <div class="col-md-3 basket">
         @if (@Model != null)
         {
             <div class="row">
@@ -54,8 +54,13 @@
         }
         else
         {
-            <div class="rounded border align-middle basket-login">
-                <p class="align-middle text-center">Пожалуйста, авторизируйтесь, чтобы заказывать книги.</p>
+            <div class="rounded border align-middle basket-login row">
+                <div class="col-md-2 align-content-center">
+                    <img src="~/images/attention.png" alt="Корзина" height="80" wight="20">
+                </div> 
+                <div class="col-md-10 align-middle">
+                    <p class="align-middle text-center">Пожалуйста, авторизируйтесь, чтобы заказывать книги.</p>
+                </div>
             </div>
         }
     </div>

@@ -31,7 +31,9 @@ body {
     padding-left: 15%;
     padding-right: 15%;
 }
-
+.basket {
+    padding: 10px !important;
+}
 .left-space {
     padding-left: 15px;
 }
@@ -87,10 +89,15 @@ body {
     padding: 2em;
 }
 
-.basket-login{
-    padding:0.5em;
-    margin:1em;
-    background-color:#f7f7f7
+.search-input{
+    width:70%;
+}
+
+.basket-login {
+    padding: 0.5em;
+    margin: 1em;
+    left:5%;
+    background-color: #f7f7f7;
 }
 
 .annotation-div {
