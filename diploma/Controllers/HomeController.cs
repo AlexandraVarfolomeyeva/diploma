@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using X.PagedList;
+
 
 namespace diploma.Controllers
 {
@@ -119,14 +121,11 @@ namespace diploma.Controllers
         [HttpGet]
         public IActionResult Index(int? page)
         {
-            int pageSize = 4;
-            int pageNumber = (page ?? 1);
+            int pageNumber = page ?? 1;
             Order order = GetCurrentOrder().Result;
             ViewBag.CurrentOrder = order; //
             ViewBag.Username = GetUserName().Result;
-            
-           
-            //return View(bookViews.ToPagedList(pageNumber, pageSize));
+            ViewBag.pageNumber = pageNumber;
             return View();
         }
 
@@ -138,9 +137,7 @@ namespace diploma.Controllers
             return View();
         }
 
-
-
-        public ActionResult GetView(string viewName)
+        public ActionResult GetView(string viewName, int page)
         {
             if (viewName == "_BasketDiv")
             {
@@ -149,12 +146,12 @@ namespace diploma.Controllers
             } else if  (viewName == "_BookList")
             {
                 BookListViewModel model = new BookListViewModel()
-                {
-                    Books = GetBooks(),
-                    CurrentOrder = GetCurrentOrder().Result,
-                    UserName = GetUserName().Result
-                };
-                return PartialView("_BookList", model);
+                    {
+                        Books = GetBooks().ToPagedList(page, 12),
+                        CurrentOrder = GetCurrentOrder().Result,
+                        UserName = GetUserName().Result
+                    };
+               return PartialView("_BookList", model);
             }
             return PartialView(viewName, null);
         }

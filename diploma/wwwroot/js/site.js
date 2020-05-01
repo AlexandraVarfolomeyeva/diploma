@@ -8,13 +8,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function loadBooks() {
     try {
-        $(".js__bookList").load("/Home/GetView", { viewName: "_BookList" });
+        var page = document.getElementById("page").innerHTML;
+        $(".js__bookList").load("/Home/GetView", { viewName: "_BookList", page: page });
     } catch (e) { }
 }
 
 function reloadBasket() {
     try {
-        $(".js___basket").load("/Home/GetView", { viewName: "_BasketDiv" });
+        $(".js___basket").load("/Home/GetView", { viewName: "_BasketDiv", page: 1 });
     } catch (e) {  }
 }
 
