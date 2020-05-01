@@ -169,14 +169,26 @@ namespace diploma.Controllers
                 case "name_desc":
                     model.Books = model.Books.OrderByDescending(s => s.Title);
                     break;
+                case "name":
+                    model.Books = model.Books.OrderBy(s => s.Title);
+                    break;
+                case "cost_desc":
+                    model.Books = model.Books.OrderByDescending(s => s.Cost);
+                    break;
+                case "cost":
+                    model.Books = model.Books.OrderBy(s => s.Cost);
+                    break;
                 case "Date":
                     model.Books = model.Books.OrderBy(s => s.Year);
                     break;
                 case "date_desc":
                     model.Books = model.Books.OrderByDescending(s => s.Year);
                     break;
+                case "new_first":
+                    model.Books = model.Books.OrderByDescending(s => s.Id);
+                    break;
                 default:
-                    model.Books = model.Books.OrderBy(s => s.Title);
+                    model.Books = model.Books.OrderByDescending(s => s.Id);
                     break;
             }
             model.Books =  model.Books.ToPagedList(page, 12);
