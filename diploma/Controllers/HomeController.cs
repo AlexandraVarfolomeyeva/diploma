@@ -131,11 +131,78 @@ namespace diploma.Controllers
             {
                 model.sortOrder = "new_first";
             }
-            if (model.Books == null)
+            IEnumerable<BookView> books = GetBooks();
+            if (!String.IsNullOrEmpty(searchString))
             {
-                model.Books = GetBooks().ToPagedList(pageNumber, 4);
+                //разбили до пробела на массив слов
+                String[] words = searchString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                List<BookView> newBooks = new List<BookView>();
+                for (int i = 0; i < words.Length; i++)
+                {  //для каждого слова
+                    IEnumerable<BookAuthor> ba = _context.BookAuthor.Include(b => b.Book).Include(b => b.Author).Where(v => v.Author.Name.Contains(words[i], StringComparison.OrdinalIgnoreCase));
+                    foreach (BookAuthor b in ba)
+                    {
+                        List<BookView> byAuthors = books.Where(f => f.Id == b.IdBook).ToList();
+                        newBooks = newBooks.Concat(byAuthors).Distinct().ToList();
+                    }
+                    //пока по названию, но надо еще пройтись по авторам, и соединить
+                    List<BookView> list = books.Where(s => s.Title.Contains(words[i], StringComparison.OrdinalIgnoreCase)).ToList();
+                    newBooks = newBooks.Concat(list).Distinct().ToList();
+                }
+                books = newBooks;
             }
-                model.Genre = Genre;
+            if (Genre != 0)
+            {
+                List<BookView> newBooks = new List<BookView>();
+                IEnumerable<BookGenre> bg = _context.BookGenre.Where(b => b.IdGenre == Genre);
+                foreach (BookGenre b in bg)
+                {
+                    BookView book = books.Where(p => p.Id == b.IdBook).First();
+                    if (book != null)
+                    {
+                        newBooks.Add(book);
+                    }
+                }
+                books = newBooks;
+            }
+            if (Stored)
+            {
+                books = books.Where(f => f.Stored > 0);
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    books = books.OrderByDescending(s => s.Title);
+                    break;
+                case "name":
+                    books = books.OrderBy(s => s.Title);
+                    break;
+                case "cost_desc":
+                    books = books.OrderByDescending(s => s.Cost);
+                    break;
+                case "cost":
+                    books = books.OrderBy(s => s.Cost);
+                    break;
+                case "Date":
+                    books = books.OrderBy(s => s.Year);
+                    break;
+                case "date_desc":
+                    books = books.OrderByDescending(s => s.Year);
+                    break;
+                case "new_first":
+                    books = books.OrderByDescending(s => s.Id);
+                    break;
+                default:
+                    books = books.OrderByDescending(s => s.Id);
+                    break;
+            }
+            model.Books = books.ToPagedList(pageNumber, 4);
+
+
+
+
+
+            model.Genre = Genre;
                 model.searchString = searchString;
                 model.sortOrder = sortOrder;
                 model.Stored = Stored;
@@ -152,13 +219,16 @@ namespace diploma.Controllers
             return View();
         }
 
-        //public ActionResult GetBasketView()
-        //{
-
-        //        Order model = GetCurrentOrder().Result;
-        //        ViewBag.Genres = _context.Genre.OrderBy(g=>g.Name);
-        //        return PartialView("_BasketDiv", model);
-        //}
+        public ActionResult GetBasketView()
+        {
+            BookListViewModel bvm = new BookListViewModel()
+            {
+                UserName = GetUserName().Result,
+                CurrentOrder = GetCurrentOrder().Result
+            };
+            ViewBag.Genres = _context.Genre.OrderBy(g => g.Name);
+            return PartialView("_BasketDiv", bvm);
+        }
 
         public IActionResult GetBookView(int page, string searchString, string sortOrder, bool Stored, int Genre)
         {
