@@ -2,8 +2,8 @@
 const uriIndex = "/Home/Index/";
 
 document.addEventListener("DOMContentLoaded", function () {
-    reloadBasket();
-    loadBooks();
+    //reloadBasket();
+    //loadBooks();
 });
 
 
@@ -32,9 +32,8 @@ function Search() {
     try {
         var OrderBy = document.querySelector("#Order").value;
         var search_word = document.querySelector('#search').value;
-        var page;
+        var page =1;
         if (window.location.pathname !== "/") { page = 1;}
-        else { page = document.getElementById("page").innerHTML; }
         var Stored = document.querySelector('#Stored').checked;
         var Genre = document.querySelector('#Genre').value;
         if (window.location.pathname !== "/") {
@@ -47,6 +46,12 @@ function Search() {
             });
         } else {
             $(".js__bookList").load("/Home/GetBookView", { page: page, searchString: search_word, sortOrder: OrderBy, Stored: Stored, Genre: Genre });
+            $.ajax({
+                type: "GET",
+                url: "/Home/Index",
+                async: false,
+                data: { model: null,  page: page, searchString: search_word, sortOrder: OrderBy, Stored: Stored, Genre: Genre }
+            });
         }
     } catch (e) { }
 }

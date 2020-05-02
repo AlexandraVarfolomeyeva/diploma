@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Главная";
 }
+@model BookListViewModel;
 <div class="modal1" data-modal="4">
     <!--   Svg иконка для закрытия окна  -->
     <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -68,7 +69,7 @@
     </a>
 </div>
 <div class="js___basket">
-    @{Html.Partial("_BasketDiv");}
+    @{Html.RenderPartial("_BasketDiv", Model);}
 </div>
 <div class="row">
     <div class="col-md-4 order-md-2 mb-4 ">
@@ -82,7 +83,7 @@
 </div>
 <hr />
 <div class="js__bookList">
-    @Html.Partial("_BookList")
+    @{Html.RenderPartial("_BookList", Model);}
 </div>
 @if (ViewBag.pageNumber != null) { 
 <div class="hidden">

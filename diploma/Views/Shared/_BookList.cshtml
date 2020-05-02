@@ -3,7 +3,7 @@
 @using X.PagedList.Mvc.Common;
 @using X.PagedList;
 
-@if (Model != null)
+@if (Model.Books != null)
 {
     <div class="row">
         @if (Model.Books.Count() == 0)
@@ -73,6 +73,7 @@
 
     </div>
     <div class="row justify-content-center">
-        @Html.PagedListPager((IPagedList)Model.Books, page => Url.Action("Index", "Home", new { page = page, searchString = ViewBag.searchString, sortOrder = ViewBag.sortOrder, Stored = ViewBag.Stored, Genre = ViewBag.Genre }))
+        @*@{ Model.Books = (IPagedList)Model.Books;}*@
+        @Html.PagedListPager(Model.Books, page => Url.Action("Index", "Home", new { model = Model, page = page, searchString = ViewBag.searchString, sortOrder = ViewBag.sortOrder, Stored = ViewBag.Stored, Genre = ViewBag.Genre }))
     </div>
 }
