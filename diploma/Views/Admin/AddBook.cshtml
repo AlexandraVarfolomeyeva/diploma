@@ -120,26 +120,15 @@
     </div>
     <div class="col-md-4 order-md-2 mb-4">
         <div class="text-center">
-            <img src="~/img/empty.png" id="bookImg" class="rounded" alt="Обложка" width="150" height="215">
+            <img src="~/img/@ViewBag.FileName" id="bookImg" class="rounded" alt="Обложка" width="150" height="215">
         </div>
 
         <hr class="mb-4">
         <div class="input-group mb-3">
-            @*<div class="custom-file">
-            <input type="file" class="custom-file-input" aria-describedby="inputGroupFileAddon03" id="inputImg" accept=".png, .jpg, .jpeg" onchange="getImg()">
-            <label id="labelImg" class="custom-file-label" for="inputImg">Выбрать файл</label>
-        </div>*@
-            @using (Html.BeginForm("AddBook",
-                     "Admin",
-                     FormMethod.Post,
-                     new { enctype = "multipart/form-data", id = "ImgForm" })){
                 <div class="custom-file">
-                    @*<input type="file" name="file" id="file" /><br><br>*@
-                    <input type="file" class="custom-file-input" aria-describedby="inputGroupFileAddon03" name="file" id="file" accept=".png, .jpg, .jpeg" onchange="getImg()">
-                    <label id="labelImg" class="custom-file-label" for="file">Выбрать файл</label>
+                    <input type="file" class="custom-file-input" aria-describedby="inputGroupFileAddon03" name="file" id="file" accept=".png, .jpg, .jpeg" onchange="getImg()" disabled>
+                    <label id="labelImg" class="custom-file-label" for="file">@ViewBag.FileName</label>
                 </div>
-            }
-        
         </div>
         
     </div>

@@ -221,18 +221,9 @@ function addBook() {
         var publisherSelect = document.querySelector("#publisherSelect").value; ///publisherSelect
         var cost = document.querySelector("#cost").value;
         var stored = document.querySelector("#Stored").value;
-        var x = document.getElementById("file");
-
-        var file = document.getElementById("ImgForm");
-
+        var inputImg = document.getElementById("labelImg").innerHTML;
         var author = [];
         var genre = [];
-        if (x.files.length == 0) {
-            var inputImg = "empty.png";
-        }
-        else {
-            var inputImg = + x.files[0].name;
-        }
         for (i in authors) {
             author.push(authors[i].value);
         }

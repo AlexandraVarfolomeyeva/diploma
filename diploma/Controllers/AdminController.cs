@@ -118,27 +118,40 @@ namespace diploma.Controllers
         }
 
 
+        [HttpGet]
+        public IActionResult AddBook(string filename)
+        {
+            ViewBag.Username = GetUserName().Result;
+            ViewBag.FileName = filename;
+            return View();
+        }
 
         [HttpGet]
-        public IActionResult AddBook()
+        public IActionResult UploadPicture()
         {
             ViewBag.Username = GetUserName().Result;
             return View();
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddBook(IFormFile file)
+        public async Task<ActionResult> UploadPicture(IFormFile file)
         {
             //Task<ActionResult>
             if (file != null)
                 try
                 {
-                    string path = Path.Combine(_appEnvironment.WebRootPath + "\\img\\", Path.GetFileName(file.FileName));
+                    string format;
+                    String[] words = file.FileName.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                    format = words[words.Length - 1];
+                    string b = DateTime.Now.ToFileTime() + "." + format;
+                    //Path.GetFileName(file.FileName)
+                    string path = Path.Combine(_appEnvironment.WebRootPath + "\\img\\", b);
                     using (var stream = new FileStream(path, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
                     }
-                    ViewBag.Message = "File uploaded successfully";
+                    //RedirectToAction("AddBook","Admin", new { filename = b });
+                    return RedirectToAction("AddBook", new { filename = b });
                 }
                 catch (Exception ex)
                 {

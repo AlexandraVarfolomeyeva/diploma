@@ -117,7 +117,6 @@ namespace diploma.Controllers
             return bookViews;
         }
 
-
         [HttpGet]
         public IActionResult Index(int? page, string searchString, string sortOrder, bool? Stored, int? Genre)
         {
@@ -143,15 +142,12 @@ namespace diploma.Controllers
             return View();
         }
 
-        public ActionResult GetView(string viewName)
+        public ActionResult GetBasketView()
         {
-            if (viewName == "_BasketDiv")
-            {
+
                 Order model = GetCurrentOrder().Result;
                 ViewBag.Genres = _context.Genre.OrderBy(g=>g.Name);
                 return PartialView("_BasketDiv", model);
-            } 
-            return PartialView(viewName, null);
         }
 
         public IActionResult GetBookView(int page, string searchString, string sortOrder, bool Stored, int Genre)
@@ -167,7 +163,7 @@ namespace diploma.Controllers
                 UserName = GetUserName().Result
             };
             if (!String.IsNullOrEmpty(searchString))
-            { 
+            {
                 //разбили до пробела на массив слов
                 String[] words = searchString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 List<BookView> newBooks = new List<BookView>();

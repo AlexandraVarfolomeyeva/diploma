@@ -32,16 +32,28 @@ function Search() {
     try {
         var OrderBy = document.querySelector("#Order").value;
         var search_word = document.querySelector('#search').value;
-        var page = document.getElementById("page").innerHTML;
+        var page;
+        if (window.location.pathname !== "/") { page = 1;}
+        else { page = document.getElementById("page").innerHTML; }
         var Stored = document.querySelector('#Stored').checked;
         var Genre = document.querySelector('#Genre').value;
-        $(".js__bookList").load("/Home/GetBookView", { page: page, searchString: search_word, sortOrder: OrderBy, Stored: Stored, Genre: Genre});
+        if (window.location.pathname !== "/") {
+            //window.location.href = "/Home/Index";
+            $.ajax({
+                type: "GET",
+                url: "/Home/Index",
+                async: false,
+                data: { page: page, searchString: search_word, sortOrder: OrderBy, Stored: Stored, Genre: Genre }
+            });
+        } else {
+            $(".js__bookList").load("/Home/GetBookView", { page: page, searchString: search_word, sortOrder: OrderBy, Stored: Stored, Genre: Genre });
+        }
     } catch (e) { }
 }
 
 function reloadBasket() {
     try {
-        $(".js___basket").load("/Home/GetView", { viewName: "_BasketDiv"});
+        $(".js___basket").load("/Home/GetBasketView");
     } catch (e) {  }
 }
 
