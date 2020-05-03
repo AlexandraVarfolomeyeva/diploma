@@ -117,20 +117,9 @@ namespace diploma.Controllers
             return bookViews;
         }
 
-        [HttpGet]
-        public IActionResult Index(BookListViewModel model, int? page, string searchString, string sortOrder, bool Stored, int Genre)
+
+       public IEnumerable<BookView> FilterBooks(string searchString, string sortOrder, bool Stored, int Genre)
         {
-            int pageNumber = page ?? 1;
-            if (model.CurrentOrder == null)
-            { model.CurrentOrder = GetCurrentOrder().Result; }
-            if (String.IsNullOrEmpty(model.UserName))
-            {
-                model.UserName = GetUserName().Result;
-            }
-            if (String.IsNullOrEmpty(sortOrder))
-            {
-                model.sortOrder = "new_first";
-            }
             IEnumerable<BookView> books = GetBooks();
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -157,10 +146,10 @@ namespace diploma.Controllers
                 IEnumerable<BookGenre> bg = _context.BookGenre.Where(b => b.IdGenre == Genre);
                 foreach (BookGenre b in bg)
                 {
-                    BookView book = books.Where(p => p.Id == b.IdBook).First();
-                    if (book != null)
+                    IEnumerable<BookView> book = books.Where(p => p.Id == b.IdBook);
+                    if (book.Any())
                     {
-                        newBooks.Add(book);
+                        newBooks.Add(book.First());
                     }
                 }
                 books = newBooks;
@@ -196,12 +185,27 @@ namespace diploma.Controllers
                     books = books.OrderByDescending(s => s.Id);
                     break;
             }
+            return books;
+        }
+
+
+        [HttpGet]
+        public IActionResult Index(BookListViewModel model, int? page, string searchString, string sortOrder, bool Stored, int Genre)
+        {
+            int pageNumber = page ?? 1;
+            if (model.CurrentOrder == null)
+            { model.CurrentOrder = GetCurrentOrder().Result; }
+            if (String.IsNullOrEmpty(model.UserName))
+            {
+                model.UserName = GetUserName().Result;
+            }
+            if (String.IsNullOrEmpty(sortOrder))
+            {
+                model.sortOrder = "new_first";
+            }
+            IEnumerable<BookView> books = FilterBooks(searchString, sortOrder, Stored, Genre);
             model.Books = books.ToPagedList(pageNumber, 4);
-
-
-
-
-
+            
             model.Genre = Genre;
                 model.searchString = searchString;
                 model.sortOrder = sortOrder;
@@ -233,71 +237,7 @@ namespace diploma.Controllers
         public IActionResult GetBookView(int page, string searchString, string sortOrder, bool Stored, int Genre)
         {
             page = 1;
-            IEnumerable<BookView> books = GetBooks();
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                //разбили до пробела на массив слов
-                String[] words = searchString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                List<BookView> newBooks = new List<BookView>();
-                for (int i = 0; i < words.Length; i++)
-                {  //для каждого слова
-                    IEnumerable <BookAuthor> ba = _context.BookAuthor.Include(b=>b.Book).Include(b => b.Author).Where(v=>v.Author.Name.Contains(words[i], StringComparison.OrdinalIgnoreCase));
-                    foreach (BookAuthor b in ba)
-                    {
-                        List<BookView> byAuthors = books.Where(f => f.Id == b.IdBook).ToList();
-                        newBooks = newBooks.Concat(byAuthors).Distinct().ToList();
-                    }
-                    //пока по названию, но надо еще пройтись по авторам, и соединить
-                    List<BookView> list = books.Where(s => s.Title.Contains(words[i], StringComparison.OrdinalIgnoreCase)).ToList();
-                    newBooks = newBooks.Concat(list).Distinct().ToList();
-                }
-                books = newBooks;
-            }
-            if (Genre != 0)
-            {
-                List<BookView> newBooks = new List<BookView>();
-                IEnumerable<BookGenre> bg = _context.BookGenre.Where(b => b.IdGenre == Genre);
-                foreach (BookGenre b in bg)
-                {
-                    BookView book = books.Where(p => p.Id == b.IdBook).First();
-                    if (book != null)
-                    {
-                        newBooks.Add(book);
-                    }
-                }
-                books = newBooks;
-            }
-            if (Stored)
-            {
-               books = books.Where(f => f.Stored > 0);
-            }
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    books = books.OrderByDescending(s => s.Title);
-                    break;
-                case "name":
-                    books = books.OrderBy(s => s.Title);
-                    break;
-                case "cost_desc":
-                    books = books.OrderByDescending(s => s.Cost);
-                    break;
-                case "cost":
-                    books  = books.OrderBy(s => s.Cost);
-                    break;
-                case "Date":
-                    books = books.OrderBy(s => s.Year);
-                    break;
-                case "date_desc":
-                    books = books.OrderByDescending(s => s.Year);
-                    break;
-                case "new_first":
-                    books = books.OrderByDescending(s => s.Id);
-                    break;
-                default:
-                    books = books.OrderByDescending(s => s.Id);
-                    break;
-            }
+            IEnumerable<BookView> books = FilterBooks(searchString, sortOrder, Stored, Genre);
             BookListViewModel bvm = new BookListViewModel()
             {
                 Stored = Stored,

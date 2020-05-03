@@ -77,3 +77,10 @@
         @Html.PagedListPager(Model.Books, page => Url.Action("Index", "Home", new { model = Model, page = page, searchString = Model.searchString, sortOrder = Model.sortOrder, Stored = Model.Stored, Genre = Model.Genre }))
     </div>
 }
+    <div class="hidden">
+        <p id="pageHidden">@Model.page</p>
+        <p id="searchHidden">@Model.searchString</p>
+        <p id="orderHidden">@Model.sortOrder</p>
+        <p id="storedHidden">@Model.Stored</p>
+        <p id="genreHidden">@Model.Genre</p>
+    </div>

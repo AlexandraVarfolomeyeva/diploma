@@ -52,6 +52,32 @@ namespace diploma.Controllers
             }
         }
 
+
+        private async Task<Order> GetCurrentOrder()
+        {
+            try
+            {
+                User usr = await _userManager.GetUserAsync(HttpContext.User);
+                if (usr != null)
+                {
+                    string id = usr.Id;
+                    IEnumerable<Order> orders = _context.Order.Where(p => p.UserId == id && p.Active == 1).Include(p => p.BookOrders);
+                    return orders.FirstOrDefault();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Log.Write(ex);
+                return null;
+            }
+        }
+
+
         [HttpGet]
         //[Route("/Admin/Book/{id}")][FromRoute]
         public async Task<IActionResult> Book(int id)
@@ -108,7 +134,12 @@ namespace diploma.Controllers
                 }
                 b.idGenres = ge.ToArray();
                 b.Genres = ges.ToArray();
-                return View(b);
+                BookDetails bd = new BookDetails()
+                {
+                    Book = b,
+                    CurrentOrder = GetCurrentOrder().Result
+                };
+                return View(bd);
             }
             catch (Exception ex)
             {

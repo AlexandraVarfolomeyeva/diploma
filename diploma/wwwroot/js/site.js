@@ -2,7 +2,9 @@
 const uriIndex = "/Home/Index/";
 
 document.addEventListener("DOMContentLoaded", function () {
-
+    if (window.location.pathname !== "/") {
+        reloadBasket();
+    }
 });
 
 function Search() {
@@ -30,6 +32,17 @@ function Search() {
             //    data: { model: null,  page: page, searchString: search_word, sortOrder: OrderBy, Stored: Stored, Genre: Genre }
             //});
         }
+    } catch (e) { }
+}
+
+function loadBooks() {
+    try {
+        var page = document.getElementById("pageHidden").innerHTML;
+        var search_word = document.getElementById("searchHidden").innerHTML;
+        var OrderBy = document.getElementById("orderHidden").innerHTML;
+        var Stored = document.getElementById("storedHidden").innerHTML;
+        var Genre = document.getElementById("genreHidden").innerHTML;
+         $(".js__bookList").load("/Home/GetBookView", { page: page, searchString: search_word, sortOrder: OrderBy, Stored: Stored, Genre: Genre });
     } catch (e) { }
 }
 
