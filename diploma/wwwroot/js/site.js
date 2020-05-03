@@ -133,7 +133,12 @@ function deleteBook(id) {//удаление книги -- метод, досту
             if (request.status === 401) {
                 msg = "У вас не хватает прав для удаления";
             } else if (request.status === 204) {
-                loadBooks();
+                if (window.location.pathname === "/") {
+                    loadBooks();
+                } else {
+                    window.location.href = "/Home/Index";
+                }
+
             } else {
                 msg = "Неизвестная ошибка";
             }
