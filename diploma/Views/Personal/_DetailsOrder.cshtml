@@ -24,7 +24,7 @@
                     <b>Стоимость заказа (без доставки): </b> @Model.SumOrder руб.
                 </p>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" id="status-msg">
                 @if (Model.Active == 0)
                 {
 
@@ -32,7 +32,7 @@
 
                 } else if (Model.Active == 4)
                 {
-                    <input class="bg-danger" disabled type="text" value="Отменен"/>
+                    <p class="text-danger">Отменен </p>
                 }
             </div>
         </div>

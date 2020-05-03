@@ -275,6 +275,31 @@ _userManager.GetUserAsync(HttpContext.User);
         }
 
         [HttpPut]
+        public async Task<ActionResult> CancelOrder(int id)
+        {
+            try
+            {
+                Order j = _context.Order.Find(id);
+                j.Active = 4;
+                _context.Order.Update(j);
+                IEnumerable<BookOrder> bo = _context.BookOrder.Include(f => f.Book).Where(f => f.IdOrder == id);
+                foreach (BookOrder b in bo)
+                {
+                    b.Book.Stored += b.Amount;
+                    _context.Book.Update(b.Book);
+                }
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
+
+        [HttpPut]
         public async Task<ActionResult> DeleteItem(int id)
         {
             try {

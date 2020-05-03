@@ -209,10 +209,11 @@ function Cancel(id) {
             url: url,
             type: "PUT",
             success: response => {
-           
+                reloadHistory();
+                document.getElementById("status-msg").innerHTML = "<p class=\"text-danger\">Отменен</p>"
             },
             error: response => {
-             
+                reloadMessage(response.responseText);
             }
         });
     } catch (e) { }
