@@ -1,13 +1,14 @@
-﻿uriDeleteAll = "/Personal/DeleteAll/"
-uriDecrease = "/Personal/Decrease/"
-uriIncrease = "/Personal/Increase/"
-uriDeleteItem = "/Personal/DeleteItem/"
-uriMakeOrder = "/Personal/MakeOrder/"
+﻿const uriDeleteAll = "/Personal/DeleteAll/"
+const uriDecrease = "/Personal/Decrease/"
+const uriIncrease = "/Personal/Increase/"
+const uriDeleteItem = "/Personal/DeleteItem/"
+const uriMakeOrder = "/Personal/MakeOrder/"
+const uriCancelOrder = "/Personal/CancelOrder/"
 
 function SureDeleteAll(id) {
     try {
         document.getElementById("message").innerHTML = "Вы уверены, что хотите очистить заказ?";
-        var modalElem = document.querySelector('.modal1[data-modal="5"]');
+        var modalElem = document.querySelector('.modal1[data-modal="4"]');
         modalElem.classList.add('active');
         var overlay = document.querySelector('#overlay-modal');
         overlay.classList.add('active');
@@ -65,8 +66,6 @@ function reloadHistory() {
     } catch (e) { }
 }
 
-
-
 document.addEventListener("DOMContentLoaded", function () {
     reloadBasketTable();
     reloadHistory();
@@ -119,7 +118,6 @@ function DeleteItem(id) {
     });
 }
 
-
 function deleteAll(id) {
     //добавление к заказу книги
     //добавляем новое поле в промежуточную таблицу
@@ -168,4 +166,54 @@ function OrderBooks(id) {
             alert("Error" + response.responseText);
         }
     });
+}
+
+function CancelOrder(id) {
+    try {
+        document.querySelector("#message").innerHTML = "Вы уверены, что хотите отменить заказ?";
+        var modalElem = document.querySelector('.modal1[data-modal="4"]');
+        modalElem.classList.add('active');
+        var overlay = document.querySelector('#overlay-modal');
+        overlay.classList.add('active');
+        let form = document.getElementById("prompt-form");
+
+        form.submit.onclick = function () {
+            modalElem.classList.remove('active');
+            overlay.classList.remove('active');
+            Cancel(id);
+        };
+
+        form.cancel.onclick = function () {
+            modalElem.classList.remove('active');
+            overlay.classList.remove('active');
+        };
+
+        document.onkeydown = function (e) {
+            if (e.key == 'Escape') {
+                modalElem.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            if (e.key === 13) {
+                modalElem.classList.remove('active');
+                overlay.classList.remove('active');
+                Cancel(id);
+            }
+        };
+    } catch (e) { }
+}
+
+function Cancel(id) {
+    try {
+        var url = uriCancelOrder + id;
+        $.ajax({
+            url: url,
+            type: "PUT",
+            success: response => {
+           
+            },
+            error: response => {
+             
+            }
+        });
+    } catch (e) { }
 }

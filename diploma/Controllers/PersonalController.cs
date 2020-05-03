@@ -158,7 +158,7 @@ _userManager.GetUserAsync(HttpContext.User);
                         IEnumerable<Order> orders = _context.Order.Where(h=>h.UserId==usr.Id && h.Active!=1);
                         List<Order> ActiveOrders = _context.Order.Where(h => h.UserId == usr.Id && h.Active == 1).ToList();
                         while (ActiveOrders.Count > 1)
-                        {
+                        { //убираем дубляжи активных заказов
                             Order o = ActiveOrders.Last();
                             _context.Order.Remove(o);
                             ActiveOrders.Remove(o);
