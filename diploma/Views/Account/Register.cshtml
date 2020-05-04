@@ -5,11 +5,15 @@
 
 <div class="container">
     <div class="col-md-8 order-md-1 center-block">
-        <h4 class="mb-3"> Регистрация </h4>
-        <div class="mb-3">
-            <p class="text-info">
-                Обратите внимание, что Пароль должен состоять из латинских букв, цифр, как минимум одной заглавной и одной строчной буквы и одного служебного символа.
-                <br /> Поле UserName может содержать только идущие подряд латинские буквы и цифры.
+        <div class="header-div">
+          <h3 class="mb-3"> Регистрация </h3>
+        </div>
+        <div class="mb-3 div-register-info border">
+            <p>
+                <ul>
+                    <li>Обратите внимание, что Пароль должен состоять из латинских букв, цифр, как минимум одной заглавной и одной строчной буквы и одного служебного символа.</li>
+                    <li>Поле UserName может содержать только идущие подряд латинские буквы и цифры.</li>
+                </ul>
             </p>
         </div>
 
@@ -19,17 +23,17 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="mb-3">
                 @Html.LabelFor(model => model.Fio)
-                @Html.EditorFor(model => model.Fio, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                @Html.EditorFor(model => model.Fio, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", placeholder="Иванов Иван Иванович" } })
                 <span asp-validation-for="Fio" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 @Html.LabelFor(model => model.Email)
-                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", placeholder = "email@mail.ru" } })
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 @Html.LabelFor(model => model.UserName)
-                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", placeholder = "user_name1" } })
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="mb-3">
@@ -38,7 +42,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">+7</span>
                     </div>
-                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", placeholder = "9999999999" } })
                     
                 </div><span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
@@ -53,7 +57,7 @@
             </div>
             <div class="mb-3">
                 @Html.LabelFor(model => model.Address)
-                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", placeholder = "ул. Рабфаковская, д.34, кв.6" } })
             </div>
             <div class="mb-3">
                 @Html.LabelFor(model => model.Password)

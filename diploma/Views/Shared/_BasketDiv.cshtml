@@ -2,65 +2,68 @@
 
 <div class="row basket-div center-block" id="partialViewDiv">
     <div class="col-md-9 active-cyan-3 search-div">
-       <form method="post" asp-controller="Home" asp-action="Search">
-        <div class="row">
-            <input name="searchString" class="form-control search-input" value="@Model.searchString" autocomplete="off" type="text" id="search" placeholder="Поиск..." aria-label="Search">
-        </div>
-        <div class="row">
-            <div class="col-md-3">
-                <select class="custom-select" id="Order" name="sortOrder">
-                    <option value="new_first">Сначала новые</option>
-                    <option value="name_desc">По названию (По убыванию)</option>
-                    <option value="name">По названию (По возрастанию)</option>
-                    <option value="cost_desc">По цене (По убыванию)</option>
-                    <option value="cost">По цене (По возрастанию)</option>
-                    <option value="Date">По дате выпуска (По возрастанию)</option>
-                    <option value="date_desc">По дате выпуска (По убыванию)</option>
-                </select>
+        <form method="post" asp-controller="Home" asp-action="Search">
+            <div class="row">
+                <input name="searchString" class="form-control search-input" value="@Model.searchString" autocomplete="off" type="text" id="search" placeholder="Поиск..." aria-label="Search">
             </div>
-            <div class="col-md-3">
-                <select class="custom-select" id="Genre" name="Genre">
-                    <option value="0">Все жанры</option>
-                    @foreach (Genre g in ViewBag.Genres)
-                    {
-                        <option value="@g.Id">@g.Name</option>
-                    }
-                </select>
+            <div class="row space">
+                <div class="col-md-3">
+                    <select class="custom-select" id="Order" name="sortOrder">
+                        <option value="new_first">Сначала новые</option>
+                        <option value="name_desc">По названию (По убыванию)</option>
+                        <option value="name">По названию (По возрастанию)</option>
+                        <option value="cost_desc">По цене (По убыванию)</option>
+                        <option value="cost">По цене (По возрастанию)</option>
+                        <option value="Date">По дате выпуска (По возрастанию)</option>
+                        <option value="date_desc">По дате выпуска (По убыванию)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="custom-select" id="Genre" name="Genre">
+                        <option value="0">Все жанры</option>
+                        @foreach (Genre g in ViewBag.Genres)
+                        {
+                            <option value="@g.Id">@g.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group form-check col-md-3">
+                    <input type="checkbox" class="form-check-input" id="Stored" name="Stored">
+                    <label class="stored-label" for="Stored">В наличии</label>
+                </div>
+                <div class="col-md-3">
+                    <input class="btn btn-info btn-search" type="submit" value="Поиск">
+                </div>
             </div>
-            <div class="form-group form-check col-md-3">
-                <input type="checkbox" class="form-check-input" id="Stored" name="Stored">
-                <label class="form-check-label" for="Stored">В наличии</label>
-            </div>
-            <div class="col-md-3">
-                <input class="btn btn-info" type="submit" value="Поиск">
-            </div>
-        </div>
-       </form>
+        </form>
     </div>
     <div class="col-md-3 basket">
         @if (@Model.CurrentOrder != null)
         {
             <div class="row">
                 <div class="col-md-4">
-                    <a class="h5" asp-area="" asp-controller="Personal" asp-action="Basket">
+                    <a asp-area="" asp-controller="Personal" asp-action="Basket">
                         @*   <img src="~/images/corzina.png" alt="Корзина" height="80" wight="80">*@
                         <img src="~/images/unnamed.png" alt="Корзина" height="104" wight="80">
                     </a>
                 </div>
-                <div class="col-md-8 text-center">
-                    <a class="h5" asp-area="" asp-controller="Personal" asp-action="Basket">Корзина</a>
-                    <p>Количество: @Model.CurrentOrder.Amount</p>
-                    <p>Сумма: @Model.CurrentOrder.SumOrder</p>
+
+                <div class="col-md-8 text-center basket-content">
+                    <p>
+                        <a class="h3" asp-area="" asp-controller="Personal" asp-action="Basket">Корзина</a>
+                    </p>
+                    <p><b>Количество:</b> @Model.CurrentOrder.Amount</p>
+                    <p><b>Сумма:</b> @Model.CurrentOrder.SumOrder</p>
                 </div>
             </div>
         }
         else
         {
-            <div class="rounded border align-middle basket-login row">
-                <div class="col-md-2 align-content-center">
+            <div class="rounded basket-login basket-div-middle row">
+                <div class="col-md-2 col-sm-12 exclamator align-content-center">
                     <img src="~/images/attention.png" alt="Корзина" height="80" wight="20">
-                </div> 
-                <div class="col-md-10 align-middle">
+                </div>
+                <div class="col-md-10 basket-div-middle">
                     <p class="align-middle text-center">Пожалуйста, авторизируйтесь, чтобы заказывать книги.</p>
                 </div>
             </div>

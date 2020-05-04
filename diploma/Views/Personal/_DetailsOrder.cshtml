@@ -39,7 +39,7 @@
 
 
 
-        <table class="table">
+        <table class="table table-basket">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">Книга</th>
@@ -52,7 +52,7 @@
                 {
                     <tr>
                         <td>
-                            <a asp-action="Book" asp-controller="Admin" asp-route-id="@i.Book.Id"> @i.Book.Title</a> <br />
+                            <a class="h4" asp-action="Book" asp-controller="Admin" asp-route-id="@i.Book.Id"> @i.Book.Title</a> <br />
                             @foreach (string c in i.Book.Authors)
                             {
                                 <a>

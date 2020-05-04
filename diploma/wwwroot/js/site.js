@@ -5,7 +5,36 @@ document.addEventListener("DOMContentLoaded", function () {
     if (window.location.pathname !== "/") {
         reloadBasket();
     }
+    clapTitles();
 });
+
+function clapTitles() {
+    var titles = document.querySelectorAll(".js__clap_text");
+    titles.forEach(function (item) {
+        var title = item.innerHTML;
+        var words = title.split(' ').filter(function (el) {
+            return el != "";
+        });
+        title = "";
+        words.forEach(function (word) {
+            if (word != 0) {
+                title += word + " ";
+            }
+        });
+        if (title.length > 40) {
+            var length = 0;
+            title = "";
+            words.forEach(function (word) {
+                if (word != 0 && length < 30) {
+                    title += word + " ";
+                    length += word.length;
+                }
+            });
+            title += "...";
+        };
+        item.innerHTML = title;
+    });
+}
 
 function loadBooks() {
     try {
