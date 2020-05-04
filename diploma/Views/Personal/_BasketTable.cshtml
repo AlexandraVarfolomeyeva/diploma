@@ -1,7 +1,8 @@
 ﻿@model OrderView;
 @using System.Globalization;
-<div>
-    <h2>Корзина</h2>
+<div class="div-basket">
+    <h2 class="text-center">Корзина</h2>
+    <hr>
     @if (Model != null)
     {
         @if (Model.Amount != 0)
@@ -61,7 +62,10 @@
         }
         else
         {
-            <h4>Корзина пуста!</h4>
+            <div class="empty-basket-div">
+                <h4 class="empty-basket">Корзина пуста!</h4>
+            </div>
+          
         }
     }
 </div>

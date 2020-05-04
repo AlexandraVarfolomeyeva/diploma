@@ -188,6 +188,12 @@ namespace diploma.Controllers
             return books;
         }
 
+        [HttpPost]
+        public IActionResult Search(string searchString, string sortOrder, bool Stored, int Genre)
+        {
+           return RedirectToAction("Index", "Home", new { page = 1, searchString = searchString, sortOrder = sortOrder, Stored = Stored, Genre = Genre });
+        }
+
 
         [HttpGet]
         public IActionResult Index(BookListViewModel model, int? page, string searchString, string sortOrder, bool Stored, int Genre)

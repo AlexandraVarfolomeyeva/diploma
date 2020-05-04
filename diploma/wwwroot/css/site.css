@@ -6,8 +6,29 @@ body {
     font-size: 1.2rem !important;
 }
 
-.front{
-z-index:40 !important;
+.div-basket {
+    background-color: #f7f7f7;
+    width: 90%;
+    padding: 1em;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+.empty-basket-div {
+    justify-content: center !important;
+    display: flex;
+    align-items: center;
+    min-height: 150px;
+    text-align: center;
+}
+
+.empty-basket {
+    /*margin: 2em;*/
+    color: #434343;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.front {
+    z-index: 40 !important;
 }
 .button-gr-book {
     position: absolute; /* добавили */
@@ -35,7 +56,9 @@ z-index:40 !important;
     padding-right: 15%;
 }
 .basket {
-    padding: 10px !important;
+    /*padding: 10px !important;*/
+    justify-content: center !important;
+    display: flex;
 }
 .left-space {
     padding-left: 15px;
