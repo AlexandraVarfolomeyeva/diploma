@@ -66,13 +66,55 @@
             <div class="row space">
                 <div class="col-md-3">
                     <select class="custom-select" id="Order" name="sortOrder">
-                        <option value="new_first">Сначала новые</option>
-                        <option value="name_desc">По названию (По убыванию)</option>
-                        <option value="name">По названию (По возрастанию)</option>
-                        <option value="cost_desc">По цене (По убыванию)</option>
-                        <option value="cost">По цене (По возрастанию)</option>
-                        <option value="Date">По дате выпуска (По возрастанию)</option>
-                        <option value="date_desc">По дате выпуска (По убыванию)</option>
+
+                        @if (Model.sortOrder == "" || Model.sortOrder == "new_first")
+                        {
+                            <option value="new_first" selected>Сначала новые</option> }
+                        else
+                        {
+                            <option value="new_first">Сначала новые</option>}
+                        @if (Model.sortOrder == "name_desc")
+                        {
+                            <option value="name_desc"  selected>По названию (По убыванию)</option> }
+                        else
+                        {
+                            <option value="name_desc">По названию (По убыванию)</option>}
+
+
+                        @if (Model.sortOrder == "name")
+                        {
+                            <option value="name" selected>По названию (По возрастанию)</option> }
+                        else
+                        {
+                            <option value="name">По названию (По возрастанию)</option>}
+
+                        @if (Model.sortOrder == "cost_desc")
+                        {
+                            <option value="cost_desc" selected>По цене (По убыванию)</option>}
+                        else
+                        {
+                            <option value="cost_desc">По цене (По убыванию)</option>}
+                        @if (Model.sortOrder == "cost")
+                        {
+                            <option value="cost" selected>По цене (По возрастанию)</option> }
+                        else
+                        {
+                            <option value="cost">По цене (По возрастанию)</option>}
+
+                        @if (Model.sortOrder == "Date")
+                        {
+                            <option value="Date" selected>По дате выпуска (По возрастанию)</option> }
+                        else
+                        {
+                            <option value="Date">По дате выпуска (По возрастанию)</option>}
+
+                        @if (Model.sortOrder == "date_desc")
+                        {
+                            <option value="date_desc" selected>По дате выпуска (По убыванию)</option>}
+                        else
+                        {
+                            <option value="date_desc">По дате выпуска (По убыванию)</option>}
+
                     </select>
                 </div>
                 <div class="col-md-3">
@@ -80,14 +122,26 @@
                         <option value="0">Все жанры</option>
                         @foreach (Genre g in ViewBag.Genres)
                         {
-                            <option value="@g.Id">@g.Name</option>
+                            if (Model.Genre != g.Id)
+                            {
+                                <option value="@g.Id">@g.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@g.Id" selected>@g.Name</option>
+                            }
                         }
                     </select>
                 </div>
                 <div class="form-group form-check col-md-3">
-                    <input type="checkbox" class="form-check-input" id="Stored" name="Stored">
-                    <label class="stored-label" for="Stored">В наличии</label>
-                </div>
+                    @if (Model.Stored)
+                    {
+                        <input type = "checkbox" class="form-check-input" id="Stored" name="Stored" value = "true" checked>
+                     } else {
+                        <input type="checkbox" class="form-check-input" id="Stored" name="Stored" value = "false">
+                     }
+                        <label class="stored-label" for="Stored">В наличии</label>
+                    </div>
                 <div class="col-md-3">
                     <input class="btn btn-info btn-search" type="submit" value="Поиск">
                 </div>
@@ -124,10 +178,10 @@
     @if (ViewBag.pageNumber != null)
     {
         <div class="hidden">
-            <p id="page">@ViewBag.pageNumber</p>
-            <p id="searchStringHidden">@ViewBag.searchString</p>
-            <p id="sortOrderHidden">@ViewBag.sortOrder</p>
-            <p id="StoredHidden">@ViewBag.Stored</p>
-            <p id="GenreHidden">@ViewBag.Genre</p>
+            <p id="page">@Model.page</p>
+            <p id="searchStringHidden">@Model.searchString</p>
+            <p id="sortOrderHidden">@Model.sortOrder</p>
+            <p id="StoredHidden">@Model.Stored</p>
+            <p id="GenreHidden">@Model.Genre</p>
         </div>
     }
