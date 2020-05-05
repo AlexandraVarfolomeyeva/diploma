@@ -34,11 +34,11 @@ namespace diploma.Controllers
             int pageNumber = page ?? 1;
             IEnumerable<Order> orders = _context.Order.Include(n=>n.BookOrders).Where(n=>n.Active != 1).Include(n=>n.User);
      
-            List<OrderView> modelList = new List<OrderView>();
+            List<AdminOrderView> modelList = new List<AdminOrderView>();
             foreach (Order o in orders)
             {
                 City city = _context.City.Find(o.User.IdCity);
-                OrderView c = new OrderView()
+                AdminOrderView c = new AdminOrderView()
                 {
                     Active = o.Active,
                     Amount = o.Amount,
@@ -47,11 +47,15 @@ namespace diploma.Controllers
                     Id = o.Id,
                     SumOrder = o.SumOrder,
                     City = city.Name,
-                    SumDelivery = city.DeliverySum
+                    SumDelivery = city.DeliverySum,
+                    Address = o.User.Address,
+                    Email=o.User.Email,
+                    FIO=o.User.Fio,
+                    Phone=o.User.PhoneNumber
                 };
                 modelList.Add(c);
             }
-            IEnumerable<OrderView> model = modelList;
+            IEnumerable<AdminOrderView> model = modelList;
             return View(model);
         }
 
