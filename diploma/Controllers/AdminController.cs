@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using diploma.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -132,7 +133,7 @@ namespace diploma.Controllers
             return RedirectToAction("OrderList", "Admin", new { page = 1, status = status, period=period, sort=sort, search= search });
         }
 
-
+        [Authorize(Roles = "admin")]
         public IActionResult OrderList(int? page, int status, string period, string sort, string search)
         {
             int pageNumber = page ?? 1;
@@ -265,6 +266,7 @@ namespace diploma.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public IActionResult AddBook(string filename)
         {
             ViewBag.Username = GetUserName().Result;
@@ -273,6 +275,7 @@ namespace diploma.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public IActionResult UploadPicture()
         {
             ViewBag.Username = GetUserName().Result;
@@ -280,6 +283,7 @@ namespace diploma.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> UploadPicture(IFormFile file)
         {
             //Task<ActionResult>

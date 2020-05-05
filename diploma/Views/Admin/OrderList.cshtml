@@ -19,11 +19,45 @@
         </div>
         <div class="col-md-10">
             <select class="custom-select" name="status">
-                <option value="1">Все</option>
-                <option value="0">В процессе</option>
-                <option value="2">Отправлен</option>
-                <option value="3">Доставлен</option>
-                <option value="4">Отменен</option>
+                @{int f = ViewBag.status;}
+                @if (f == 1)
+                {
+                    <option value="1" selected>Все</option>}
+                else
+                {
+                    <option value="1">Все</option>}
+
+
+                @if (f == 0)
+                {
+                    <option value="0" selected>В процессе</option>}
+                else
+                {
+                    <option value="0">В процессе</option>}
+
+
+                @if (f == 2)
+                {
+                    <option value="2" selected>Отправлен</option>}
+                else
+                {
+                    <option value="2">Отправлен</option>}
+
+
+                @if (f == 3)
+                {
+                    <option value="3" selected>Доставлен</option>}
+                else
+                {
+                    <option value="3">Доставлен</option>}
+
+
+                @if (f == 4)
+                {
+                    <option value="4" selected>Отменен</option>}
+                else
+                {
+                    <option value="4">Отменен</option>}
             </select>
         </div>
             </div>
@@ -33,11 +67,32 @@
         </div>
         <div class="col-md-10">
             <select class="custom-select" name="period">
-                <option value="all">Все</option>
-                <option value="day">Сегодня</option>
-                <option value="week">За неделю</option>
-                <option value="month">За месяц</option>
-                <option value="year">За год</option>
+                @{ string p = ViewBag.period;}
+                @if (p == "" || p == "all") { <option value="all" selected>Все</option>}
+                else
+                {
+                    <option value="all">Все</option>}
+
+                @if (p == "day") { <option value="day" selected>Сегодня</option>}
+                else
+                {
+                    <option value="day">Сегодня</option>}
+
+                @if (p == "week") { <option value="week" selected>За неделю</option>}
+                else
+                {
+                    <option value="week">За неделю</option>}
+
+                @if (p == "month") { <option value="month" selected>За месяц</option>}
+                else
+                {
+                    <option value="month">За месяц</option>}
+
+                @if ( p == "year") { <option value="year" selected>За год</option>}
+                else
+                {
+                    <option value="year">За год</option>
+                }
             </select>
         </div>
     </div>
@@ -47,12 +102,49 @@
         </div>
         <div class="col-md-10">
             <select class="custom-select" name="sort">
-                <option value="No">По номеру заказа (по возрастанию)</option>
-                <option value="No_desc">По номеру заказа (по убыванию)</option>
-                <option value="Order">По дате заказа (по возрастанию)</option>
-                <option value="Order_desc">По дате заказа (по убыванию)</option>
-                <option value="Delivery">По дате получения (по возрастанию)</option>
-                <option value="Delivery_desc">По дате получения (по убыванию)</option>
+                @{p = ViewBag.sort;}
+                @if (p == "" || p == "No")
+                {
+                    <option value="No" selected>По номеру заказа (по возрастанию)</option>}
+                else
+                {
+                    <option value="No">По номеру заказа (по возрастанию)</option>}
+                @if (p == "No_desc")
+                {
+                    <option value="No_desc" selected>По номеру заказа (по убыванию)</option>}
+                else
+                {
+                    <option value="No_desc">По номеру заказа (по убыванию)</option>}
+
+
+                @if (p == "Order")
+                {
+                    <option value="Order" selected>По дате заказа (по возрастанию)</option> }
+                else
+                {
+                    <option value="Order">По дате заказа (по возрастанию)</option>}
+
+                @if (p == "Order_desc")
+                {
+                    <option value="Order_desc" selected>По дате заказа (по убыванию)</option> }
+                else
+                {
+                    <option value="Order_desc">По дате заказа (по убыванию)</option>}
+
+                @if (p == "Delivery")
+                {
+                    <option value="Delivery" selected>По дате получения (по возрастанию)</option>}
+                else
+                {
+                    <option value="Delivery">По дате получения (по возрастанию)</option>}
+
+                @if (p == "Delivery_desc")
+                {
+                    <option value="Delivery_desc" selected>По дате получения (по убыванию)</option>}
+                else
+                {
+                    <option value="Delivery_desc">По дате получения (по убыванию)</option>}
+
             </select>
         </div>
     </div>
