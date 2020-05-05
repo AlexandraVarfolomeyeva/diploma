@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 
 namespace diploma.Controllers
 {
@@ -38,6 +39,29 @@ namespace diploma.Controllers
             foreach (Order o in orders)
             {
                 City city = _context.City.Find(o.User.IdCity);
+                List<BookOrderView> bol = new List<BookOrderView>();
+                foreach (BookOrder b in o.BookOrders)
+                {
+                    Book book = _context.Book.Find(b.IdBook);
+                    BookView bookview = new BookView()
+                    {
+                        Content = book.Content,
+                        Cost = book.Cost,
+                        Id = book.Id,
+                        image = book.image,
+                        Stored = book.Stored,
+                        Publisher = _context.Publisher.Find(book.IdPublisher).Name,
+                        Title = book.Title,
+                        Year =book.Year
+                    };
+                    BookOrderView bo = new BookOrderView()
+                    {
+                        Amount = b.Amount,
+                        Id = b.Id,
+                        Book = bookview
+                    };
+                    bol.Add(bo);
+                }
                 AdminOrderView c = new AdminOrderView()
                 {
                     Active = o.Active,
@@ -49,14 +73,15 @@ namespace diploma.Controllers
                     City = city.Name,
                     SumDelivery = city.DeliverySum,
                     Address = o.User.Address,
-                    Email=o.User.Email,
-                    FIO=o.User.Fio,
-                    Phone=o.User.PhoneNumber
+                    Email = o.User.Email,
+                    FIO = o.User.Fio,
+                    Phone = o.User.PhoneNumber,
+                    BookOrders = bol
                 };
                 modelList.Add(c);
             }
             IEnumerable<AdminOrderView> model = modelList;
-            return View(model);
+            return View(model.ToPagedList(pageNumber,3));
         }
 
         private Task<User> GetCurrentUserAsync() =>

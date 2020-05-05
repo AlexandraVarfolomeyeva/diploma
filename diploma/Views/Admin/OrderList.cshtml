@@ -1,5 +1,8 @@
 ﻿@model IEnumerable<AdminOrderView>
 @using System.Globalization;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Mvc.Common;
+@using X.PagedList;
 @{
     ViewData["Title"] = "Список заказов";
 }
@@ -8,49 +11,63 @@
 <table class="table">
 
     <thead class="thead-dark">
-        <tr>
+        <tr class="text-center">
             <th scope="col">Номер заказа</th>
+            <th scope="col">ФИО</th>
+            <th scope="col">Контакты</th>
             <th scope="col">Дата заказа</th>
             <th scope="col">Дата доставки</th>
-            <th scope="col">Город</th>
             <th scope="col">Адрес</th>
             <th scope="col">Доставка</th>
-            <th scope="col">Стоимость без доставки (руб.)</th>
-
+            <th scope="col">Стоимость без доставки</th>
+            <th scope="col">Список книг</th>
             <th scope="col">Статус</th>
         </tr>
     </thead>
     <tbody>
         @foreach (AdminOrderView i in Model)
         {
-        <tr scope="row">
-            <td> @i.Id </td>
-            @{string date = i.DateOrder.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
-            <td> @date </td>
-            @{date = i.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
-            <td> @date </td>
-            <td>@i.City</td>
-            <td>@i.Address</td>
-            <td> @i.SumDelivery</td>
-            <td> @i.SumOrder</td>
-            <td>
-                @switch (i.Active)
-                {
-                    case 0:<p class="text-danger">Обрабатывается</p> break;
-                    case 1: <p class="text-danger"> Не заказан </p> break;
-                    case 2: <p class="text-info"> Отправлен </p> break;
-                    case 3: <p class="text-success"> Доставлен </p> break;
-                    case 4: <p class="text-danger"> Отменен </p>break;
-                }
-
-                @*<div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <button class="btn btn-secondary" onclick="Increase(@i.Id);">+</button>
-                <button class="btn btn-secondary" onclick="Decrease(@i.Id);">-</button>
-                <button class="btn btn-secondary" onclick="DeleteItem(@i.Id);">Удалить</button>
-            </div>*@
-            </td>
-        </tr>
+            <tr scope="row">
+                <td> @i.Id </td>
+                <td> @i.FIO </td>
+                <td> т.@i.Phone, @i.Email </td>
+                @{string date = i.DateOrder.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
+                <td> @date </td>
+                @{date = i.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
+                <td> @date </td>
+                <td>г.@i.City, @i.Address</td>
+                <td> @i.SumDelivery руб.</td>
+                <td> @i.SumOrder руб.</td>
+                <td>
+                    <ul>
+                        @foreach (BookOrderView v in i.BookOrders)
+                        {
+                            <li>
+                                <span> @v.Book.Id. </span>
+                                @v.Book.Title (<span> x </span>
+                                @v.Amount)
+                            </li>
+                        }
+                    </ul>
+                </td>
+                <td>
+                    @switch (i.Active)
+                    {
+                        case 0:<p class="text-danger">Обрабатывается</p><br>
+                            <input type="checkbox" value="Отправлен" name="sent"> <label for="sent" onchange="">Отправлен</label>
+                            break;
+                        case 1: <p class="text-danger"> Не заказан </p> break;
+                        case 2: <p class="text-info"> Отправлен </p> <br>
+                            <button class="btn btn-success"> Доставлен </button> break;
+                        case 3: <p class="text-success"> Доставлен </p> break;
+                        case 4: <p class="text-danger"> Отменен </p>break;
+                    }
+                </td>
+            </tr>
 
         }
     </tbody>
 </table>
+<div class="row justify-content-center">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("OrderList", "Admin", new { page = page }))
+</div>
