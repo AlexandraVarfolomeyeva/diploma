@@ -29,12 +29,9 @@ namespace diploma.Controllers
             _appEnvironment = appEnvironment;
         }
 
-
-        public IActionResult OrderList(int? page)
+        private List<AdminOrderView> GetFiltered(int status, string period)
         {
-            int pageNumber = page ?? 1;
-            IEnumerable<Order> orders = _context.Order.Include(n=>n.BookOrders).Where(n=>n.Active != 1).Include(n=>n.User);
-     
+            IEnumerable<Order> orders = _context.Order.Include(n => n.BookOrders).Where(n => n.Active != 1).Include(n => n.User);
             List<AdminOrderView> modelList = new List<AdminOrderView>();
             foreach (Order o in orders)
             {
@@ -52,7 +49,7 @@ namespace diploma.Controllers
                         Stored = book.Stored,
                         Publisher = _context.Publisher.Find(book.IdPublisher).Name,
                         Title = book.Title,
-                        Year =book.Year
+                        Year = book.Year
                     };
                     BookOrderView bo = new BookOrderView()
                     {
@@ -80,7 +77,35 @@ namespace diploma.Controllers
                 };
                 modelList.Add(c);
             }
-            IEnumerable<AdminOrderView> model = modelList;
+            if (status != 1)
+            {
+                modelList = modelList.Where(f=>f.Active==status).ToList();
+            }
+            switch (period)
+            {
+                case "all": break;
+                case "day": modelList = modelList.Where(f => f.DateOrder.Date == DateTime.Today).ToList(); break;
+                case "week": modelList = modelList.Where(f => f.DateOrder.Date.CompareTo(DateTime.Today.AddDays(-7))>=0).ToList(); break;
+                case "month": modelList = modelList.Where(f => f.DateOrder.Date.CompareTo(DateTime.Today.AddMonths(-1)) >= 0).ToList(); break;
+                case "year": modelList = modelList.Where(f => f.DateOrder.Date.CompareTo(DateTime.Today.AddYears(-1)) >= 0).ToList(); break;
+                default: break;
+            }
+            return modelList;
+        }
+
+        [HttpPost]
+        public IActionResult Search(int status, string period)
+        {
+            return RedirectToAction("OrderList", "Admin", new { page = 1, status = status, period=period });
+        }
+
+
+        public IActionResult OrderList(int? page, int status, string period)
+        {
+            int pageNumber = page ?? 1;
+            ViewBag.status = status;
+            ViewBag.period = period;
+            IEnumerable<AdminOrderView> model = GetFiltered(status, period);
             return View(model.ToPagedList(pageNumber,3));
         }
 

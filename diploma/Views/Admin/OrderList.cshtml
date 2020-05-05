@@ -8,66 +8,92 @@
 }
 
 <h2 class="text-center">Список заказов</h2>
-<table class="table">
 
-    <thead class="thead-dark">
-        <tr class="text-center">
-            <th scope="col">Номер заказа</th>
-            <th scope="col">ФИО</th>
-            <th scope="col">Контакты</th>
-            <th scope="col">Дата заказа</th>
-            <th scope="col">Дата доставки</th>
-            <th scope="col">Адрес</th>
-            <th scope="col">Доставка</th>
-            <th scope="col">Стоимость без доставки</th>
-            <th scope="col">Список книг</th>
-            <th scope="col">Статус</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (AdminOrderView i in Model)
-        {
-            <tr scope="row">
-                <td> @i.Id </td>
-                <td> @i.FIO </td>
-                <td> т.@i.Phone, @i.Email </td>
-                @{string date = i.DateOrder.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
-                <td> @date </td>
-                @{date = i.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
-                <td> @date </td>
-                <td>г.@i.City, @i.Address</td>
-                <td> @i.SumDelivery руб.</td>
-                <td> @i.SumOrder руб.</td>
-                <td>
-                    <ul>
-                        @foreach (BookOrderView v in i.BookOrders)
-                        {
-                            <li>
-                                <span> @v.Book.Id. </span>
-                                @v.Book.Title (<span> x </span>
-                                @v.Amount)
-                            </li>
-                        }
-                    </ul>
-                </td>
-                <td>
-                    @switch (i.Active)
-                    {
-                        case 0:<p class="text-danger">Обрабатывается</p><br>
-                            <input type="checkbox" value="Отправлен" name="sent"> <label for="sent" onchange="">Отправлен</label>
-                            break;
-                        case 1: <p class="text-danger"> Не заказан </p> break;
-                        case 2: <p class="text-info"> Отправлен </p> <br>
-                            <button class="btn btn-success"> Доставлен </button> break;
-                        case 3: <p class="text-success"> Доставлен </p> break;
-                        case 4: <p class="text-danger"> Отменен </p>break;
-                    }
-                </td>
+<form method="post" asp-controller="Admin" asp-action="Search">
+    <select class="custom-select" name="status">
+        <option value="1">Все</option>
+        <option value="0">В процессе</option>
+        <option value="2">Отправлен</option>
+        <option value="3">Доставлен</option>
+        <option value="4">Отменен</option>
+    </select>
+    <select class="custom-select" name="period">
+        <option value="all">Все</option>
+        <option value="day">Сегодня</option>
+        <option value="week">За неделю</option>
+        <option value="month">За месяц</option>
+        <option value="year">За год</option>
+    </select>
+    <input class="btn btn-dark" type="submit" value="Поиск" />
+</form>
+@if (Model.Any())
+{
+    <table class="table">
+
+        <thead class="thead-dark">
+            <tr class="text-center">
+                <th scope="col">Номер заказа</th>
+                <th scope="col">ФИО</th>
+                <th scope="col">Контакты</th>
+                <th scope="col">Дата заказа</th>
+                <th scope="col">Дата доставки</th>
+                <th scope="col">Адрес</th>
+                <th scope="col">Доставка</th>
+                <th scope="col">Стоимость без доставки</th>
+                <th scope="col">Список книг</th>
+                <th scope="col">Статус</th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (AdminOrderView i in Model)
+            {
+                <tr scope="row">
+                    <td> @i.Id </td>
+                    <td> @i.FIO </td>
+                    <td> т.@i.Phone, @i.Email </td>
+                    @{string date = i.DateOrder.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
+                    <td> @date </td>
+                    @{date = i.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
+                    <td> @date </td>
+                    <td>г.@i.City, @i.Address</td>
+                    <td> @i.SumDelivery руб.</td>
+                    <td> @i.SumOrder руб.</td>
+                    <td>
+                        <ul>
+                            @foreach (BookOrderView v in i.BookOrders)
+                            {
+                                <li>
+                                    <span> @v.Book.Id. </span>
+                                    @v.Book.Title (<span> x </span>
+                                    @v.Amount)
+                                </li>
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        @switch (i.Active)
+                        {
+                            case 0:<p class="text-danger">Обрабатывается</p><br>
+                                <input type="checkbox" value="Отправлен" name="sent"> <label for="sent" onchange="">Отправлен</label>
+                                break;
+                            case 1: <p class="text-danger"> Не заказан </p> break;
+                            case 2: <p class="text-info"> Отправлен </p> <br>
+                                <button class="btn btn-success"> Доставлен </button> break;
+                            case 3: <p class="text-success"> Доставлен </p> break;
+                            case 4: <p class="text-danger"> Отменен </p>break;
+                        }
+                    </td>
+                </tr>
 
-        }
-    </tbody>
-</table>
+            }
+
+
+
+        </tbody>
+    </table>
+} else { 
+                          <p>  По Вашему запросу ничего не найдено! </p>
+}
 <div class="row justify-content-center">
-    @Html.PagedListPager((IPagedList)Model, page => Url.Action("OrderList", "Admin", new { page = page }))
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("OrderList", "Admin", new { page = page, status = ViewBag.status, period=ViewBag.period }))
 </div>
