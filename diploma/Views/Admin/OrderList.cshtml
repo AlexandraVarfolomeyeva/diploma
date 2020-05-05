@@ -1,0 +1,56 @@
+﻿@model IEnumerable<OrderView>
+@using System.Globalization;
+@{
+    ViewData["Title"] = "Список заказов";
+}
+
+<h2 class="text-center">Список заказов</h2>
+<table class="table">
+
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Номер заказа</th>
+            <th scope="col">Дата заказа</th>
+            <th scope="col">Дата доставки</th>
+            <th scope="col">Адрес</th>
+            <th scope="col">Город</th>
+            <th scope="col">Доставка</th>
+            <th scope="col">Стоимость без доставки (руб.)</th>
+
+            <th scope="col">Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (OrderView i in Model)
+        {
+            <tr scope="row">
+                <td> @i.Id </td>
+                @{string date = i.DateOrder.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
+                <td> @date </td>
+                @{date = i.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
+                <td> @date </td>
+                <td>@i.City</td>
+                <td>@i.City</td>
+                <td> @i.SumDelivery</td>
+                <td> @i.SumOrder</td>
+                <td>
+                    @switch (i.Active)
+                    {
+                        case 0:<p class="text-danger">Обрабатывается</p> break;
+                        case 1: <p class="text-danger"> Не заказан </p> break;
+                        case 2: <p class="text-info"> Отправлен </p> break;
+                        case 3: <p class="text-success"> Доставлен </p> break;
+                        case 4: <p class="text-danger"> Отменен </p>break;
+                    }
+
+                    @*<div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <button class="btn btn-secondary" onclick="Increase(@i.Id);">+</button>
+            <button class="btn btn-secondary" onclick="Decrease(@i.Id);">-</button>
+            <button class="btn btn-secondary" onclick="DeleteItem(@i.Id);">Удалить</button>
+        </div>*@
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

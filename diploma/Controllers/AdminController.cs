@@ -29,6 +29,32 @@ namespace diploma.Controllers
         }
 
 
+        public IActionResult OrderList(int? page)
+        {
+            int pageNumber = page ?? 1;
+            IEnumerable<Order> orders = _context.Order.Include(n=>n.BookOrders).Where(n=>n.Active != 1).Include(n=>n.User);
+     
+            List<OrderView> modelList = new List<OrderView>();
+            foreach (Order o in orders)
+            {
+                City city = _context.City.Find(o.User.IdCity);
+                OrderView c = new OrderView()
+                {
+                    Active = o.Active,
+                    Amount = o.Amount,
+                    DateDelivery = o.DateDelivery,
+                    DateOrder = o.DateOrder,
+                    Id = o.Id,
+                    SumOrder = o.SumOrder,
+                    City = city.Name,
+                    SumDelivery = city.DeliverySum
+                };
+                modelList.Add(c);
+            }
+            IEnumerable<OrderView> model = modelList;
+            return View(model);
+        }
+
         private Task<User> GetCurrentUserAsync() =>
   _userManager.GetUserAsync(HttpContext.User);
 
