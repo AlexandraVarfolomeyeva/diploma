@@ -7,6 +7,20 @@ body {
     font-family: 'Times New Roman', Times, serif;
 }
 
+.nothing-found {
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    min-height: 150px;
+    background-color: #f7f7f7;
+    padding: 1em;
+    width:100%;
+}
+
+.nothing {
+    align-self: center;
+}
+
 .div-basket {
     background-color: #f7f7f7;
     width: 90%;

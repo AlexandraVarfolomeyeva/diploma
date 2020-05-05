@@ -92,7 +92,9 @@
         </tbody>
     </table>
 } else { 
-                          <p>  По Вашему запросу ничего не найдено! </p>
+                            <div class="nothing-found">
+                          <p class="nothing">  По Вашему запросу ничего не найдено! </p>
+                                </div>
 }
 <div class="row justify-content-center">
     @Html.PagedListPager((IPagedList)Model, page => Url.Action("OrderList", "Admin", new { page = page, status = ViewBag.status, period=ViewBag.period }))
