@@ -10,21 +10,53 @@
 <h2 class="text-center">Список заказов</h2>
 
 <form method="post" asp-controller="Admin" asp-action="Search">
-    <select class="custom-select" name="status">
-        <option value="1">Все</option>
-        <option value="0">В процессе</option>
-        <option value="2">Отправлен</option>
-        <option value="3">Доставлен</option>
-        <option value="4">Отменен</option>
-    </select>
-    <select class="custom-select" name="period">
-        <option value="all">Все</option>
-        <option value="day">Сегодня</option>
-        <option value="week">За неделю</option>
-        <option value="month">За месяц</option>
-        <option value="year">За год</option>
-    </select>
-    <input class="btn btn-dark" type="submit" value="Поиск" />
+    <div class="row">
+        <input name="search" class="form-control search-input" autocomplete="off" type="text" id="search" placeholder="Поиск..." aria-label="Search" value="@ViewBag.search">
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label>Статус заказа: </label>
+        </div>
+        <div class="col-md-10">
+            <select class="custom-select" name="status">
+                <option value="1">Все</option>
+                <option value="0">В процессе</option>
+                <option value="2">Отправлен</option>
+                <option value="3">Доставлен</option>
+                <option value="4">Отменен</option>
+            </select>
+        </div>
+            </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label>Дата заказа: </label>
+        </div>
+        <div class="col-md-10">
+            <select class="custom-select" name="period">
+                <option value="all">Все</option>
+                <option value="day">Сегодня</option>
+                <option value="week">За неделю</option>
+                <option value="month">За месяц</option>
+                <option value="year">За год</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label>Сортировать: </label>
+        </div>
+        <div class="col-md-10">
+            <select class="custom-select" name="sort">
+                <option value="No">По номеру заказа (по возрастанию)</option>
+                <option value="No_desc">По номеру заказа (по убыванию)</option>
+                <option value="Order">По дате заказа (по возрастанию)</option>
+                <option value="Order_desc">По дате заказа (по убыванию)</option>
+                <option value="Delivery">По дате получения (по возрастанию)</option>
+                <option value="Delivery_desc">По дате получения (по убыванию)</option>
+            </select>
+        </div>
+    </div>
+    <input class="btn btn-info btn-search" type="submit" value="Поиск" />
 </form>
 @if (Model.Any())
 {
@@ -92,10 +124,10 @@
         </tbody>
     </table>
 } else { 
-                            <div class="nothing-found">
-                          <p class="nothing">  По Вашему запросу ничего не найдено! </p>
-                                </div>
+    <div class="nothing-found">
+         <p class="nothing">  По Вашему запросу ничего не найдено! </p>
+    </div>
 }
 <div class="row justify-content-center">
-    @Html.PagedListPager((IPagedList)Model, page => Url.Action("OrderList", "Admin", new { page = page, status = ViewBag.status, period=ViewBag.period }))
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("OrderList", "Admin", new { page = page, status = ViewBag.status, period=ViewBag.period, sort = ViewBag.sort, search= ViewBag.search }))
 </div>

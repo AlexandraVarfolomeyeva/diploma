@@ -29,7 +29,7 @@ namespace diploma.Controllers
             _appEnvironment = appEnvironment;
         }
 
-        private List<AdminOrderView> GetFiltered(int status, string period)
+        private List<AdminOrderView> GetFiltered(int status, string period, string sort, string search)
         {
             IEnumerable<Order> orders = _context.Order.Include(n => n.BookOrders).Where(n => n.Active != 1).Include(n => n.User);
             List<AdminOrderView> modelList = new List<AdminOrderView>();
@@ -77,7 +77,30 @@ namespace diploma.Controllers
                 };
                 modelList.Add(c);
             }
-            if (status != 1)
+            if (!String.IsNullOrEmpty(search))
+            {
+                String[] words = search.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                List<AdminOrderView> newmodel = new List<AdminOrderView>();
+                for (int i = 0; i < words.Length; i++)
+                {  //для каждого слова
+                    List<AdminOrderView> model = modelList.Where(f => f.FIO.Contains(words[i], StringComparison.OrdinalIgnoreCase)).ToList();
+                    newmodel = newmodel.Concat(model).Distinct().ToList();
+
+                    model = modelList.Where(f => f.Address.Contains(words[i], StringComparison.OrdinalIgnoreCase)).ToList();
+                    newmodel = newmodel.Concat(model).Distinct().ToList();
+
+                    model = modelList.Where(f => f.City.Contains(words[i], StringComparison.OrdinalIgnoreCase)).ToList();
+                    newmodel = newmodel.Concat(model).Distinct().ToList();
+
+                    int id;
+                    if (Int32.TryParse(words[i], out id)) {
+                        model = modelList.Where(f => f.Id == id).ToList(); 
+                        newmodel = newmodel.Concat(model).Distinct().ToList();
+                    }
+                }
+                modelList = newmodel;
+            }
+                if (status != 1)
             {
                 modelList = modelList.Where(f=>f.Active==status).ToList();
             }
@@ -90,22 +113,34 @@ namespace diploma.Controllers
                 case "year": modelList = modelList.Where(f => f.DateOrder.Date.CompareTo(DateTime.Today.AddYears(-1)) >= 0).ToList(); break;
                 default: break;
             }
+            switch (sort)
+            {
+                case "No": modelList= modelList.OrderBy(f => f.Id).ToList(); break;
+                case "No_desc": modelList.OrderByDescending(f => f.Id).ToList(); break;
+                case "Order": modelList.OrderBy(f => f.DateOrder).ToList(); break;
+                case "Order_desc": modelList.OrderByDescending(f => f.DateOrder).ToList(); break;
+                case "Delivery": modelList.OrderBy(f => f.DateDelivery).ToList(); break;
+                case "Delivery_desc": modelList.OrderByDescending(f => f.DateDelivery).ToList(); break;
+                default: modelList = modelList.OrderBy(f => f.Id).ToList(); break; 
+            }
             return modelList;
         }
 
         [HttpPost]
-        public IActionResult Search(int status, string period)
+        public IActionResult Search(int status, string period, string sort, string search)
         {
-            return RedirectToAction("OrderList", "Admin", new { page = 1, status = status, period=period });
+            return RedirectToAction("OrderList", "Admin", new { page = 1, status = status, period=period, sort=sort, search= search });
         }
 
 
-        public IActionResult OrderList(int? page, int status, string period)
+        public IActionResult OrderList(int? page, int status, string period, string sort, string search)
         {
             int pageNumber = page ?? 1;
             ViewBag.status = status;
             ViewBag.period = period;
-            IEnumerable<AdminOrderView> model = GetFiltered(status, period);
+            ViewBag.sort = sort;
+            ViewBag.search = search;
+            IEnumerable<AdminOrderView> model = GetFiltered(status, period,sort, search);
             return View(model.ToPagedList(pageNumber,3));
         }
 
