@@ -1,43 +1,5 @@
 ﻿@model BookListViewModel;
 
-<div class="row basket-div center-block" id="partialViewDiv">
-    <div class="col-md-9 active-cyan-3 search-div">
-        <form method="post" asp-controller="Home" asp-action="Search">
-            <div class="row">
-                <input name="searchString" class="form-control search-input" value="@Model.searchString" autocomplete="off" type="text" id="search" placeholder="Поиск..." aria-label="Search">
-            </div>
-            <div class="row space">
-                <div class="col-md-3">
-                    <select class="custom-select" id="Order" name="sortOrder">
-                        <option value="new_first">Сначала новые</option>
-                        <option value="name_desc">По названию (По убыванию)</option>
-                        <option value="name">По названию (По возрастанию)</option>
-                        <option value="cost_desc">По цене (По убыванию)</option>
-                        <option value="cost">По цене (По возрастанию)</option>
-                        <option value="Date">По дате выпуска (По возрастанию)</option>
-                        <option value="date_desc">По дате выпуска (По убыванию)</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <select class="custom-select" id="Genre" name="Genre">
-                        <option value="0">Все жанры</option>
-                        @foreach (Genre g in ViewBag.Genres)
-                        {
-                            <option value="@g.Id">@g.Name</option>
-                        }
-                    </select>
-                </div>
-                <div class="form-group form-check col-md-3">
-                    <input type="checkbox" class="form-check-input" id="Stored" name="Stored">
-                    <label class="stored-label" for="Stored">В наличии</label>
-                </div>
-                <div class="col-md-3">
-                    <input class="btn btn-info btn-search" type="submit" value="Поиск">
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="col-md-3 basket">
         @if (@Model.CurrentOrder != null)
         {
             <div class="row">
@@ -68,5 +30,3 @@
                 </div>
             </div>
         }
-    </div>
-</div>
