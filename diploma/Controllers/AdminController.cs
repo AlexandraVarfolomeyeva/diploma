@@ -95,34 +95,34 @@ namespace diploma.Controllers
 
                     int id;
                     if (Int32.TryParse(words[i], out id)) {
-                        model = modelList.Where(f => f.Id == id).ToList(); 
+                        model = modelList.Where(f => f.Id == id).ToList();
                         newmodel = newmodel.Concat(model).Distinct().ToList();
                     }
                 }
                 modelList = newmodel;
             }
-                if (status != 1)
+            if (status != 1)
             {
-                modelList = modelList.Where(f=>f.Active==status).ToList();
+                modelList = modelList.Where(f => f.Active == status).ToList();
             }
             switch (period)
             {
                 case "all": break;
                 case "day": modelList = modelList.Where(f => f.DateOrder.Date == DateTime.Today).ToList(); break;
-                case "week": modelList = modelList.Where(f => f.DateOrder.Date.CompareTo(DateTime.Today.AddDays(-7))>=0).ToList(); break;
+                case "week": modelList = modelList.Where(f => f.DateOrder.Date.CompareTo(DateTime.Today.AddDays(-7)) >= 0).ToList(); break;
                 case "month": modelList = modelList.Where(f => f.DateOrder.Date.CompareTo(DateTime.Today.AddMonths(-1)) >= 0).ToList(); break;
                 case "year": modelList = modelList.Where(f => f.DateOrder.Date.CompareTo(DateTime.Today.AddYears(-1)) >= 0).ToList(); break;
                 default: break;
             }
             switch (sort)
             {
-                case "No": modelList= modelList.OrderBy(f => f.Id).ToList(); break;
+                case "No": modelList = modelList.OrderBy(f => f.Id).ToList(); break;
                 case "No_desc": modelList.OrderByDescending(f => f.Id).ToList(); break;
                 case "Order": modelList.OrderBy(f => f.DateOrder).ToList(); break;
                 case "Order_desc": modelList.OrderByDescending(f => f.DateOrder).ToList(); break;
                 case "Delivery": modelList.OrderBy(f => f.DateDelivery).ToList(); break;
                 case "Delivery_desc": modelList.OrderByDescending(f => f.DateDelivery).ToList(); break;
-                default: modelList = modelList.OrderBy(f => f.Id).ToList(); break; 
+                default: modelList = modelList.OrderBy(f => f.Id).ToList(); break;
             }
             return modelList;
         }
@@ -130,7 +130,7 @@ namespace diploma.Controllers
         [HttpPost]
         public IActionResult Search(int status, string period, string sort, string search)
         {
-            return RedirectToAction("OrderList", "Admin", new { page = 1, status = status, period=period, sort=sort, search= search });
+            return RedirectToAction("OrderList", "Admin", new { page = 1, status = status, period = period, sort = sort, search = search });
         }
 
         [Authorize(Roles = "admin")]
@@ -141,8 +141,8 @@ namespace diploma.Controllers
             ViewBag.period = period;
             ViewBag.sort = sort;
             ViewBag.search = search;
-            IEnumerable<AdminOrderView> model = GetFiltered(status, period,sort, search);
-            return View(model.ToPagedList(pageNumber,3));
+            IEnumerable<AdminOrderView> model = GetFiltered(status, period, sort, search);
+            return View(model.ToPagedList(pageNumber, 3));
         }
 
         private Task<User> GetCurrentUserAsync() =>
@@ -281,6 +281,26 @@ namespace diploma.Controllers
             ViewBag.Username = GetUserName().Result;
             return View();
         }
+
+
+        [HttpPut]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> ChangeStatus(int id, int option)
+        {
+            try
+            {
+                Order o = _context.Order.Find(id);
+                o.Active = option;
+                _context.Order.Update(o);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
 
         [HttpPost]
         [Authorize(Roles = "admin")]

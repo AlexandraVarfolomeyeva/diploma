@@ -157,6 +157,7 @@
         <thead class="thead-dark">
             <tr class="text-center">
                 <th scope="col">Номер заказа</th>
+                <th scope="col">Список книг</th>
                 <th scope="col">ФИО</th>
                 <th scope="col">Контакты</th>
                 <th scope="col">Дата заказа</th>
@@ -164,50 +165,75 @@
                 <th scope="col">Адрес</th>
                 <th scope="col">Доставка</th>
                 <th scope="col">Стоимость без доставки</th>
-                <th scope="col">Список книг</th>
+
                 <th scope="col">Статус</th>
             </tr>
         </thead>
         <tbody>
             @foreach (AdminOrderView i in Model)
             {
-                <tr scope="row">
-                    <td> @i.Id </td>
-                    <td> @i.FIO </td>
-                    <td> т.@i.Phone, @i.Email </td>
-                    @{string date = i.DateOrder.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
-                    <td> @date </td>
-                    @{date = i.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
-                    <td> @date </td>
-                    <td>г.@i.City, @i.Address</td>
-                    <td> @i.SumDelivery руб.</td>
-                    <td> @i.SumOrder руб.</td>
-                    <td>
-                        <ul>
-                            @foreach (BookOrderView v in i.BookOrders)
-                            {
-                                <li>
-                                    <span> @v.Book.Id. </span>
-                                    @v.Book.Title (<span> x </span>
-                                    @v.Amount)
-                                </li>
-                            }
-                        </ul>
-                    </td>
-                    <td>
-                        @switch (i.Active)
+            <tr scope="row">
+                <td> @i.Id </td>
+                <td>
+                    <ul>
+                        @foreach (BookOrderView v in i.BookOrders)
                         {
-                            case 0:<p class="text-danger">Обрабатывается</p><br>
-                                <input type="checkbox" value="Отправлен" name="sent"> <label for="sent" onchange="">Отправлен</label>
-                                break;
-                            case 1: <p class="text-danger"> Не заказан </p> break;
-                            case 2: <p class="text-info"> Отправлен </p> <br>
-                                <button class="btn btn-success"> Доставлен </button> break;
-                            case 3: <p class="text-success"> Доставлен </p> break;
-                            case 4: <p class="text-danger"> Отменен </p>break;
+                            <li>
+                                <span> @v.Book.Id. </span>
+                                @v.Book.Title (<span> x </span>
+                                @v.Amount)
+                            </li>
                         }
-                    </td>
-                </tr>
+                    </ul>
+                </td>
+                <td> @i.FIO </td>
+                <td> т.@i.Phone, @i.Email </td>
+                @{string date = i.DateOrder.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
+                <td> @date </td>
+                @{date = i.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
+                <td> @date </td>
+                <td>г.@i.City, @i.Address</td>
+                <td> @i.SumDelivery руб.</td>
+                <td> @i.SumOrder руб.</td>
+
+                <td>
+                  @{string id = "status" + i.Id; }
+                  <div id=@id>
+                    @switch (i.Active)
+                    {
+                        case 0: <p class="text-danger">Обрабатывается</p>break;
+                        case 1: <p class="text-danger"> Не заказан </p> break;
+                        case 2: <p class="text-info"> Отправлен </p> break;
+                        case 3: <p class="text-success"> Доставлен </p> break;
+                        case 4: <p class="text-danger"> Отменен </p>break;
+                    }
+                  </div>
+                    @if (i.Active != 4)
+                    {  <select class="custom-select" id="Status" name="status" onChange="ChangeStatus(@i.Id);">
+    @if (i.Active == 0)
+    {
+        <option value="0" selected> Обрабатывается </option> }
+    else
+    {
+        <option value="0"> Обрабатывается </option>}
+    @if (i.Active == 2)
+    {
+        <option value="2" selected> Отправлен </option>}
+    else
+    {
+        <option value="2"> Отправлен </option>}
+
+    @if (i.Active == 3)
+    {
+        <option value="3" selected> Доставлен </option>}
+    else
+    {
+        <option value="3"> Доставлен </option>}
+
+</select>
+                    }
+                </td>
+            </tr>
 
             }
 
@@ -223,3 +249,8 @@
 <div class="row justify-content-center">
     @Html.PagedListPager((IPagedList)Model, page => Url.Action("OrderList", "Admin", new { page = page, status = ViewBag.status, period=ViewBag.period, sort = ViewBag.sort, search= ViewBag.search }))
 </div>
+
+
+<environment include="Development">
+    <script src="~/js/OrdersList.js" asp-append-version="true"></script>
+</environment>

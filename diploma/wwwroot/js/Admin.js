@@ -5,6 +5,7 @@ const uriView = "/api/View/";
 const uriAuthors = "/api/Authors/";
 const uriPublishers = "/api/Publisher/";
 const uriGenres = "/api/Genre/";
+
 var idBook;
 var selectedPub;
 var authors = [];
@@ -337,3 +338,4 @@ function saveBook() {
         }));//добавление строки заказа
     } catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!"); }
 }
+
