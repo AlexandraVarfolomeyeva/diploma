@@ -132,6 +132,8 @@ function deletegenreoption(index) {
 
 function createAuthor() {
     try {
+        var button = document.getElementById("createAuthor");
+        button.setAttribute('onclick', '');
         var AuthorName = document.querySelector("#AuthorName").value;
         var request = new XMLHttpRequest();
         request.open("POST", uriAuthors);
@@ -144,11 +146,13 @@ function createAuthor() {
                 var author = JSON.parse(request.response);
                 var newOption = new Option(author.name, author.id);
                 addForm.authorSelect.options[addForm.authorSelect.options.length] = newOption;
+                $("#authorSelect").val(author.id);
             } else if (request.status == 409) {
                 alert("Автор с таким именем уже существует!");
             } else {
                 alert("Error " + request.status + ": " + request.responseText);
             }
+            button.setAttribute('onclick', 'createAuthor();');
         };
         request.setRequestHeader("Accepts", "application/json;charset=UTF-8");
         request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -160,6 +164,8 @@ function createAuthor() {
 
 function createPublisher() {
     try {
+        var button = document.getElementById("createPublisher");
+        button.setAttribute('onclick', '');
         var PublisherTitle = document.querySelector("#PublisherTitle").value;
         var request = new XMLHttpRequest();
         request.open("POST", uriPublishers);
@@ -172,12 +178,14 @@ function createPublisher() {
                 var publisher = JSON.parse(request.response);
                 var newOption = new Option(publisher.name, publisher.id);
                 addForm.publisherSelect.options[addForm.publisherSelect.options.length] = newOption;
+                $("#publisherSelect").val(publisher.id);
             } else if (request.status == 409) {
                 alert("Издательство с таким названием уже существует!");
             }
             else {
                 alert("Error " + request.status + ": " + request.responseText);
             }
+            button.setAttribute('onclick', 'createPublisher();');
         };
         request.setRequestHeader("Accepts", "application/json;charset=UTF-8");
         request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -214,6 +222,8 @@ function addBook() {
     //добавление к заказу книги
     //добавляем новое поле в промежуточную таблицу
     try {
+        var button = document.getElementById("addBtn");
+        button.setAttribute('onclick', '');
         var title = document.querySelector("#title").value;
         var authorSelect = document.querySelector("#authorSelect").value; ///authorSelect
         var genreSelect = document.querySelector("#GenreSelect").value; ///authorSelect
@@ -242,6 +252,7 @@ function addBook() {
             } else {
                 alert("Error");
             }
+            button.setAttribute('onclick', 'addBook();');
         };
         request.setRequestHeader("Accepts", "application/json;charset=UTF-8");
         request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");

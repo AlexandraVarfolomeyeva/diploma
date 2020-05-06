@@ -20,6 +20,7 @@ namespace diploma.Models
         #endregion
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<City> City { get; set; }
+        public virtual DbSet<Comment> Comment { get; set; }
         public virtual DbSet<BookGenre> BookGenre { get; set; }
         public virtual DbSet<Genre> Genre { get; set; }
         public virtual DbSet<Book> Book { get; set; }
@@ -50,6 +51,7 @@ namespace diploma.Models
             modelBuilder.Entity<Book>(entity =>
             {
                 entity.HasMany(a => a.BookOrders).WithOne(a => a.Book).HasForeignKey(a => a.IdBook);
+                entity.HasMany(a => a.Comments).WithOne(a => a.Book).HasForeignKey(a => a.IdBook);
                 entity.HasMany(a => a.BookAuthors).WithOne(a => a.Book).HasForeignKey(a => a.IdBook);
                 entity.HasMany(a => a.BookGenres).WithOne(a => a.Book).HasForeignKey(a => a.IdBook);
             });

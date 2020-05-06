@@ -18,6 +18,8 @@ namespace diploma.Models
         public string Year { get; set; } //год публикации
         public int Cost { get; set; } //стоимость
         public int Stored {get;set;} //количество на складе
+        public int Score { get; set; } //рейтинг книги
+        public int Weight { get; set; } //вес в грамах
         public bool isDeleted { get; set; }
         public string Content { get; set; } //Описание (аннотация) книги
         [Required]
@@ -27,6 +29,7 @@ namespace diploma.Models
         public virtual ICollection<BookOrder> BookOrders { get; set; }
         public virtual ICollection<BookAuthor> BookAuthors { get; set; }
         public virtual ICollection<BookGenre> BookGenres { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
         public Book()
         {
             BookOrders = new HashSet<BookOrder>();

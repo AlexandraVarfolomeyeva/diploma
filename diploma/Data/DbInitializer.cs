@@ -11,18 +11,31 @@ namespace diploma.Data
         public static void Initialize(BookingContext context)
         {
             context.Database.EnsureCreated();
-            if (!context.User.Any())
+            if (!context.City.Any())
             {
                 var Cities = new City[]
                 {
-                    new City {Name = "Москва", DeliverySum=150},
-                    new City {Name = "Санкт-Петербург", DeliverySum=150},
-                    new City {Name = "Новосибирск", DeliverySum=150},
-                    new City {Name = "Екатеринбург", DeliverySum=150},
-                    new City {Name = "Нижний Новгород", DeliverySum=150},
-                    new City {Name = "Казань", DeliverySum=150},
-                    new City {Name = "Самара", DeliverySum=150},
-                    new City {Name = "Омск", DeliverySum=150}
+                    new City {Name = "Москва", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Санкт-Петербург", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Новосибирск", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Екатеринбург", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Нижний Новгород", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Казань", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Самара", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Омск", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Челябинск", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Ростов-на-Дону", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Уфа", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Волгоград", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Пермь", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Красноярск", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Воронеж", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Саратов", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Краснодар", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Тольятти", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Барнаул", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Ижевск", DeliverySum=150, DeliveryTime=10},
+                    new City {Name = "Ульяновск", DeliverySum=150, DeliveryTime=10}
                 };
                 foreach (City b in Cities)
                 {
@@ -30,66 +43,45 @@ namespace diploma.Data
                 }
                 context.SaveChanges();
             }
-            //if (!context.User.Any())
-            //{
-            //    var users = new User[]
-            //    {
-            //    //new User {Url="http://diploma.msdn.com/donald", Address="Lake", Login="donald", Name="donaldduck", Password="1234", Phone="123409"},
-            //    //new User {Url="http://diploma.msdn.com/mikky", Address="hole", Login="mikky", Name="mikkymouse", Password="4567", Phone="456787"},
-            //    //new User {Url="http://diploma.msdn.com/miny", Address="hole", Login="miny", Name="minymouse", Password="7890", Phone="789065"}
-
-            //    };
-            //    foreach (User b in users)
-            //    {
-            //        context.User.Add(b);
-            //    }
-            //    context.SaveChanges();
-            //}
-
-            //if (!context.Order.Any())
-            //{
-            //    var orders = new Order[]
-            //{
-            //    //new Order { UserId ="1", SumOrder=498, SumDelivery=129, User=context.User.FirstOrDefault()},
-            //    //new Order { UserId ="1", SumOrder=5679, SumDelivery=56, User=context.User.FirstOrDefault()}
-            //};
-            //    foreach (Order p in orders)
-            //    {
-            //        context.Order.Add(p);
-            //    }
-            //    context.SaveChanges();
-            //}
 
 
-
-            //if (!context.BookOrder.Any())
-            //{
-            //    var bookOrders = new BookOrder[]
-            //{
-            //    new BookOrder { IdOrder=1, IdBook=1, Order=context.Order.FirstOrDefault(), Book=context.Book.FirstOrDefault()},
-            //    new BookOrder { IdOrder=2, IdBook=2,  Order=context.Order.LastOrDefault(), Book=context.Book.LastOrDefault()}
-            //};
-            //    foreach (BookOrder p in bookOrders)
-            //    {
-            //        context.BookOrder.Add(p);
-            //    }
-            //    context.SaveChanges();
-            //}
-
-
-            //if (!context.Book.Any())
-            //{
-            //    var books = new Book[]
-            //{
-            //    new Book { Content="\"Если даже такая нищебродская тушка, как я сумела поправить свое финансовое положение, сможет кто угодно!\" - заявляет Джен Синсеро...",Title="НЕ НОЙ. Вековая мудрость, которая гласит: хватит жаловаться – пора становиться богатым", Cost = 477, Year="2019", Publisher=""},
-            //    new Book { Content="Какова бы ни была ваша цель - существенно изменить лишь некоторые ключевые аспекты своей жизни или радикально преобразовать все свое существование, чтобы все, с чем вам приходится бороться сейчас, стало лишь неприятным воспоминанием, - вы выбрали правильную книгу... ",Title="Магия утра. Как первый час дня определяет ваш успех", Cost = 828, Year="2019", Publisher=""}
-            //};
-            //    foreach (Book p in books)
-            //    {
-            //        context.Book.Add(p);
-            //    }
-            //    context.SaveChanges();
-            //}
+            if (!context.Genre.Any())
+            {
+                var Genres = new Genre[]
+                {
+                    new Genre {Name="Боевики"},
+                    new Genre {Name="Детективы"},
+                    new Genre {Name="Детские"},
+                    new Genre {Name="Документальные"},
+                    new Genre {Name="Дом и семья"},
+                    new Genre {Name = "Компьютер и интернет"},
+                    new Genre {Name = "Любовные романы"},
+                    new Genre {Name = "Научно-образовательные"},
+                    new Genre {Name = "Поэзия и драматургия"},
+                    new Genre {Name = "Приключения"},
+                    new Genre {Name = "Проза"},
+                    new Genre {Name = "Религия и духовность"},
+                    new Genre {Name = "Современная литература"},
+                    new Genre {Name = "Справочная литература"},
+                    new Genre {Name = "Старинная литература"},
+                    new Genre {Name = "Юмор"},
+                    new Genre {Name = "Эротика"},
+                    new Genre {Name = "Экономика"},
+                    new Genre {Name = "Фантастика"},
+                    new Genre {Name = "Психология"},
+                    new Genre {Name = "Бизнес"},
+                    new Genre {Name = "Лингвистика"},
+                    new Genre {Name = "Научная фантастика"},
+                    new Genre {Name = "Ужасы"},
+                    new Genre {Name = "Триллер"},
+                    new Genre {Name = "Политика"}
+                };
+                foreach (Genre b in Genres)
+                {
+                    context.Genre.Add(b);
+                }
+                context.SaveChanges();
+            }
         }
     }
 }

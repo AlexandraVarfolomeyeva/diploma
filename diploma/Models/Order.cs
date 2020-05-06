@@ -21,8 +21,12 @@ namespace diploma.Models
         [ForeignKey("User")]
         public string UserId { get; set; }
         public DateTime DateDelivery { get; set; }//дата доставки
+        public DateTime? DateSubmit { get; set; }//дата подтверждения
+        public DateTime? DateSent { get; set; }//дата отправки
+        public DateTime? DateCancel { get; set; }//дата отмены заказа
         public DateTime DateOrder { get; set; }//дата заказа
         public float SumOrder { get; set; } //стоимость заказа
+        public float SumDelivery { get; set; } //стоимость доставки
         public int Active { get; set; } //является ли заказ активным
         public int Amount { get; set; } //количество книг в заказе
         //public string Url { get; set; }

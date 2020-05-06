@@ -26,7 +26,15 @@
                     <h6>
                         @foreach (string c in s.Authors)
                         {
-                            <a href="#" class="authors text-muted">
+                            var parms = new Dictionary<string, string>
+                             {
+                                    { "page", "1" },
+                                    { "searchString", c },
+                                     { "sortOrder", "" },
+                                      { "Stored", "false" },
+                                       { "Genre", "" }
+                             };
+                            <a class="authors text-muted" asp-area="" asp-controller="Home" asp-action="Index" asp-all-route-data="parms">
                                 @c;
                             </a>
                         }
@@ -34,9 +42,9 @@
                     <h6>
                         @foreach (string c in s.Genres)
                         {
-                            <a href="#" class="authors text-muted">
+                            <p class="authors text-muted" >
                                 @c;
-                            </a>
+                            </p>
                         }
                     </h6>
                     <h5>

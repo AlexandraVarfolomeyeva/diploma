@@ -228,7 +228,7 @@ namespace diploma.Controllers
                 model.sortOrder = "new_first";
             }
             IEnumerable<BookView> books = FilterBooks(searchString, sortOrder, Stored, Genre);
-            model.Books = books.ToPagedList(pageNumber, 4);
+            model.Books = books.ToPagedList(pageNumber, 12);
             
             model.Genre = Genre;
                 model.searchString = searchString;
@@ -266,7 +266,7 @@ namespace diploma.Controllers
             BookListViewModel bvm = new BookListViewModel()
             {
                 Stored = Stored,
-                Books = books.ToPagedList(page, 4),
+                Books = books.ToPagedList(page, 12),
                 UserName = GetUserName().Result,
                 CurrentOrder = GetCurrentOrder().Result,
                 Genre=Genre,
@@ -291,9 +291,14 @@ namespace diploma.Controllers
             ViewBag.Username = GetUserName().Result;
             return View();
         }
-       
+        
+        public IActionResult PriceAndDelivery()
+        {
+            ViewBag.Username = GetUserName().Result;
+            return View();
+        }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
