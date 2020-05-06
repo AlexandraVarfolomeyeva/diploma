@@ -80,14 +80,14 @@
                 Цена:  @Model.Book.Cost
             </h5>
             <div>
-                @if (ViewBag.UserName == "admin")
+                @if (ViewBag.Role == "admin")
                 {
                     <button onclick="editBook(@Model.Book.Id);" class="btn btn-dark"> Редактировать </button>
                     string passtitle = "\"" + Model.Book.Title + "\"";
                     <button onclick="areYouSure(@Model.Book.Id, @passtitle);" class="btn btn-dark"> Удалить </button>
                     <a></a>
                 }
-                else if (ViewBag.UserName != "Войти" && Model.CurrentOrder != null)
+                else if (ViewBag.Role == "user" && Model.CurrentOrder != null)
                 {
                     if (Model.Book.Stored > 0)
                     {

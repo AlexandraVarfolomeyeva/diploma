@@ -194,6 +194,23 @@ namespace diploma.Controllers
             }
         }
 
+        private async Task<string> GetRole()
+        {
+            try
+            {
+                User usr = await GetCurrentUserAsync();
+                if (usr != null)
+                {
+                    string role = _userManager.GetRolesAsync(usr).Result.First();
+                    return role;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return "";
+        }
 
         [HttpGet]
         //[Route("/Admin/Book/{id}")][FromRoute]
@@ -201,6 +218,7 @@ namespace diploma.Controllers
         {
             ViewBag.Username = GetUserName().Result;
             ViewBag.Genres = _context.Genre;
+            ViewBag.Role = GetRole().Result;
             try
             {
                 if (!ModelState.IsValid)

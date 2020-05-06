@@ -30,6 +30,24 @@ namespace diploma.Controllers
             _appEnvironment = appEnvironment;
         }
 
+        private async Task<string> GetRole()
+        {
+            try
+            {
+                User usr = await GetCurrentUserAsync();
+                if (usr != null)
+                {
+                    string role = _userManager.GetRolesAsync(usr).Result.First();
+                    return role;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return "";
+        }
+
         private async Task<Order> GetCurrentOrder()
         {
             try
@@ -218,6 +236,7 @@ namespace diploma.Controllers
                 model.Stored = Stored;
             ViewBag.Genres = _context.Genre;
             ViewBag.Username = GetUserName().Result;
+            ViewBag.Role = GetRole().Result;
             return View(model);
         }
 
