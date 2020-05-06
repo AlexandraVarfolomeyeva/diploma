@@ -13,6 +13,7 @@ namespace diploma.Models
         public string Year { get; set; } //год публикации
         public int Cost { get; set; } //стоимость
         public int Stored { get; set; } //есть ли на складе
+        public int Weight { get; set; }
         public string Content { get; set; } //Описание (аннотация) книги
         public string Title { get; set; } //Название книги
         public int Publisher { get; set; }

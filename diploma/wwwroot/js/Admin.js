@@ -232,6 +232,8 @@ function addBook() {
         var publisherSelect = document.querySelector("#publisherSelect").value; ///publisherSelect
         var cost = document.querySelector("#cost").value;
         var stored = document.querySelector("#Stored").value;
+        var weight = document.querySelector("#Weight").value;
+        
         var inputImg = document.getElementById("labelImg").innerHTML;
         var author = [];
         var genre = [];
@@ -265,7 +267,8 @@ function addBook() {
             title: title,
             publisher: publisherSelect,
             idAuthors: author,
-            idGenres: genre
+            idGenres: genre,
+            weight: weight
         }));//добавление строки заказа
     } catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!"); }
 }
@@ -282,6 +285,7 @@ function getBookData() {
             document.querySelector("#year").value = book.year;
             document.querySelector("#cost").value = book.cost;
             document.querySelector("#Stored").value = book.stored;
+            document.querySelector("#Weight").value = book.weight;
             document.getElementById("bookImg").src = "../img/" + book.image;
             document.getElementById('labelImg').innerHTML = book.image;
             selectedPub = book.publisher;
@@ -309,6 +313,7 @@ function saveBook() {
         var publisherSelect = document.querySelector("#publisherSelect").value; ///publisherSelect
         var cost = document.querySelector("#cost").value;
         var stored = document.querySelector("#Stored").value;
+        var weight = document.querySelector("#Weight").value;
 
         var author = [];
         var genre = [];
@@ -345,7 +350,8 @@ function saveBook() {
             title: title,
             publisher: publisherSelect,
             idAuthors: author,
-            idGenres: genre
+            idGenres: genre,
+            weight: weight
         }));//добавление строки заказа
     } catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!"); }
 }

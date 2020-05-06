@@ -101,6 +101,7 @@ namespace diploma.Controllers
                     Publisher=item.IdPublisher,
                     Stored=item.Stored,
                     Title=item.Title,
+                    Weight=item.Weight,
                     Year = item.Year
                 };
                 List<int> au = new List<int>();
@@ -157,6 +158,7 @@ namespace diploma.Controllers
                 item.Stored = book.Stored;
                 item.Title = book.Title;
                 item.Year = book.Year;
+                item.Weight = book.Weight;
                 item.isDeleted = book.isDeleted;
                 item.IdPublisher = book.Publisher;
 

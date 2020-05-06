@@ -85,6 +85,7 @@ namespace diploma.Controllers
                 image = item.image,
                 IdPublisher = item.Publisher,
                 Cost = item.Cost,
+                Weight=item.Weight,
                 Content = item.Content,
                 isDeleted=item.isDeleted
                 };
@@ -141,6 +142,7 @@ namespace diploma.Controllers
                 item.BookAuthors = book.BookAuthors;
                 item.Title = book.Title;
                 item.Year = book.Year;
+                item.Weight = book.Weight;
                 item.isDeleted = book.isDeleted;
                 item.IdPublisher = book.IdPublisher;
                 item.BookGenres = book.BookGenres;
