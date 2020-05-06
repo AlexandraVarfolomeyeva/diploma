@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -290,10 +291,18 @@ namespace diploma.Controllers
             try
             {
                 Order o = _context.Order.Find(id);
+                if (o.Active == 3 && option != 3)
+                {
+                    User usr = _context.User.Find(o.UserId);
+                    City city = _context.City.Find(usr.IdCity);
+                    o.DateDelivery = o.DateOrder.AddDays(city.DeliveryTime);
+                }
                 o.Active = option;
+                if (option == 3)
+                { o.DateDelivery = DateTime.Now.Date; }
                 _context.Order.Update(o);
                 await _context.SaveChangesAsync();
-                return NoContent();
+                return Ok(o.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU")));
             }
             catch (Exception ex)
             {

@@ -190,8 +190,9 @@
                 <td> т.@i.Phone, @i.Email </td>
                 @{string date = i.DateOrder.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
                 <td> @date </td>
-                @{date = i.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
-                <td> @date </td>
+                @{date = i.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));
+                    string dateId = "date" + i.Id;}
+                <td id=@dateId> @date </td>
                 <td>г.@i.City, @i.Address</td>
                 <td> @i.SumDelivery руб.</td>
                 <td> @i.SumOrder руб.</td>
@@ -209,7 +210,7 @@
                     }
                   </div>
                     @if (i.Active != 4)
-                    {  <select class="custom-select" id="Status" name="status" onChange="ChangeStatus(@i.Id);">
+                    {  <select class="custom-select" id="Status" name="status" onChange="ChangeStatus(@i.Id, this.options[this.selectedIndex]);">
     @if (i.Active == 0)
     {
         <option value="0" selected> Обрабатывается </option> }

@@ -1,9 +1,9 @@
 ﻿const uriStatus = "/Admin/ChangeStatus/";
 
-function ChangeStatus(id) {
+function ChangeStatus(id, selector) {
     try {
-        var option = $('#Status').val();
-        var optionName = $('#Status option:selected').text();
+        var option = selector.value;
+        var optionName = selector.label;
         $.ajax({
             url: uriStatus,
             data: {
@@ -20,6 +20,9 @@ function ChangeStatus(id) {
                 };
                 var name = "status" + id;
                 var html = "<p class=\"" + className + "\">" + optionName + "</p>";
+                document.getElementById(name).innerHTML = html;
+                name = "date" + id;
+                html = response;
                 document.getElementById(name).innerHTML = html;
             },
             error: response => {
