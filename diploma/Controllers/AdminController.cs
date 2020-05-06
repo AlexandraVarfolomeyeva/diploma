@@ -200,7 +200,7 @@ namespace diploma.Controllers
         public async Task<IActionResult> Book(int id)
         {
             ViewBag.Username = GetUserName().Result;
-
+            ViewBag.Genres = _context.Genre;
             try
             {
                 if (!ModelState.IsValid)
