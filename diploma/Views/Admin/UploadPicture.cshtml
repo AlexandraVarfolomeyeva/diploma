@@ -3,15 +3,16 @@
     ViewData["Title"] = "Загрузить обложку";
 }
 
-<h2>Сначала загрузите обложку книги!</h2><br />
-<div class="container">
+<h2 class="text-center">Сначала загрузите обложку книги!</h2><br />
+<div class="container ">
     <div class="text-center">
-        <img src="~/img/empty.png" id="bookImg" class="rounded" alt="Обложка" width="150" height="215">
+        <img src="~/img/empty.png" id="bookImg" class="rounded" alt="Обложка" width="300" height="430">
     </div>
+    <br/>
     @using (Html.BeginForm("UploadPicture",
                      "Admin",
                      FormMethod.Post,
-                     new { enctype = "multipart/form-data", id = "ImgForm" }))
+                     new { enctype = "multipart/form-data", id = "ImgForm", @class="div-upload" }))
     {
         <div class="custom-file">
             @*<input type="file" name="file" id="file" /><br><br>*@

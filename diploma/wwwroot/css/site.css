@@ -7,6 +7,12 @@ body {
     font-family: 'Times New Roman', Times, serif;
 }
 
+.div-upload {
+    width: 70% !important;
+    text-align: center;
+    margin: auto;
+}
+
 .nothing-found {
     text-align: center;
     justify-content: center;
@@ -14,7 +20,7 @@ body {
     min-height: 150px;
     background-color: #f7f7f7;
     padding: 1em;
-    width:100%;
+    width: 100%;
 }
 
 .nothing {
