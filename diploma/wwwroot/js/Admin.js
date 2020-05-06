@@ -188,7 +188,7 @@ function createPublisher() {
 }
 
 function getImg() {
-    document.getElementById("ImgForm").submit();
+    //document.getElementById("ImgForm").submit();
     var x = document.getElementById("file");
     document.getElementById('labelImg').innerHTML = x.files[0].name;
     document.getElementById('bookImg').src = window.URL.createObjectURL(x.files[0]);
