@@ -11,7 +11,11 @@ namespace diploma.Models
         [Required]
         [Key]
         public int Id { get; set; }
+        [Required]
+        public string UserName { get; set; }
+        [Required]
         public string Content { get; set; }
+        [Required]
         public int IdBook { get; set; }
         public virtual Book Book { get; set; }
     }

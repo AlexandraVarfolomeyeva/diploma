@@ -7,6 +7,37 @@ body {
     font-family: 'Times New Roman', Times, serif;
 }
 
+.comment-form {
+    width: 100%;
+    padding: 5px;
+    background-color: aqua;
+    text-align: center;
+}
+
+
+.comments-section {
+    justify-content: center;
+    /*text-align: center;*/
+}
+
+.comments {
+    width: 80%;
+}
+
+.username {
+    background-color: #e6e6e6;
+    font-size: 1.3rem;
+    margin-top: 5px;
+}
+
+.comment {
+    background-color: #e9e9e9;
+    font-family: 'Times New Roman';
+    font-size: 1.2rem;
+    text-align: justify;
+    margin-bottom: 5px;
+}
+
 .div-upload {
     width: 70% !important;
     text-align: center;
@@ -203,8 +234,8 @@ body {
     font-family: 'Times New Roman';
     font-size: 1.3rem;
     background-color: #FEFDFF;
-    text-align:justify;
-    width:100%;
+    text-align: justify;
+    width: 100%;
 }
 
 .title-book {

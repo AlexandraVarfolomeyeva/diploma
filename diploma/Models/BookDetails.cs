@@ -9,5 +9,6 @@ namespace diploma.Models
     {
         public BookAdd Book;
         public Order CurrentOrder;
+        public IEnumerable<Comment> Comments;
     }
 }

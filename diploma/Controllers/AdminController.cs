@@ -212,9 +212,84 @@ namespace diploma.Controllers
             return "";
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Comments(Comment comment)
+        {
+            try
+            {
+                _context.Comment.Add(comment);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("Comment", new { id = comment.Id }, comment);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+ 
+        public IActionResult GetCommentsView(int id)
+        {
+            BookAdd book = FindBook(id);
+            ViewBag.Username = GetUserName().Result;
+            BookDetails model = new BookDetails()
+            {
+                Book = book,
+                Comments = _context.Comment.Where(c=>c.IdBook==book.Id)
+            };
+            return PartialView("_Comments", model);
+        }
+
+        private BookAdd FindBook(int id)
+        {
+            Book item = _context.Book.Find(id);
+            if (item == null)
+            {
+                Log.WriteSuccess(" AdminController.GetBook", "Книга не найдена.");
+                return null;
+            }
+            BookAdd b = new BookAdd()
+            {
+                Id = item.Id,
+                Content = item.Content,
+                isDeleted = item.isDeleted,
+                Cost = item.Cost,
+                image = item.image,
+                Publisher = item.IdPublisher,
+                Stored = item.Stored,
+                Title = item.Title,
+                Year = item.Year
+            };
+            ViewBag.image = item.image;
+            List<int> au = new List<int>();
+            List<string> aus = new List<string>();
+            List<int> ge = new List<int>();
+            List<string> ges = new List<string>();
+            IEnumerable<BookAuthor> bookauthors = _context.BookAuthor.Where(f => f.IdBook == item.Id);
+            IEnumerable<BookGenre> bookgenres = _context.BookGenre.Where(f => f.IdBook == item.Id);
+            foreach (BookAuthor line in bookauthors)
+            {
+                Author author = _context.Author.Find(line.IdAuthor);
+                au.Add(author.Id);
+                aus.Add(author.Name);
+            }
+            b.idAuthors = au.ToArray();
+            b.Authors = aus.ToArray();
+            foreach (BookGenre line in bookgenres)
+            {
+                Genre genre = _context.Genre.Find(line.IdGenre);
+                ge.Add(genre.Id);
+                ges.Add(genre.Name);
+            }
+            b.idGenres = ge.ToArray();
+            b.Genres = ges.ToArray();
+            return b;
+        }
+
         [HttpGet]
         //[Route("/Admin/Book/{id}")][FromRoute]
-        public async Task<IActionResult> Book(int id)
+        public IActionResult Book(int id)
         {
             ViewBag.Username = GetUserName().Result;
             ViewBag.Genres = _context.Genre;
@@ -227,52 +302,12 @@ namespace diploma.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var item = await _context.Book.SingleOrDefaultAsync(m => m.Id == id);
-
-                if (item == null)
-                {
-                    Log.WriteSuccess(" BookViewsController.GetBook", "Книга не найдена.");
-                    return NotFound();
-                }
-                BookAdd b = new BookAdd()
-                {
-                    Id = item.Id,
-                    Content = item.Content,
-                    isDeleted = item.isDeleted,
-                    Cost = item.Cost,
-                    image = item.image,
-                    Publisher = item.IdPublisher,
-                    Stored = item.Stored,
-                    Title = item.Title,
-                    Year = item.Year
-                };
-                ViewBag.image = item.image;
-                List<int> au = new List<int>();
-                List<string> aus = new List<string>();
-                List<int> ge = new List<int>();
-                List<string> ges = new List<string>();
-                IEnumerable<BookAuthor> bookauthors = _context.BookAuthor.Where(f => f.IdBook == item.Id);
-                IEnumerable<BookGenre> bookgenres = _context.BookGenre.Where(f => f.IdBook == item.Id);
-                foreach (BookAuthor line in bookauthors)
-                {
-                    Author author = _context.Author.Find(line.IdAuthor);
-                    au.Add(author.Id);
-                    aus.Add(author.Name);
-                }
-                b.idAuthors = au.ToArray();
-                b.Authors = aus.ToArray();
-                foreach (BookGenre line in bookgenres)
-                {
-                    Genre genre = _context.Genre.Find(line.IdGenre);
-                    ge.Add(genre.Id);
-                    ges.Add(genre.Name);
-                }
-                b.idGenres = ge.ToArray();
-                b.Genres = ges.ToArray();
+                BookAdd b = FindBook(id);
                 BookDetails bd = new BookDetails()
                 {
                     Book = b,
-                    CurrentOrder = GetCurrentOrder().Result
+                    CurrentOrder = GetCurrentOrder().Result,
+                    Comments = _context.Comment.Where(c=>c.IdBook == b.Id)
                 };
                 return View(bd);
             }
