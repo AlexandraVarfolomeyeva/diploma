@@ -177,11 +177,12 @@
     </div>
     @if (ViewBag.pageNumber != null)
     {
-        <div class="hidden">
-            <p id="page">@Model.page</p>
-            <p id="searchStringHidden">@Model.searchString</p>
-            <p id="sortOrderHidden">@Model.sortOrder</p>
-            <p id="StoredHidden">@Model.Stored</p>
-            <p id="GenreHidden">@Model.Genre</p>
-        </div>
+    <div class="hidden">
+        <p id="page">@Model.page</p>
+        <p id="searchStringHidden">@Model.searchString</p>
+        <p id="sortOrderHidden">@Model.sortOrder</p>
+        <p id="storedHidden">@Model.Stored</p>
+        <p id="genreHidden">@Model.Genre</p>
+        <p id="authorHidden">@Model.AuthorSearch</p>
+    </div>
     }

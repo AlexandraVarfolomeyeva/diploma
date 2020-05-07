@@ -19,6 +19,7 @@ namespace diploma.Models
         public int Cost { get; set; } //стоимость
         public int Stored {get;set;} //количество на складе
         public int Score { get; set; } //рейтинг книги
+        public int Rated { get; set; } //человек оценили
         public int Weight { get; set; } //вес в грамах
         public bool isDeleted { get; set; }
         public string Content { get; set; } //Описание (аннотация) книги

@@ -68,6 +68,15 @@
                     </a>
                 }
             </h6>
+
+            @*<div id="rating">
+                <span onclick="Rate(@Model.Book.Id,1);">★</span>
+                <span onclick="Rate(@Model.Book.Id,2);">★</span>
+                <span onclick="Rate(@Model.Book.Id,3);">★</span>
+                <span onclick="Rate(@Model.Book.Id,4);">★</span>
+                <span onclick="Rate(@Model.Book.Id,5);">★</span>
+            </div>*@
+
             <h6>
                 @foreach (string c in Model.Book.Genres)
                 {
@@ -119,3 +128,7 @@
         @{Html.RenderPartial("_Comments", Model);}
     </div>
 </div>
+
+<environment include="Development">
+    <script src="~/js/Rating.js" asp-append-version="true"></script>
+</environment>

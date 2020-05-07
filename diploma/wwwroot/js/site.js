@@ -43,7 +43,8 @@ function loadBooks() {
         var OrderBy = document.getElementById("orderHidden").innerHTML;
         var Stored = document.getElementById("storedHidden").innerHTML;
         var Genre = document.getElementById("genreHidden").innerHTML;
-         $(".js__bookList").load("/Home/GetBookView", { page: page, searchString: search_word, sortOrder: OrderBy, Stored: Stored, Genre: Genre });
+        var AuthorSearch = document.getElementById("authorHidden").innerHTML;
+        $(".js__bookList").load("/Home/GetBookView", { page: page, searchString: search_word, sortOrder: OrderBy, Stored: Stored, Genre: Genre, AuthorSearch: AuthorSearch });
     } catch (e) { }
 }
 

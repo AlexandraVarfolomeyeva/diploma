@@ -217,6 +217,7 @@ namespace diploma.Controllers
         {
             try
             {
+                comment.DateComment = DateTime.Now;
                 _context.Comment.Add(comment);
                 await _context.SaveChangesAsync();
 

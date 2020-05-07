@@ -13,6 +13,7 @@ namespace diploma.Models
         public string sortOrder;
         public bool Stored;
         public int Genre;
+        public string AuthorSearch;
         public IPagedList<BookView> Books;
         public string UserName;
         public Order CurrentOrder;

@@ -136,7 +136,7 @@ namespace diploma.Controllers
         }
 
 
-       public IEnumerable<BookView> FilterBooks(string searchString, string sortOrder, bool Stored, int Genre)
+       public IEnumerable<BookView> FilterBooks(string searchString, string sortOrder, bool Stored, int Genre, string AuthorSearch)
         {
             IEnumerable<BookView> books = GetBooks();
             if (!String.IsNullOrEmpty(searchString))
@@ -158,7 +158,22 @@ namespace diploma.Controllers
                 }
                 books = newBooks;
             }
-            if (Genre != 0)
+
+            if (!String.IsNullOrEmpty(AuthorSearch)) {
+                List<BookView> newBooks = new List<BookView>();
+                foreach (BookView book in books)
+                {
+                    foreach (string au in book.Authors)
+                    {
+                        if (au == AuthorSearch)
+                        {
+                            newBooks.Add(book);
+                        }
+                    }
+                }
+                books = newBooks;
+            }
+                if (Genre != 0)
             {
                 List<BookView> newBooks = new List<BookView>();
                 IEnumerable<BookGenre> bg = _context.BookGenre.Where(b => b.IdGenre == Genre);
@@ -214,7 +229,7 @@ namespace diploma.Controllers
 
 
         [HttpGet]
-        public IActionResult Index(BookListViewModel model, int? page, string searchString, string sortOrder, bool Stored, int Genre)
+        public IActionResult Index(BookListViewModel model, int? page, string searchString, string sortOrder, bool Stored, int Genre, string AuthorSearch)
         {
             int pageNumber = page ?? 1;
             if (model.CurrentOrder == null)
@@ -227,13 +242,14 @@ namespace diploma.Controllers
             {
                 model.sortOrder = "new_first";
             }
-            IEnumerable<BookView> books = FilterBooks(searchString, sortOrder, Stored, Genre);
+            IEnumerable<BookView> books = FilterBooks(searchString, sortOrder, Stored, Genre, AuthorSearch);
             model.Books = books.ToPagedList(pageNumber, 12);
             
             model.Genre = Genre;
                 model.searchString = searchString;
                 model.sortOrder = sortOrder;
                 model.Stored = Stored;
+            model.AuthorSearch = AuthorSearch;
             ViewBag.Genres = _context.Genre;
             ViewBag.Username = GetUserName().Result;
             ViewBag.Role = GetRole().Result;
@@ -259,10 +275,10 @@ namespace diploma.Controllers
             return PartialView("_BasketDiv", bvm);
         }
 
-        public IActionResult GetBookView(int page, string searchString, string sortOrder, bool Stored, int Genre)
+        public IActionResult GetBookView(int page, string searchString, string sortOrder, bool Stored, int Genre, string AuthorSearch)
         {
             page = 1;
-            IEnumerable<BookView> books = FilterBooks(searchString, sortOrder, Stored, Genre);
+            IEnumerable<BookView> books = FilterBooks(searchString, sortOrder, Stored, Genre, AuthorSearch);
             BookListViewModel bvm = new BookListViewModel()
             {
                 Stored = Stored,
@@ -271,7 +287,8 @@ namespace diploma.Controllers
                 CurrentOrder = GetCurrentOrder().Result,
                 Genre=Genre,
                 page=page,
-                searchString=searchString,
+                AuthorSearch= AuthorSearch,
+                searchString =searchString,
                 sortOrder=sortOrder
             };
             return PartialView("_BookList", bvm);

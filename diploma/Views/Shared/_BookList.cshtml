@@ -29,10 +29,11 @@
                             var parms = new Dictionary<string, string>
                              {
                                     { "page", "1" },
-                                    { "searchString", c },
+                                    { "searchString", "" },
                                      { "sortOrder", "" },
                                       { "Stored", "false" },
-                                       { "Genre", "" }
+                                       { "Genre", "" },
+                                       { "AuthorSearch", c }
                              };
                             <a class="authors text-muted" asp-area="" asp-controller="Home" asp-action="Index" asp-all-route-data="parms">
                                 @c;
@@ -84,7 +85,7 @@
         </div>
         <div class="row justify-content-center">
             @*@{ Model.Books = (IPagedList)Model.Books;}*@
-            @Html.PagedListPager(Model.Books, page => Url.Action("Index", "Home", new { model = Model, page = page, searchString = Model.searchString, sortOrder = Model.sortOrder, Stored = Model.Stored, Genre = Model.Genre }))
+            @Html.PagedListPager(Model.Books, page => Url.Action("Index", "Home", new { model = Model, page = page, searchString = Model.searchString, sortOrder = Model.sortOrder, Stored = Model.Stored, Genre = Model.Genre, AuthorSearch= Model.AuthorSearch }))
         </div>
     }
     <div class="hidden">

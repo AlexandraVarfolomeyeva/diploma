@@ -15,8 +15,10 @@ namespace diploma.Models
         public string UserName { get; set; }
         [Required]
         public string Content { get; set; }
+        public DateTime DateComment { get; set; }
         [Required]
         public int IdBook { get; set; }
+     
         public virtual Book Book { get; set; }
     }
 }
