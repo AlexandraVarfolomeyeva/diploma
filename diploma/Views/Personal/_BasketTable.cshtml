@@ -8,6 +8,7 @@
         @if (Model.Amount != 0)
         {
             <h4>Количество: <span id="Amount">@Html.DisplayFor(model => model.Amount)</span></h4>
+            <h4>Вес: <span id="Weight">@Html.DisplayFor(model => model.Weight)</span></h4>
             <h4>Сумма заказа: <span id="SumOrder">@Html.DisplayFor(model => model.SumOrder)</span> руб.</h4>
             <p class="text-muted">Сумма заказа не включает в себя стоимость доставки.</p>
             <p class="text-monospace">
@@ -19,7 +20,7 @@
             <button class="btn btn-light" onclick="SureDeleteAll(@Model.Id);">Очистить корзину</button>
             <table class="table table-basket">
                 <thead class="thead-dark">
-                    <tr >
+                    <tr>
                         <th scope="col">Книга</th>
                         <th scope="col">Цена</th>
                         <th scope="col">Количество</th>
@@ -57,16 +58,16 @@
                     }
                 </tbody>
             </table>
-           <div class="justify-content-center buy-btn">
-            <button class="btn" onclick="OrderBooks(@Model.Id);">Заказать</button>
-           </div>
+            <div class="justify-content-center buy-btn">
+                <button class="btn" onclick="OrderBooks(@Model.Id);">Заказать</button>
+            </div>
         }
         else
         {
             <div class="empty-basket-div">
                 <h4 class="empty-basket">Корзина пуста!</h4>
             </div>
-          
+
         }
     }
 </div>

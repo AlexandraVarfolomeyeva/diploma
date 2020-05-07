@@ -15,6 +15,9 @@ namespace diploma.Models
         public string Content { get; set; } //Описание (аннотация) книги
         public string Title { get; set; } //Название книги
         public string Publisher { get; set; }
+        public int Score { get; set; } //рейтинг книги
+        public int Rated { get; set; } //человек оценили
+        public int Weight { get; set; } //вес в грамах
         public string[] Genres { get; set; }
         public string[] Authors { get; set; }
     }

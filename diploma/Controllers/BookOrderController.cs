@@ -89,8 +89,17 @@ namespace diploma.Controllers
                     };
                     _context.BookOrder.Add(bookorder);
                 }
+                Book b = _context.Book.Find(item.IdBook);
                 Order order = _context.Order.Find(item.IdOrder);
-                order.SumOrder += item.Sum;
+                order.SumOrder += b.Cost;
+                int overweight = ((order.Weight - 5000) / 1000) + 1;
+                order.Weight += b.Weight;
+                if (order.Weight > 5000)
+                {
+                    int overweight_new = ((order.Weight - 5000) / 1000) + 1;
+                    overweight_new -= overweight;
+                    order.SumDelivery += overweight_new * 200;
+                }
                 order.Amount++;
                 _context.Order.Update(order);
                 await _context.SaveChangesAsync();

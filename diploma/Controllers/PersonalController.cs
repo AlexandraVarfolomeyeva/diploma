@@ -71,6 +71,9 @@ _userManager.GetUserAsync(HttpContext.User);
                 image = book.image,
                 Stored = book.Stored,
                 Title = book.Title,
+                Rated=book.Rated,
+                Score=book.Score,
+                Weight=book.Weight,
                 Year = book.Year,
                 Publisher = publisher.Name,
                 Authors=au.ToArray(),
@@ -95,11 +98,15 @@ _userManager.GetUserAsync(HttpContext.User);
                                     DateDelivery = j.DateDelivery,
                                     Amount = j.Amount,
                                     DateOrder = j.DateOrder,
-                                    SumOrder = j.SumOrder
+                                    SumOrder = j.SumOrder,
+                                    SumDelivery = j.SumDelivery,
+                                    Weight=j.Weight
                                 };
                     List<BookOrderView> bo = new List<BookOrderView>();
                     int sum = 0;
                     int amount = 0;
+                    int weight=0;
+                    City city = _context.City.Find(usr.IdCity);
                     foreach (BookOrder o in j.BookOrders)
                     {
                         amount += o.Amount;
@@ -109,7 +116,8 @@ _userManager.GetUserAsync(HttpContext.User);
                             Amount = o.Amount
                         };
                         Book item = _context.Book.Where(book => book.isDeleted == false && book.Id==o.IdBook).FirstOrDefault();
-                        sum += item.Cost*o.Amount;
+                        sum += item.Cost * o.Amount;
+                        weight+=item.Weight * o.Amount;
                         n.Book = GetViewByBook(item);
                         bo.Add(n);
                     }
@@ -117,12 +125,17 @@ _userManager.GetUserAsync(HttpContext.User);
                     j.Amount = amount;
                     orderView.SumOrder = sum;
                     j.SumOrder = sum;
+                    j.Weight = weight;
+                    if (weight > 5000)
+                    {
+                        weight = ((weight - 5000) / 1000)+1;//за каждый последующий килограмм
+                        j.SumDelivery = city.DeliverySum + (200 * weight);
+                    }
                     _context.Order.Update(j);
                     await _context.SaveChangesAsync();
                     orderView.BookOrders = bo;
-                   City city = _context.City.Find(usr.IdCity);
                     orderView.City = city.Name;
-                    orderView.SumDelivery = city.DeliverySum;
+                    orderView.SumDelivery = j.SumDelivery;
                     orderView.DateDelivery = DateTime.Now.AddDays(city.DeliveryTime);
                     return orderView;
                 }
@@ -181,6 +194,7 @@ _userManager.GetUserAsync(HttpContext.User);
                             DateOrder = order.DateOrder,
                             SumOrder = order.SumOrder,
                             Id = order.Id,
+                            Weight = order.Weight,
                             City = city.Name,
                             SumDelivery = city.DeliverySum
                         };
@@ -221,6 +235,14 @@ _userManager.GetUserAsync(HttpContext.User);
                     Order o = _context.Order.Find(j.IdOrder);
                     o.SumOrder -= b.Cost;
                     o.Amount -= 1;
+                    int overweight = ((o.Weight - 5000) / 1000) + 1; //на сколько перевешивало раньше
+                        o.Weight -= b.Weight;
+                    if (o.Weight > 5000)
+                    {
+                        int overweight_new = ((o.Weight - 5000) / 1000) + 1;  //на сколько сейчас
+                        overweight -= overweight_new; //на сколько уменьшилось
+                        o.SumDelivery -= overweight * 200;
+                    }
                     _context.Order.Update(o);
                     await _context.SaveChangesAsync();
                  
@@ -232,6 +254,14 @@ _userManager.GetUserAsync(HttpContext.User);
                     _context.BookOrder.Remove(j);
                     Order o = _context.Order.Find(j.IdOrder);
                     o.SumOrder -= b.Cost;
+                      int overweight = ((o.Weight - 5000) / 1000) + 1; //на сколько перевешивало раньше
+                        o.Weight -= b.Weight;
+                    if (o.Weight > 5000)
+                    {
+                        int overweight_new = ((o.Weight - 5000) / 1000) + 1;  //на сколько сейчас
+                        overweight -= overweight_new; //на сколько уменьшилось
+                        o.SumDelivery -= overweight * 200;
+                    }
                     o.Amount -= 1;
                     _context.Order.Update(o);
                     await _context.SaveChangesAsync();
@@ -258,6 +288,14 @@ _userManager.GetUserAsync(HttpContext.User);
                     Order o = _context.Order.Find(j.IdOrder);
                     o.SumOrder += b.Cost;
                     o.Amount += 1;
+                    int overweight = ((o.Weight - 5000) / 1000) + 1; //на сколько перевешивало раньше
+                    o.Weight += b.Weight;
+                    if (o.Weight > 5000)
+                    {
+                        int overweight_new = ((o.Weight - 5000) / 1000) + 1;  //на сколько сейчас
+                        overweight_new -= overweight; //на сколько увеличилось
+                        o.SumDelivery += overweight_new * 200;
+                    }
                     _context.Order.Update(o);
                     _context.BookOrder.Update(j);
                     await _context.SaveChangesAsync();
@@ -306,7 +344,15 @@ _userManager.GetUserAsync(HttpContext.User);
                 BookOrder j = _context.BookOrder.Find(id);
                 Order o = _context.Order.Find(j.IdOrder);
                 Book b = _context.Book.Find(j.IdBook);
-                o.SumOrder -= j.Amount*b.Cost;
+                o.SumOrder -= j.Amount * b.Cost;
+                int overweight = ((o.Weight - 5000) / 1000) + 1; //на сколько перевешивало раньше
+                    o.Weight -= b.Weight;
+                if (o.Weight > 5000)
+                {
+                    int overweight_new = ((o.Weight - 5000) / 1000) + 1;  //на сколько сейчас
+                    overweight -= overweight_new; //на сколько уменьшилось
+                    o.SumDelivery -= overweight * 200;
+                }
                 o.Amount -= j.Amount;
                 _context.BookOrder.Remove(j);
                 await _context.SaveChangesAsync();
@@ -348,6 +394,8 @@ _userManager.GetUserAsync(HttpContext.User);
                     UserId = user.Id,
                     Active = 1,
                     Amount = 0,
+                    Weight=0,
+                    SumDelivery=city.DeliverySum,
                     DateDelivery = DateTime.Now.AddDays(city.DeliveryTime),
                     DateOrder = DateTime.Now,
                     SumOrder=0
@@ -368,7 +416,7 @@ _userManager.GetUserAsync(HttpContext.User);
         [HttpDelete("{id}")]
         [Route("[controller]/DeleteAll/{id}")]
         public async Task<IActionResult> DeleteAll([FromRoute] int id)
-        {//удаление книги из БД возможно только администратором
+        {//удаление заказа 
             try
             {
                 if (!ModelState.IsValid)
@@ -387,9 +435,13 @@ _userManager.GetUserAsync(HttpContext.User);
                 foreach (BookOrder i in lines) { 
                     _context.BookOrder.Remove(i);
                 }
+                User usr = GetCurrentUserAsync().Result;
+                City city = _context.City.Find(usr.IdCity);
                 item.Amount = 0;
                 item.SumOrder = 0;
-              _context.Order.Update(item);
+                item.Weight = 0;
+                item.SumDelivery = city.DeliverySum;
+                _context.Order.Update(item);
                 await _context.SaveChangesAsync();
                 OrderView j = await GetCurrentOrder();
                 //return RedirectToAction("Basket", new { j });

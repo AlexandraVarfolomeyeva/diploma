@@ -109,15 +109,16 @@ namespace diploma.Controllers
                                 message = "Добавлен новый пользователь: " + user.UserName
                             };
 
-                            IEnumerable<City> b = d.Where(c => c.Id == user.IdCity);
+                            City b = d.Where(c => c.Id == user.IdCity).First();
                             Order order = new Order()
                             {
                                 User = user,
                                 UserId = user.Id,
                                 Amount = 0,
                                 Active = 1,
+                                SumDelivery = b.DeliverySum,
                                 SumOrder = 0,
-                                DateDelivery = DateTime.Now.AddDays(b.FirstOrDefault().DeliveryTime),
+                                DateDelivery = DateTime.Now.AddDays(b.DeliveryTime),
                                 DateOrder = DateTime.Now
                             };
                             //  order.DateDelivery= DateTime.Now.AddMonths(1);

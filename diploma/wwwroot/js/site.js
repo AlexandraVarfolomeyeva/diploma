@@ -55,7 +55,7 @@ function reloadBasket() {
 }
 
 //id -- книги ; sum -- цена книги
-function add(id, sum, order) {
+function add(id, order) {
     var button = document.getElementById(id);
     button.setAttribute('onclick', '');
     //добавление к заказу книги
@@ -64,8 +64,7 @@ function add(id, sum, order) {
         var bookOrder = {
             'IdBook': id,
             'IdOrder': order,
-            'Amount': 1,
-            'Sum': sum
+            'Amount': 1
         }
         var request = new XMLHttpRequest();
         request.open("POST", uriBookOrder);

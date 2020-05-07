@@ -26,6 +26,7 @@ namespace diploma.Models
         public DateTime? DateCancel { get; set; }//дата отмены заказа
         public DateTime DateOrder { get; set; }//дата заказа
         public float SumOrder { get; set; } //стоимость заказа
+        public int Weight { get; set; } //вес в грамах
         public float SumDelivery { get; set; } //стоимость доставки
         public int Active { get; set; } //является ли заказ активным
         public int Amount { get; set; } //количество книг в заказе

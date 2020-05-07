@@ -65,7 +65,7 @@
                             {
                                 if (!Model.CurrentOrder.BookOrders.Where(i => i.IdBook == s.Id).Any())
                                 {
-                                    <button id=@s.Id onclick="add(@s.Id,@s.Cost,@Model.CurrentOrder.Id);" class="btn btn-dark"> Купить </button> <br />
+                                    <button id=@s.Id onclick="add(@s.Id,@Model.CurrentOrder.Id);" class="btn btn-dark"> Купить </button> <br />
                                 }
                                 else
                                 {

@@ -10,6 +10,5 @@ namespace diploma.Models
         public int IdBook { get; set; }
         public int IdOrder { get; set; }
         public int Amount { get; set; } //количество книг в заказе
-        public int Sum { get; set; } //стоимость книги, добавляемой или удаляемой в/из заказ(а)
     }
 }
