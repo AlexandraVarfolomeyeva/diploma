@@ -306,6 +306,7 @@ namespace diploma.Controllers
         public IActionResult Privacy()
         {
             ViewBag.Username = GetUserName().Result;
+            HttpContext.Request.Cookies.Any();
             return View();
         }
         
