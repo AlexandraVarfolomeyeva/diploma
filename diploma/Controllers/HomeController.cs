@@ -313,7 +313,8 @@ namespace diploma.Controllers
         public IActionResult PriceAndDelivery()
         {
             ViewBag.Username = GetUserName().Result;
-            return View();
+            IEnumerable<City> cities = _context.City;
+            return View(cities);
         }
 
          [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
