@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using diploma.Models;
+using BLL.Infrastracture;
+using BLL.Models;
+using DAL.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -37,20 +39,13 @@ namespace diploma
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            var connection =
-               Configuration.GetConnectionString("DefaultConnection");
-        services.AddIdentity<User, IdentityRole>()
-        .AddEntityFrameworkStores<BookingContext>();
-
-        services.AddDbContext<BookingContext>(options =>
-        options.UseSqlServer(connection));
-
         services.AddMvc().AddJsonOptions(options =>
         {
             options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
         });
 
-        services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddBll(Configuration);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
         services.ConfigureApplicationCookie(options =>
         {//401 ошибка если недостаточно прав
@@ -123,7 +118,7 @@ services)
         string adminPassword = "Aa123456!";
         if (await userManager.FindByNameAsync(adminEmail) == null)
         {
-            User admin = new User
+                User admin = new User
             {
                 Email = adminEmail,
                 UserName = "admin",
@@ -144,8 +139,8 @@ services)
         string userPassword = "Aa123456!";
         if (await userManager.FindByNameAsync(userEmail) == null)
         {
-            User user = new User
-            {
+             User user = new User
+                {
                 Email = userEmail,
                 UserName = "user",
                 Fio = "Пользователь",

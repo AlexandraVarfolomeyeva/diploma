@@ -4,28 +4,29 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using diploma.Models;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using X.PagedList;
-
+using BLL.Models;
+using BLL.Interfaces;
+using DAL.Entities;
 
 namespace diploma.Controllers
 {
     public class HomeController : Controller
     {
 
-        private readonly BookingContext _context;
+        private readonly IBookCrud _contextBook;
         private readonly UserManager<User> _userManager;
         IHostingEnvironment _appEnvironment;
 
-        public HomeController(BookingContext context,
+        public HomeController(IBookCrud contextBook,
      UserManager<User> userManager, IHostingEnvironment appEnvironment)
         {
-            _context = context;
+            _contextBook = contextBook;
             _userManager = userManager;
             _appEnvironment = appEnvironment;
         }
@@ -48,29 +49,29 @@ namespace diploma.Controllers
             return "";
         }
 
-        private async Task<Order> GetCurrentOrder()
-        {
-            try
-            {
-                User usr = await _userManager.GetUserAsync(HttpContext.User);
-            if (usr != null)
-            {
-                string id = usr.Id;
-                IEnumerable<Order> orders = _context.Order.Where(p => p.UserId == id && p.Active == 1).Include(p=>p.BookOrders);
-                return orders.FirstOrDefault();
-            }
-            else
-            {
-                return null;
-            }
-            }
-            catch (Exception ex)
-            {
+        //private async Task<OrderModel> GetCurrentOrder()
+        //{
+        //    try
+        //    {
+        //        UserModel usr = await _userManager.GetUserAsync(HttpContext.User);
+        //    if (usr != null)
+        //    {
+        //        string id = usr.Id;
+        //        //IEnumerable<OrderModel> orders = _context.Order.Where(p => p.UserId == id && p.Active == 1).Include(p=>p.BookOrders);
+        //        return orders.FirstOrDefault();
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                Log.Write(ex);
-                return null;
-            }
-        }
+        //        Log.Write(ex);
+        //        return null;
+        //    }
+        //}
 
         private Task<User> GetCurrentUserAsync() =>
       _userManager.GetUserAsync(HttpContext.User);
@@ -96,43 +97,7 @@ namespace diploma.Controllers
 
         public IEnumerable<BookView> GetBooks()
         {
-            IEnumerable<Book> books = _context.Book.Include(p => p.BookOrders).Where(d => d.isDeleted == false);
-            BookView[] bookViews = new BookView[books.Count()];
-            int i = 0;
-            foreach (Book item in books)
-            {
-                bookViews[i] = new BookView()
-                {
-                    Id = item.Id,
-                    image = item.image,
-                    Stored = item.Stored,
-                    Title = item.Title,
-                    Year = item.Year,
-                    Cost = item.Cost,
-                    Content = item.Content
-                };
-                Publisher publisher = _context.Publisher.Find(item.IdPublisher);
-                List<string> au = new List<string>();
-                List<string> ge = new List<string>();
-                bookViews[i].Publisher = publisher.Name;
-                IEnumerable<BookAuthor> bookauthors = _context.BookAuthor.Where(b => b.IdBook == item.Id);
-                IEnumerable<BookGenre> bookgenres = _context.BookGenre.Where(b => b.IdBook == item.Id);
-                foreach (BookAuthor line in bookauthors)
-                {
-                    Author author = _context.Author.Find(line.IdAuthor);
-                    au.Add(author.Name);
-                }
-                bookViews[i].Authors = au.ToArray();
-                foreach (BookGenre line in bookgenres)
-                {
-                    Genre genre = _context.Genre.Find(line.IdGenre);
-                    ge.Add(genre.Name);
-                }
-                bookViews[i].Genres = ge.ToArray();
-                i++;
-            }
-            IEnumerable<BookView> views = bookViews;
-            return bookViews;
+            return _contextBook.GetAllBookViews();
         }
 
 
@@ -146,12 +111,12 @@ namespace diploma.Controllers
                 List<BookView> newBooks = new List<BookView>();
                 for (int i = 0; i < words.Length; i++)
                 {  //для каждого слова
-                    IEnumerable<BookAuthor> ba = _context.BookAuthor.Include(b => b.Book).Include(b => b.Author).Where(v => v.Author.Name.Contains(words[i], StringComparison.OrdinalIgnoreCase));
-                    foreach (BookAuthor b in ba)
-                    {
-                        List<BookView> byAuthors = books.Where(f => f.Id == b.IdBook).ToList();
-                        newBooks = newBooks.Concat(byAuthors).Distinct().ToList();
-                    }
+                    //IEnumerable<BookAuthor> ba = _context.BookAuthor.Include(b => b.Book).Include(b => b.Author).Where(v => v.Author.Name.Contains(words[i], StringComparison.OrdinalIgnoreCase));
+                    //foreach (BookAuthor b in ba)
+                    //{
+                    //    List<BookView> byAuthors = books.Where(f => f.Id == b.IdBook).ToList();
+                    //    newBooks = newBooks.Concat(byAuthors).Distinct().ToList();
+                    //}
                     //пока по названию, но надо еще пройтись по авторам, и соединить
                     List<BookView> list = books.Where(s => s.Title.Contains(words[i], StringComparison.OrdinalIgnoreCase)).ToList();
                     newBooks = newBooks.Concat(list).Distinct().ToList();
@@ -176,15 +141,15 @@ namespace diploma.Controllers
                 if (Genre != 0)
             {
                 List<BookView> newBooks = new List<BookView>();
-                IEnumerable<BookGenre> bg = _context.BookGenre.Where(b => b.IdGenre == Genre);
-                foreach (BookGenre b in bg)
-                {
-                    IEnumerable<BookView> book = books.Where(p => p.Id == b.IdBook);
-                    if (book.Any())
-                    {
-                        newBooks.Add(book.First());
-                    }
-                }
+                //IEnumerable<BookGenre> bg = _context.BookGenre.Where(b => b.IdGenre == Genre);
+                //foreach (BookGenre b in bg)
+                //{
+                //    IEnumerable<BookView> book = books.Where(p => p.Id == b.IdBook);
+                //    if (book.Any())
+                //    {
+                //        newBooks.Add(book.First());
+                //    }
+                //}
                 books = newBooks;
             }
             if (Stored)
@@ -232,8 +197,8 @@ namespace diploma.Controllers
         public IActionResult Index(BookListViewModel model, int? page, string searchString, string sortOrder, bool Stored, int Genre, string AuthorSearch)
         {
             int pageNumber = page ?? 1;
-            if (model.CurrentOrder == null)
-            { model.CurrentOrder = GetCurrentOrder().Result; }
+            //if (model.CurrentOrder == null)
+            //{ model.CurrentOrder = GetCurrentOrder().Result; }
             if (String.IsNullOrEmpty(model.UserName))
             {
                 model.UserName = GetUserName().Result;
@@ -250,7 +215,7 @@ namespace diploma.Controllers
                 model.sortOrder = sortOrder;
                 model.Stored = Stored;
             model.AuthorSearch = AuthorSearch;
-            ViewBag.Genres = _context.Genre;
+            ////ViewBag.Genres = _context.Genre;
             ViewBag.Username = GetUserName().Result;
             ViewBag.Role = GetRole().Result;
             return View(model);
@@ -264,35 +229,35 @@ namespace diploma.Controllers
             return View();
         }
 
-        public ActionResult GetBasketView()
-        {
-            BookListViewModel bvm = new BookListViewModel()
-            {
-                UserName = GetUserName().Result,
-                CurrentOrder = GetCurrentOrder().Result
-            };
-            ViewBag.Genres = _context.Genre.OrderBy(g => g.Name);
-            return PartialView("_BasketDiv", bvm);
-        }
+        ////public ActionResult GetBasketView()
+        ////{
+        ////    BookListViewModel bvm = new BookListViewModel()
+        ////    {
+        ////        UserName = GetUserName().Result,
+        ////        CurrentOrder = GetCurrentOrder().Result
+        ////    };
+        ////    ViewBag.Genres = _context.Genre.OrderBy(g => g.Name);
+        ////    return PartialView("_BasketDiv", bvm);
+        ////}
 
-        public IActionResult GetBookView(int page, string searchString, string sortOrder, bool Stored, int Genre, string AuthorSearch)
-        {
-            page = 1;
-            IEnumerable<BookView> books = FilterBooks(searchString, sortOrder, Stored, Genre, AuthorSearch);
-            BookListViewModel bvm = new BookListViewModel()
-            {
-                Stored = Stored,
-                Books = books.ToPagedList(page, 12),
-                UserName = GetUserName().Result,
-                CurrentOrder = GetCurrentOrder().Result,
-                Genre=Genre,
-                page=page,
-                AuthorSearch= AuthorSearch,
-                searchString =searchString,
-                sortOrder=sortOrder
-            };
-            return PartialView("_BookList", bvm);
-        }
+        //public IActionResult GetBookView(int page, string searchString, string sortOrder, bool Stored, int Genre, string AuthorSearch)
+        //{
+        //    page = 1;
+        //    IEnumerable<BookView> books = FilterBooks(searchString, sortOrder, Stored, Genre, AuthorSearch);
+        //    //BookListViewModel bvm = new BookListViewModel()
+        //    //{
+        //    //    Stored = Stored,
+        //    //    Books = books.ToPagedList(page, 12),
+        //    //    UserName = GetUserName().Result,
+        //    //    CurrentOrder = GetCurrentOrder().Result,
+        //    //    Genre=Genre,
+        //    //    page=page,
+        //    //    AuthorSearch= AuthorSearch,
+        //    //    searchString =searchString,
+        //    //    sortOrder=sortOrder
+        //    //};
+        //    return PartialView("_BookList", bvm);
+        //}
 
 
         public IActionResult Contact()
@@ -310,17 +275,17 @@ namespace diploma.Controllers
             return View();
         }
         
-        public IActionResult PriceAndDelivery()
-        {
-            ViewBag.Username = GetUserName().Result;
-            IEnumerable<City> cities = _context.City;
-            return View(cities);
-        }
+        //public IActionResult PriceAndDelivery()
+        //{
+        //    ViewBag.Username = GetUserName().Result;
+        //    IEnumerable<City> cities = _context.City;
+        //    return View(cities);
+        //}
 
-         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        // [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        //}
     }
 }

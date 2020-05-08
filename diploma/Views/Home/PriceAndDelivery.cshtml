@@ -1,4 +1,4 @@
-﻿@model IEnumerable<City>
+﻿@model IEnumerable<CityModel>
 @{
     ViewData["Title"] = "Доставка и оплата";
 }
@@ -17,7 +17,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (City c in Model)
+        @foreach (CityModel c in Model)
         {
             <tr scope="row">
                 <td class="font-weight-bold">
