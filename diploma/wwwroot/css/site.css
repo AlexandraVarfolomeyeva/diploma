@@ -7,7 +7,11 @@ body {
     font-family: 'Times New Roman', Times, serif;
 }
 
-
+.concern-link {
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
 /*#rating {
     text-align: center;
     perspective: 250px;
@@ -35,10 +39,6 @@ body {
             text-shadow: 0 0 30px #ffc;
         }
 */
-
-
-
-
 .comment-form {
     width: 100%;
     padding: 5px;

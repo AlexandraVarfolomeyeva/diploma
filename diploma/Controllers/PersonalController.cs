@@ -319,6 +319,7 @@ _userManager.GetUserAsync(HttpContext.User);
             {
                 Order j = _context.Order.Find(id);
                 j.Active = 4;
+                j.DateCancel = DateTime.Now.Date;
                 _context.Order.Update(j);
                 IEnumerable<BookOrder> bo = _context.BookOrder.Include(f => f.Book).Where(f => f.IdOrder == id);
                 foreach (BookOrder b in bo)

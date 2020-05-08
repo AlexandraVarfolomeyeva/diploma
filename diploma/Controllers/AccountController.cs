@@ -171,6 +171,13 @@ namespace diploma.Controllers
             }
 
 
+
+        [HttpGet]
+        public ActionResult Concern()
+        {
+            return PartialView("_Concern");
+        }
+
         [HttpGet]
         public ActionResult ErrorMsg()
         {

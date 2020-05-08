@@ -352,8 +352,11 @@ namespace diploma.Controllers
                     o.DateDelivery = o.DateOrder.AddDays(city.DeliveryTime);
                 }
                 o.Active = option;
-                if (option == 3)
-                { o.DateDelivery = DateTime.Now.Date; }
+                switch (option)
+                {
+                    case 2: o.DateSent= DateTime.Now.Date; break;
+                    case 3: o.DateDelivery = DateTime.Now.Date; break;
+                }
                 _context.Order.Update(o);
                 await _context.SaveChangesAsync();
                 return Ok(o.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU")));

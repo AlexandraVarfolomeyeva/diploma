@@ -3,6 +3,15 @@
     ViewData["Title"] = "Регистрация";
 }
 
+<div class="modal1" data-modal="5">
+    <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
+    </svg>
+    <div class="js__concern">
+        @{Html.Partial("_Concern");}
+    </div>
+</div>
+
 <div class="container">
     <div class="col-md-8 order-md-1 center-block">
         <div class="header-div">
@@ -70,6 +79,7 @@
                 <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
             </div>
             <br />
+            <div><p>Нажимая кнопку "Регистрация" я подтверждаю, что согласен на <a class="concern-link" onclick="Concern();">обработку своих персональных данных</a></p></div>
             <input class="btn btn-primary btn-lg btn-block" type="submit" value="Регистрация">
           @*  <button class="btn btn-primary btn-lg btn-block" id="registerBtn" type="submit" onsubmit="return validateForm()">Регистрация</button>*@
         </form>
@@ -78,7 +88,6 @@
         <img class="img-register" src="~/images/register.jpg">
     </div>
 </div>
-@*<environment include="Development">
-        <script src="~/js/Validation.js" asp-append-version="true"></script>
-        <script src="~/js/Account.js" asp-append-version="true"></script>
-    </environment>*@
+<environment include="Development">
+        <script src="~/js/Register.js" asp-append-version="true"></script>
+</environment>
