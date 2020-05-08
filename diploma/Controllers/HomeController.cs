@@ -19,14 +19,14 @@ namespace diploma.Controllers
     public class HomeController : Controller
     {
 
-        private readonly IBookCrud _contextBook;
+        private readonly IDBCrud _context;
         private readonly UserManager<User> _userManager;
         IHostingEnvironment _appEnvironment;
 
-        public HomeController(IBookCrud contextBook,
+        public HomeController(IDBCrud context,
      UserManager<User> userManager, IHostingEnvironment appEnvironment)
         {
-            _contextBook = contextBook;
+            _context = context;
             _userManager = userManager;
             _appEnvironment = appEnvironment;
         }
@@ -49,29 +49,29 @@ namespace diploma.Controllers
             return "";
         }
 
-        //private async Task<OrderModel> GetCurrentOrder()
-        //{
-        //    try
-        //    {
-        //        UserModel usr = await _userManager.GetUserAsync(HttpContext.User);
-        //    if (usr != null)
-        //    {
-        //        string id = usr.Id;
-        //        //IEnumerable<OrderModel> orders = _context.Order.Where(p => p.UserId == id && p.Active == 1).Include(p=>p.BookOrders);
-        //        return orders.FirstOrDefault();
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //    }
-        //    catch (Exception ex)
-        //    {
+        private async Task<OrderModel> GetCurrentOrder()
+        {
+            try
+            {
+                User usr = await _userManager.GetUserAsync(HttpContext.User);
+                if (usr != null)
+                {
+                    string id = usr.Id;
+                    IEnumerable<OrderModel> orders = _context.Order.Where(p => p.UserId == id && p.Active == 1).Include(p=>p.BookOrders);
+                    return orders.FirstOrDefault();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
 
-        //        Log.Write(ex);
-        //        return null;
-        //    }
-        //}
+                Log.Write(ex);
+                return null;
+            }
+        }
 
         private Task<User> GetCurrentUserAsync() =>
       _userManager.GetUserAsync(HttpContext.User);
@@ -97,7 +97,7 @@ namespace diploma.Controllers
 
         public IEnumerable<BookView> GetBooks()
         {
-            return _contextBook.GetAllBookViews();
+            return _context.GetAllBookViews();
         }
 
 
