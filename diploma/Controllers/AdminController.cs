@@ -33,7 +33,7 @@ namespace diploma.Controllers
 
         private List<AdminOrderView> GetFiltered(int status, string period, string sort, string search)
         {
-            IEnumerable<OrderModel> orders = _context.GetAllOrderViews().Where(n => n.Active != 1);
+            IEnumerable<OrderModel> orders = _context.GetAllOrders().Where(n => n.Active != 1);
             List<AdminOrderView> modelList = new List<AdminOrderView>();
             foreach (OrderModel o in orders)
             {
@@ -177,7 +177,7 @@ namespace diploma.Controllers
                 if (usr != null)
                 {
                     string id = usr.Id;
-                    IEnumerable<OrderModel> orders = _context.GetAllOrderViews().Where(p => p.UserId == id && p.Active == 1);
+                    IEnumerable<OrderModel> orders = _context.GetAllOrders().Where(p => p.UserId == id && p.Active == 1);
                     return orders.FirstOrDefault();
                 }
                 else

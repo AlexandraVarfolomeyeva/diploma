@@ -57,7 +57,8 @@ namespace diploma.Controllers
                 if (usr != null)
                 {
                     string id = usr.Id;
-                    IEnumerable<OrderModel> orders = _context.GetAllOrderViews().Where(p => p.UserId == id && p.Active == 1);
+                    IEnumerable<OrderModel> orders = _context.GetAllOrders();
+                    orders = orders.Where(p => p.UserId == id && p.Active == 1);
                     return orders.FirstOrDefault();
                 }
                 else
@@ -99,7 +100,6 @@ namespace diploma.Controllers
         {
             return _context.GetAllBookViews();
         }
-
 
        public IEnumerable<BookView> FilterBooks(string searchString, string sortOrder, bool Stored, int Genre, string AuthorSearch)
         {

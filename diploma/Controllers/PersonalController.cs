@@ -92,7 +92,7 @@ namespace diploma.Controllers
                 if (usr != null)
                 {
                     string id = usr.Id;
-                    OrderModel j = _context.GetAllOrderViews().Where(p => p.UserId == id && p.Active == 1).FirstOrDefault();
+                    OrderModel j = _context.GetAllOrders().Where(p => p.UserId == id && p.Active == 1).FirstOrDefault();
                         OrderView orderView = new OrderView
                                 {
                                     Id = j.Id,
@@ -104,12 +104,13 @@ namespace diploma.Controllers
                                     SumDelivery = j.SumDelivery,
                                     Weight=j.Weight
                                 };
+                    IEnumerable<BookOrderModel> bookOrders = _context.GetAllBookOrders().Where(b=>b.IdOrder==j.Id);
                     List<BookOrderView> bo = new List<BookOrderView>();
                     int sum = 0;
                     int amount = 0;
                     int weight=0;
                     CityModel city = _context.GetCity(usr.IdCity);
-                    foreach (BookOrderModel o in j.BookOrders)
+                    foreach (BookOrderModel o in bookOrders)
                     {
                         amount += o.Amount;
                         BookOrderView n = new BookOrderView
@@ -120,7 +121,7 @@ namespace diploma.Controllers
                         BookView item = _context.GetAllBookViews().Where(book=>book.Id==o.IdBook).FirstOrDefault();
                         sum += item.Cost * o.Amount;
                         weight+=item.Weight * o.Amount;
-                        //n.Book = GetViewByBook(item);
+                        n.Book = item;
                         bo.Add(n);
                     }
                     orderView.Amount = amount;
@@ -169,8 +170,8 @@ namespace diploma.Controllers
                 case "_BasketHistory":
                     {
                         User usr = GetCurrentUserAsync().Result;
-                        IEnumerable<OrderModel> orders = _context.GetAllOrderViews().Where(h=>h.UserId==usr.Id && h.Active!=1);
-                        List<OrderModel> ActiveOrders = _context.GetAllOrderViews().Where(h => h.UserId == usr.Id && h.Active == 1).ToList();
+                        IEnumerable<OrderModel> orders = _context.GetAllOrders().Where(h=>h.UserId==usr.Id && h.Active!=1);
+                        List<OrderModel> ActiveOrders = _context.GetAllOrders().Where(h => h.UserId == usr.Id && h.Active == 1).ToList();
                         while (ActiveOrders.Count > 1)
                         { //убираем дубляжи активных заказов
                             OrderModel o = ActiveOrders.Last();
@@ -202,11 +203,12 @@ namespace diploma.Controllers
                         List<BookOrderView> boo = new List<BookOrderView>();
                         foreach (BookOrderModel b in bo)
                         {
+                            BookModel book = _context.GetBookModel(b.IdBook);
                             BookOrderView o = new BookOrderView()
                             {
                                 Amount = b.Amount,
                                 Id = b.Id,
-                                Book = GetViewByBook(b.Book)
+                                Book = GetViewByBook(book)
                             };
                             boo.Add(o);
                         }
@@ -320,6 +322,7 @@ namespace diploma.Controllers
                 IEnumerable<BookOrderModel> bo = _context.GetAllBookOrders().Where(f => f.IdOrder == id);
                 foreach (BookOrderModel b in bo)
                 {
+                    b.Book = _context.GetBookModel(b.IdBook);
                     b.Book.Stored += b.Amount;
                     _context.UpdateBook(b.Book);
                 }

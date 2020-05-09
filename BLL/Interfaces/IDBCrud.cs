@@ -9,7 +9,9 @@ namespace BLL.Interfaces
     {
         //Books
         IEnumerable<BookView> GetAllBookViews();
+        IEnumerable<BookModel> GetAllBooks();
         BookAdd GetBook(int id);
+        BookModel GetBookModel(int id);
         void CreateBook(BookAdd item);
         void UpdateBook(BookAdd item);
         void UpdateBook(BookModel item);
@@ -24,7 +26,7 @@ namespace BLL.Interfaces
         void DeleteBookOrder(int id);
 
         //Orders
-        IEnumerable<OrderModel> GetAllOrderViews();
+        IEnumerable<OrderModel> GetAllOrders();
         OrderModel GetOrder(int id);
         void CreateOrder(OrderModel item);
         void UpdateOrder(OrderModel item);
