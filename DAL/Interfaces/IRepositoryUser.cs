@@ -11,6 +11,6 @@ namespace DAL.Interfaces
         User GetItem(string id); // получение одного объекта по id
         void Create(User item); // создание объекта
         void Update(User item); // обновление объекта
-        void Delete(int id); // удаление объекта по id
+        void Delete(string id); // удаление объекта по id
     }
 }

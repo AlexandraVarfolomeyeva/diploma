@@ -57,7 +57,7 @@ namespace diploma.Controllers
                 if (usr != null)
                 {
                     string id = usr.Id;
-                    IEnumerable<OrderModel> orders = _context.Order.Where(p => p.UserId == id && p.Active == 1).Include(p=>p.BookOrders);
+                    IEnumerable<OrderModel> orders = _context.GetAllOrderViews().Where(p => p.UserId == id && p.Active == 1);
                     return orders.FirstOrDefault();
                 }
                 else
@@ -111,12 +111,12 @@ namespace diploma.Controllers
                 List<BookView> newBooks = new List<BookView>();
                 for (int i = 0; i < words.Length; i++)
                 {  //для каждого слова
-                    //IEnumerable<BookAuthor> ba = _context.BookAuthor.Include(b => b.Book).Include(b => b.Author).Where(v => v.Author.Name.Contains(words[i], StringComparison.OrdinalIgnoreCase));
-                    //foreach (BookAuthor b in ba)
-                    //{
-                    //    List<BookView> byAuthors = books.Where(f => f.Id == b.IdBook).ToList();
-                    //    newBooks = newBooks.Concat(byAuthors).Distinct().ToList();
-                    //}
+                    IEnumerable<BookAuthorModel> ba = _context.GetAllBookAuthors().Where(v => v.Author.Name.Contains(words[i], StringComparison.OrdinalIgnoreCase));
+                    foreach (BookAuthorModel b in ba)
+                    {
+                        List<BookView> byAuthors = books.Where(f => f.Id == b.IdBook).ToList();
+                        newBooks = newBooks.Concat(byAuthors).Distinct().ToList();
+                    }
                     //пока по названию, но надо еще пройтись по авторам, и соединить
                     List<BookView> list = books.Where(s => s.Title.Contains(words[i], StringComparison.OrdinalIgnoreCase)).ToList();
                     newBooks = newBooks.Concat(list).Distinct().ToList();
@@ -141,15 +141,15 @@ namespace diploma.Controllers
                 if (Genre != 0)
             {
                 List<BookView> newBooks = new List<BookView>();
-                //IEnumerable<BookGenre> bg = _context.BookGenre.Where(b => b.IdGenre == Genre);
-                //foreach (BookGenre b in bg)
-                //{
-                //    IEnumerable<BookView> book = books.Where(p => p.Id == b.IdBook);
-                //    if (book.Any())
-                //    {
-                //        newBooks.Add(book.First());
-                //    }
-                //}
+                IEnumerable<BookGenreModel> bg = _context.GetAllBookGenres().Where(b => b.IdGenre == Genre);
+                foreach (BookGenreModel b in bg)
+                {
+                    IEnumerable<BookView> book = books.Where(p => p.Id == b.IdBook);
+                    if (book.Any())
+                    {
+                        newBooks.Add(book.First());
+                    }
+                }
                 books = newBooks;
             }
             if (Stored)
@@ -197,8 +197,8 @@ namespace diploma.Controllers
         public IActionResult Index(BookListViewModel model, int? page, string searchString, string sortOrder, bool Stored, int Genre, string AuthorSearch)
         {
             int pageNumber = page ?? 1;
-            //if (model.CurrentOrder == null)
-            //{ model.CurrentOrder = GetCurrentOrder().Result; }
+            if (model.CurrentOrder == null)
+            { model.CurrentOrder = GetCurrentOrder().Result; }
             if (String.IsNullOrEmpty(model.UserName))
             {
                 model.UserName = GetUserName().Result;
@@ -215,7 +215,7 @@ namespace diploma.Controllers
                 model.sortOrder = sortOrder;
                 model.Stored = Stored;
             model.AuthorSearch = AuthorSearch;
-            ////ViewBag.Genres = _context.Genre;
+            ViewBag.Genres = _context.GetAllGenres();
             ViewBag.Username = GetUserName().Result;
             ViewBag.Role = GetRole().Result;
             return View(model);
@@ -229,35 +229,35 @@ namespace diploma.Controllers
             return View();
         }
 
-        ////public ActionResult GetBasketView()
-        ////{
-        ////    BookListViewModel bvm = new BookListViewModel()
-        ////    {
-        ////        UserName = GetUserName().Result,
-        ////        CurrentOrder = GetCurrentOrder().Result
-        ////    };
-        ////    ViewBag.Genres = _context.Genre.OrderBy(g => g.Name);
-        ////    return PartialView("_BasketDiv", bvm);
-        ////}
+        public ActionResult GetBasketView()
+        {
+            BookListViewModel bvm = new BookListViewModel()
+            {
+                UserName = GetUserName().Result,
+                CurrentOrder = GetCurrentOrder().Result
+            };
+            ViewBag.Genres = _context.GetAllGenres().OrderBy(g => g.Name);
+            return PartialView("_BasketDiv", bvm);
+        }
 
-        //public IActionResult GetBookView(int page, string searchString, string sortOrder, bool Stored, int Genre, string AuthorSearch)
-        //{
-        //    page = 1;
-        //    IEnumerable<BookView> books = FilterBooks(searchString, sortOrder, Stored, Genre, AuthorSearch);
-        //    //BookListViewModel bvm = new BookListViewModel()
-        //    //{
-        //    //    Stored = Stored,
-        //    //    Books = books.ToPagedList(page, 12),
-        //    //    UserName = GetUserName().Result,
-        //    //    CurrentOrder = GetCurrentOrder().Result,
-        //    //    Genre=Genre,
-        //    //    page=page,
-        //    //    AuthorSearch= AuthorSearch,
-        //    //    searchString =searchString,
-        //    //    sortOrder=sortOrder
-        //    //};
-        //    return PartialView("_BookList", bvm);
-        //}
+        public IActionResult GetBookView(int page, string searchString, string sortOrder, bool Stored, int Genre, string AuthorSearch)
+        {
+            page = 1;
+            IEnumerable<BookView> books = FilterBooks(searchString, sortOrder, Stored, Genre, AuthorSearch);
+            BookListViewModel bvm = new BookListViewModel()
+            {
+                Stored = Stored,
+                Books = books.ToPagedList(page, 12),
+                UserName = GetUserName().Result,
+                CurrentOrder = GetCurrentOrder().Result,
+                Genre = Genre,
+                page = page,
+                AuthorSearch = AuthorSearch,
+                searchString = searchString,
+                sortOrder = sortOrder
+            };
+            return PartialView("_BookList", bvm);
+        }
 
 
         public IActionResult Contact()
@@ -274,18 +274,18 @@ namespace diploma.Controllers
             HttpContext.Request.Cookies.Any();
             return View();
         }
-        
-        //public IActionResult PriceAndDelivery()
-        //{
-        //    ViewBag.Username = GetUserName().Result;
-        //    IEnumerable<City> cities = _context.City;
-        //    return View(cities);
-        //}
 
-        // [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        //}
+        public IActionResult PriceAndDelivery()
+        {
+            ViewBag.Username = GetUserName().Result;
+            IEnumerable<CityModel> cities = _context.GetAllCities();
+            return View(cities);
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace BLL.Infrastracture
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddTransient<IdbRepos, DBReposSQL>();
-            services.AddTransient<IBookCrud, BookCrud>();
+            services.AddTransient<IDBCrud, DBCrud>();
             return services;
         }
     }

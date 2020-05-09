@@ -1,0 +1,152 @@
+﻿
+@{
+    ViewData["Title"] = "Редактирование книги";
+}
+
+@model BookAdd;
+
+<div class="modal1" data-modal="1">
+    <!--   Svg иконка для закрытия окна  -->
+    <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
+    </svg>
+    <p class="h3">Добавить издательство</p>
+    <br />
+    <input type="text" id="PublisherTitle" name="PublisherTitle" class="form-control" placeholder="Название издательства" required>
+    <div class="invalid-feedback" style="width: 100%;">
+        Поле "Название издательства" не было заполнено или было заполнено неверно.
+    </div>
+    <br>
+    <button class="btn btn-dark" id="createPublisher" onclick="createPublisher();">Добавить</button>
+</div>
+
+<div class="modal1" data-modal="2">
+    <!--   Svg иконка для закрытия окна  -->
+    <svg class="js-modal-close modal__cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
+    </svg>
+    <p class="h3">Добавить автора</p>
+    <br />
+    <input type="text" id="AuthorName" name="AuthorName" class="form-control" placeholder="ФИО автора" required>
+    <div class="invalid-feedback" style="width: 100%;">
+        Поле "ФИО автора" не было заполнено или было заполнено неверно.
+    </div>
+    <br>
+    <button class="btn btn-dark" id="createAuthor" onclick="createAuthor();">Добавить</button>
+</div>
+
+<!-- Подложка под модальным окном -->
+<div class="overlay  js-overlay-modal" id="overlay-modal"></div>
+
+
+<div class="row">
+    <div class="col-md-8 order-md-1">
+        <h4 class="mb-3"> Информация о книге </h4>
+        <div class="msg-error mb-3">
+            <div id="msg"></div>
+            <ul id="formError"></ul>
+        </div>
+        <hr class="mb-4">
+        <form class="needs-validation" id="addForm" action="javascript:void(0);" novalidate>
+            <div class="mb-3">
+                <label for="title">Название: </label>
+               <input type="text" autocomplete="off" id="title" name="title" class="form-control" placeholder="Название" required>
+                <div class="invalid-feedback" style="width: 100%;">
+                    Поле "Название" не было заполнено.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="author">Автор: </label>
+                <div id="authorDiv">  </div>
+                <select class="custom-select" id="authorSelect"></select>
+                <!--<input type="text" id="author" name="author" class="form-control" placeholder="Иванов Иван Иванович" required>-->
+                <button class="btn btn-light " onclick="newauthor();">Добавить еще одного автора</button>
+
+                <button class="btn btn-dark js-open-modal" data-modal="2">Создать</button>
+                <div class="invalid-feedback" style="width: 100%;">
+                    Поле "Автор" не было заполнено или было заполнено неверно.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="Genre">Жанр: </label>
+                <div id="GenreDiv">  </div>
+                <select class="custom-select" id="GenreSelect"></select>
+                <button class="btn btn-light " onclick="newgenre();">Добавить еще один жанр</button>
+
+                <div class="invalid-feedback" style="width: 100%;">
+                    Поле "Автор" не было заполнено или было заполнено неверно.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="content">Описание: </label>
+                <textarea type="text" autocomplete="off" id="content" name="content" class="form-control" placeholder="Добавить описание" required></textarea>
+                <div class="invalid-feedback" style="width: 100%;">
+                    Поле "Описание" не было заполнено.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="year">Год: </label>
+
+                <input type="number" id="year" name="year" class="form-control" value="2020" required>
+                <div class="invalid-feedback" style="width: 100%;">
+                    Поле "Год" не было заполнено или было заполнено неверно.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="publisher">Издательство: </label>
+                <select class="custom-select" id="publisherSelect"></select>
+                <!-- <button class="btn btn-dark" onclick="createPublisher();">Создать</button>-->
+                <button class="btn btn-dark js-open-modal" data-modal="1">Создать</button>
+                <div class="invalid-feedback" style="width: 100%;">
+                    Поле "Издательство" не было заполнено или было заполнено неверно.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="cost"> Цена в рублях: </label>
+
+                <input type="number" id="cost" name="cost" class="form-control" placeholder="400" required>
+                <div class="invalid-feedback" style="width: 100%;">
+                    Поле "Цена" не было заполнено или было заполнено неверно.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="Stored"> Количество на складе (шт.): </label>
+                <input type="number" id="Stored" name="Stored" class="form-control" value="0" required>
+                <div class="invalid-feedback" style="width: 100%;">
+                    Поле "Количество на складе" не было заполнено или было заполнено неверно.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="Weight"> Вес книги (гр.): </label>
+                <input type="number" id="Weight" name="Weight" class="form-control" placeholder="200" required>
+                <div class="invalid-feedback" style="width: 100%;">
+                    Поле "Вес книги" не было заполнено или было заполнено неверно.
+                </div>
+            </div>
+            <hr class="mb-4">
+            <br />
+
+        </form>
+    </div>
+    <div class="col-md-4 order-md-2 mb-4">
+        <div class="text-center">
+            <img src="~/img/@ViewBag.FileName" id="bookImg" class="rounded" alt="Обложка" width="150" height="215">
+        </div>
+
+        <hr class="mb-4">
+        <div class="input-group mb-3">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" aria-describedby="inputGroupFileAddon03" name="file" id="file" accept=".png, .jpg, .jpeg" onchange="getImg()" disabled>
+                    <label id="labelImg" class="custom-file-label" for="file">@ViewBag.FileName</label>
+                </div>
+        </div>
+        
+    </div>
+
+</div>
+<div class="row">
+    <button id="addBtn" class="btn btn-primary btn-lg btn-block" type="submit">Сохранить</button>
+</div>
+<environment include="Development">
+    <script src="~/js/Admin.js" asp-append-version="true"></script>
+</environment>

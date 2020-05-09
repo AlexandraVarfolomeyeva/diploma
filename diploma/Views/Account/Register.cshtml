@@ -1,0 +1,93 @@
+﻿@model RegisterViewModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<div class="modal1" data-modal="5">
+    <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
+    </svg>
+    <div class="js__concern">
+        @{Html.Partial("_Concern");}
+    </div>
+</div>
+
+<div class="container">
+    <div class="col-md-8 order-md-1 center-block">
+        <div class="header-div">
+          <h3 class="mb-3"> Регистрация </h3>
+        </div>
+        <div class="mb-3 div-register-info border">
+            <p>
+                <ul>
+                    <li>Обратите внимание, что Пароль должен состоять из латинских букв, цифр, как минимум одной заглавной и одной строчной буквы и одного служебного символа.</li>
+                    <li>Поле UserName может содержать только идущие подряд латинские буквы и цифры.</li>
+                </ul>
+            </p>
+        </div>
+
+        @*@{Html.RenderPartial("Partial");}action="javascript:void(0);"*@  @**@
+        <form class="needs-validation" id="regForm" novalidate method="post" asp-controller="Account" asp-action="Register">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="mb-3">
+                @Html.LabelFor(model => model.Fio)
+                @Html.EditorFor(model => model.Fio, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", placeholder="Иванов Иван Иванович" } })
+                <span asp-validation-for="Fio" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                @Html.LabelFor(model => model.Email)
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", placeholder = "email@mail.ru" } })
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                @Html.LabelFor(model => model.UserName)
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", placeholder = "user_name1" } })
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                @Html.LabelFor(model => model.PhoneNumber)
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">+7</span>
+                    </div>
+                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", placeholder = "9999999999" } })
+                    
+                </div><span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                @Html.LabelFor(model => model.IdCity)
+                <select class="custom-select" id="citySelect" asp-for="IdCity" name="IdCity">
+                    @foreach (CityModel s in ViewBag.Cities)
+                    {
+                        <option value="@s.Id">@s.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                @Html.LabelFor(model => model.Address)
+                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", placeholder = "ул. Рабфаковская, д.34, кв.6" } })
+            </div>
+            <div class="mb-3">
+                @Html.LabelFor(model => model.Password)
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                @Html.LabelFor(model => model.PasswordConfirm)
+                @Html.EditorFor(model => model.PasswordConfirm, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+            </div>
+            <br />
+            <div><p>Нажимая кнопку "Регистрация" я подтверждаю, что согласен на <a class="concern-link" onclick="Concern();">обработку своих персональных данных</a></p></div>
+            <input class="btn btn-primary btn-lg btn-block" type="submit" value="Регистрация">
+          @*  <button class="btn btn-primary btn-lg btn-block" id="registerBtn" type="submit" onsubmit="return validateForm()">Регистрация</button>*@
+        </form>
+    </div>
+    <div class="col-md-4 order-md-2 mb-4">
+        <img class="img-register" src="~/images/register.jpg">
+    </div>
+</div>
+<environment include="Development">
+        <script src="~/js/Register.js" asp-append-version="true"></script>
+</environment>

@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Войти в систему";
+}
+<div class="container">
+    <div class="text-center">
+        <!--id="sign" -->
+
+        <form class="form-signin" method="post" asp-controller="Account" asp-action="LogIn">
+            <img class="mb-4" src="https://openbookphilly.com/wp-content/uploads/2016/11/bookstack.png" alt="" width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal"> Пожалуйста, войдите в систему </h1>
+
+            <div class="msgClass">
+                <div id="msgAuth"></div>
+                <div id="msg"></div>
+                <ul id="formError"></ul>
+            </div>
+            @{Html.RenderPartial("_ErrorMsg");}
+
+            <label for="User"> UserName </label><!--class="sr-only"-->
+            <input type="text" id="User" name="User" class="form-control" placeholder="UserName">
+
+            <div>
+                <label for="Password"> Пароль </label><!--class="sr-only"-->
+                <input type="password" id="Password" name="Password" class="form-control" placeholder="Password">
+            </div>
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" id="Remember" name="RememberMe" value="true" checked> Запомнить меня
+                </label>
+            </div>
+            <input type="submit" class="btn btn-primary inout" value="Войти"><br />
+        </form>
+        <div class="text-center">
+
+            <a class="p-2 text-dark" asp-area="" asp-controller="Account" asp-action="Register"> Зарегистрироваться</a><br />
+        </div>
+    </div>
+</div>
+

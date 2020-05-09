@@ -1,0 +1,64 @@
+﻿@model InfoViewModel
+
+@{
+    ViewData["Title"] = Model.UserName + " - Личный кабинет";
+}
+<h4>Личный кабинет</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8 order-md-1 center-block">
+            <form class="needs-validation" id="infoForm" novalidate method="post" asp-controller="Personal" asp-action="Info">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.Fio)
+                    @Html.EditorFor(model => model.Fio, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    <span asp-validation-for="Fio" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.Email)
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.UserName)
+                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.PhoneNumber)
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">+7</span>
+                        </div>
+                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+
+                    </div><span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.IdCity)
+                    <select class="custom-select" id="citySelect" asp-for="IdCity" name="IdCity">
+                        @foreach (CityModel s in ViewBag.Cities)
+                        {
+                            <option value="@s.Id">@s.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.Address)
+                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                </div>
+                <br />
+                <div class="form-group">
+                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Сохранить изменения">
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4 order-md-2 mb-4">
+            <button id="logoffBtn" class="btn btn-primary btn-dark inout" type="submit">Выйти</button><br />
+        </div>
+    </div>
+
+    <environment include="Development">
+        <script src="~/js/Personal.js" asp-append-version="true"></script>
+    </environment>

@@ -30,11 +30,11 @@ namespace DAL.Repositories
             }
         }
 
-        public void Delete(int id)
+        public void Delete(string id)
         {
             try
             {
-                User usr = _context.User.Find(id);
+                User usr = _context.User.Where(k=>k.Id == id).FirstOrDefault();
                 if (usr != null) {
                     _context.User.Remove(usr);
                 } else

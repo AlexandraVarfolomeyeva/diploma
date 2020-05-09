@@ -12,6 +12,7 @@ namespace BLL.Interfaces
         BookAdd GetBook(int id);
         void CreateBook(BookAdd item);
         void UpdateBook(BookAdd item);
+        void UpdateBook(BookModel item);
         void DeleteBook(int id);
 
 
@@ -23,14 +24,14 @@ namespace BLL.Interfaces
         void DeleteBookOrder(int id);
 
         //Orders
-        IEnumerable<OrderView> GetAllOrderViews();
-        OrderView GetOrder(int id);
+        IEnumerable<OrderModel> GetAllOrderViews();
+        OrderModel GetOrder(int id);
         void CreateOrder(OrderModel item);
         void UpdateOrder(OrderModel item);
         void DeleteOrder(int id);
 
         //BookAuthors
-        IEnumerable<BookAuthorModel> GetAllBookAuthorViews();
+        IEnumerable<BookAuthorModel> GetAllBookAuthors();
         BookAuthorModel GetBookAuthor(int id);
         void CreateBookAuthor(BookAuthorModel item);
         void UpdateBookAuthor(BookAuthorModel item);
@@ -80,9 +81,9 @@ namespace BLL.Interfaces
 
         //Users
         IEnumerable<UserModel> GetAllUsers();
-        UserModel GetUser(int id);
+        UserModel GetUser(string id);
         void CreateUser(UserModel item);
         void UpdateUser(UserModel item);
-        void DeleteUser(int id);
+        void DeleteUser(string id);
     }
 }

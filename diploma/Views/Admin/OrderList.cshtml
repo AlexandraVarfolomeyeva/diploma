@@ -1,0 +1,257 @@
+﻿@model IEnumerable<AdminOrderView>
+@using System.Globalization;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Mvc.Common;
+@using X.PagedList;
+@{
+    ViewData["Title"] = "Список заказов";
+}
+
+<h2 class="text-center">Список заказов</h2>
+
+<form method="post" asp-controller="Admin" asp-action="Search">
+    <div class="row">
+        <input name="search" class="form-control search-input" autocomplete="off" type="text" id="search" placeholder="Поиск..." aria-label="Search" value="@ViewBag.search">
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label>Статус заказа: </label>
+        </div>
+        <div class="col-md-10">
+            <select class="custom-select" name="status">
+                @{int f = ViewBag.status;}
+                @if (f == 1)
+                {
+                    <option value="1" selected>Все</option>}
+                else
+                {
+                    <option value="1">Все</option>}
+
+
+                @if (f == 0)
+                {
+                    <option value="0" selected>В процессе</option>}
+                else
+                {
+                    <option value="0">В процессе</option>}
+
+
+                @if (f == 2)
+                {
+                    <option value="2" selected>Отправлен</option>}
+                else
+                {
+                    <option value="2">Отправлен</option>}
+
+
+                @if (f == 3)
+                {
+                    <option value="3" selected>Доставлен</option>}
+                else
+                {
+                    <option value="3">Доставлен</option>}
+
+
+                @if (f == 4)
+                {
+                    <option value="4" selected>Отменен</option>}
+                else
+                {
+                    <option value="4">Отменен</option>}
+            </select>
+        </div>
+            </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label>Дата заказа: </label>
+        </div>
+        <div class="col-md-10">
+            <select class="custom-select" name="period">
+                @{ string p = ViewBag.period;}
+                @if (p == "" || p == "all") { <option value="all" selected>Все</option>}
+                else
+                {
+                    <option value="all">Все</option>}
+
+                @if (p == "day") { <option value="day" selected>Сегодня</option>}
+                else
+                {
+                    <option value="day">Сегодня</option>}
+
+                @if (p == "week") { <option value="week" selected>За неделю</option>}
+                else
+                {
+                    <option value="week">За неделю</option>}
+
+                @if (p == "month") { <option value="month" selected>За месяц</option>}
+                else
+                {
+                    <option value="month">За месяц</option>}
+
+                @if ( p == "year") { <option value="year" selected>За год</option>}
+                else
+                {
+                    <option value="year">За год</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label>Сортировать: </label>
+        </div>
+        <div class="col-md-10">
+            <select class="custom-select" name="sort">
+                @{p = ViewBag.sort;}
+                @if (p == "" || p == "No")
+                {
+                    <option value="No" selected>По номеру заказа (по возрастанию)</option>}
+                else
+                {
+                    <option value="No">По номеру заказа (по возрастанию)</option>}
+                @if (p == "No_desc")
+                {
+                    <option value="No_desc" selected>По номеру заказа (по убыванию)</option>}
+                else
+                {
+                    <option value="No_desc">По номеру заказа (по убыванию)</option>}
+
+
+                @if (p == "Order")
+                {
+                    <option value="Order" selected>По дате заказа (по возрастанию)</option> }
+                else
+                {
+                    <option value="Order">По дате заказа (по возрастанию)</option>}
+
+                @if (p == "Order_desc")
+                {
+                    <option value="Order_desc" selected>По дате заказа (по убыванию)</option> }
+                else
+                {
+                    <option value="Order_desc">По дате заказа (по убыванию)</option>}
+
+                @if (p == "Delivery")
+                {
+                    <option value="Delivery" selected>По дате получения (по возрастанию)</option>}
+                else
+                {
+                    <option value="Delivery">По дате получения (по возрастанию)</option>}
+
+                @if (p == "Delivery_desc")
+                {
+                    <option value="Delivery_desc" selected>По дате получения (по убыванию)</option>}
+                else
+                {
+                    <option value="Delivery_desc">По дате получения (по убыванию)</option>}
+
+            </select>
+        </div>
+    </div>
+    <input class="btn btn-info btn-search" type="submit" value="Поиск" />
+</form>
+@if (Model.Any())
+{
+    <table class="table">
+
+        <thead class="thead-dark">
+            <tr class="text-center">
+                <th scope="col">Номер заказа</th>
+                <th scope="col">Список книг</th>
+                <th scope="col">ФИО</th>
+                <th scope="col">Контакты</th>
+                <th scope="col">Дата заказа</th>
+                <th scope="col">Дата доставки</th>
+                <th scope="col">Адрес</th>
+                <th scope="col">Доставка</th>
+                <th scope="col">Стоимость без доставки</th>
+
+                <th scope="col">Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (AdminOrderView i in Model)
+            {
+            <tr scope="row">
+                <td> @i.Id </td>
+                <td>
+                    <ul>
+                        @foreach (BookOrderView v in i.BookOrders)
+                        {
+                            <li>
+                                <span> @v.Book.Id. </span>
+                                @v.Book.Title (<span> x </span>
+                                @v.Amount)
+                            </li>
+                        }
+                    </ul>
+                </td>
+                <td> @i.FIO </td>
+                <td> т.@i.Phone, @i.Email </td>
+                @{string date = i.DateOrder.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
+                <td> @date </td>
+                @{date = i.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));
+                    string dateId = "date" + i.Id;}
+                <td id=@dateId> @date </td>
+                <td>г.@i.City, @i.Address</td>
+                <td> @i.SumDelivery руб.</td>
+                <td> @i.SumOrder руб.</td>
+
+                <td>
+                  @{string id = "status" + i.Id; }
+                  <div id=@id>
+                    @switch (i.Active)
+                    {
+                        case 0: <p class="text-danger">Обрабатывается</p>break;
+                        case 1: <p class="text-danger"> Не заказан </p> break;
+                        case 2: <p class="text-info"> Отправлен </p> break;
+                        case 3: <p class="text-success"> Доставлен </p> break;
+                        case 4: <p class="text-danger"> Отменен </p>break;
+                    }
+                  </div>
+                    @if (i.Active != 4)
+                    {  <select class="custom-select" id="Status" name="status" onChange="ChangeStatus(@i.Id, this.options[this.selectedIndex]);">
+    @if (i.Active == 0)
+    {
+        <option value="0" selected> Обрабатывается </option> }
+    else
+    {
+        <option value="0"> Обрабатывается </option>}
+    @if (i.Active == 2)
+    {
+        <option value="2" selected> Отправлен </option>}
+    else
+    {
+        <option value="2"> Отправлен </option>}
+
+    @if (i.Active == 3)
+    {
+        <option value="3" selected> Доставлен </option>}
+    else
+    {
+        <option value="3"> Доставлен </option>}
+
+</select>
+                    }
+                </td>
+            </tr>
+
+            }
+
+
+
+        </tbody>
+    </table>
+} else { 
+    <div class="nothing-found">
+         <p class="nothing">  По Вашему запросу ничего не найдено! </p>
+    </div>
+}
+<div class="row justify-content-center">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("OrderList", "Admin", new { page = page, status = ViewBag.status, period=ViewBag.period, sort = ViewBag.sort, search= ViewBag.search }))
+</div>
+
+
+<environment include="Development">
+    <script src="~/js/OrdersList.js" asp-append-version="true"></script>
+</environment>
