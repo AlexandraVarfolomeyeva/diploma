@@ -111,11 +111,16 @@ namespace diploma.Controllers
                 List<BookView> newBooks = new List<BookView>();
                 for (int i = 0; i < words.Length; i++)
                 {  //для каждого слова
-                    IEnumerable<BookAuthorModel> ba = _context.GetAllBookAuthors().Where(v => v.Author.Name.Contains(words[i], StringComparison.OrdinalIgnoreCase));
+                    IEnumerable<BookAuthorModel> ba = _context.GetAllBookAuthors();
                     foreach (BookAuthorModel b in ba)
                     {
-                        List<BookView> byAuthors = books.Where(f => f.Id == b.IdBook).ToList();
-                        newBooks = newBooks.Concat(byAuthors).Distinct().ToList();
+                        AuthorModel author = _context.GetAuthor(b.IdAuthor);
+                        if (author.Name.Contains(words[i], StringComparison.OrdinalIgnoreCase))
+                        {
+                            List<BookView> byAuthors = books.Where(f => f.Id == b.IdBook).ToList();
+                            newBooks = newBooks.Concat(byAuthors).Distinct().ToList();
+                        }
+
                     }
                     //пока по названию, но надо еще пройтись по авторам, и соединить
                     List<BookView> list = books.Where(s => s.Title.Contains(words[i], StringComparison.OrdinalIgnoreCase)).ToList();

@@ -1,5 +1,6 @@
 ﻿const uriBookOrder = "/api/BookOrder/";
 const uriIndex = "/Home/Index/";
+const uriBooks = "/api/Books/";
 
 document.addEventListener("DOMContentLoaded", function () {
     if (window.location.pathname !== "/") {
@@ -126,7 +127,7 @@ function areYouSure(id, title) {
 function deleteBook(id) {//удаление книги -- метод, доступный только администратору
     try {
         var request = new XMLHttpRequest();
-        var url = "/api/Books/" + id;
+        var url = uriBooks + id;
         request.open("DELETE", url, false);
         request.onload = function () {
             // Обработка кода ответа

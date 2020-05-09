@@ -34,7 +34,7 @@ namespace BLL.Operations
 
         public void CreateBook(BookAdd item)
         {
-            BookModel book = new BookModel()
+            Book book = new Book()
             {
                 Year = item.Year,
                 Title = item.Title,
@@ -46,8 +46,8 @@ namespace BLL.Operations
                 Content = item.Content,
                 isDeleted = item.isDeleted
             };
-            db.Books.Create(toBook(book, new Book()));
-
+            db.Books.Create(book);
+            db.Save();
             for (int i = 0; i < item.idAuthors.Length; i++)
             {
                 BookAuthor bookauthor = new BookAuthor()

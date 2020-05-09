@@ -37,6 +37,7 @@ namespace diploma.Controllers
             List<AdminOrderView> modelList = new List<AdminOrderView>();
             foreach (OrderModel o in orders)
             {
+                o.BookOrders = _context.GetAllBookOrders().Where(p=>p.IdOrder==o.Id).ToList();
                 List<BookOrderView> bol = new List<BookOrderView>();
                 foreach (BookOrderModel b in o.BookOrders)
                 {
@@ -60,6 +61,8 @@ namespace diploma.Controllers
                     };
                     bol.Add(bo);
                 }
+                o.User = _context.GetUser(o.UserId);
+                o.User.City = _context.GetCity(o.User.IdCity);
                 AdminOrderView c = new AdminOrderView()
                 {
                     Active = o.Active,
@@ -117,11 +120,11 @@ namespace diploma.Controllers
             switch (sort)
             {
                 case "No": modelList = modelList.OrderBy(f => f.Id).ToList(); break;
-                case "No_desc": modelList.OrderByDescending(f => f.Id).ToList(); break;
-                case "Order": modelList.OrderBy(f => f.DateOrder).ToList(); break;
-                case "Order_desc": modelList.OrderByDescending(f => f.DateOrder).ToList(); break;
-                case "Delivery": modelList.OrderBy(f => f.DateDelivery).ToList(); break;
-                case "Delivery_desc": modelList.OrderByDescending(f => f.DateDelivery).ToList(); break;
+                case "No_desc": modelList=modelList.OrderByDescending(f => f.Id).ToList(); break;
+                case "Order": modelList=modelList.OrderBy(f => f.DateOrder).ToList(); break;
+                case "Order_desc": modelList=modelList.OrderByDescending(f => f.DateOrder).ToList(); break;
+                case "Delivery": modelList=modelList.OrderBy(f => f.DateDelivery).ToList(); break;
+                case "Delivery_desc": modelList=modelList.OrderByDescending(f => f.DateDelivery).ToList(); break;
                 default: modelList = modelList.OrderBy(f => f.Id).ToList(); break;
             }
             return modelList;

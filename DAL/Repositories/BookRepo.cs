@@ -20,7 +20,8 @@ namespace DAL.Repositories
 
         public void Create(Book item)
         {
-            try { _context.Book.Add(item);
+            try {
+             _context.Book.Add(item);
             }
            catch (Exception ex)
             {
