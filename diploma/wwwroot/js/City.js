@@ -1,6 +1,7 @@
 ﻿const uriCities = "/Admin/Cities/";
 const uriCity = "/Admin/City/";
 const uriEditCity = "/Admin/EditCity/";
+const uriDeleteCity = "/Admin/DeleteCity/";
 
 document.addEventListener("DOMContentLoaded", function () {
     loadCities();
@@ -56,16 +57,12 @@ function Edit(id) {
 }
 
 function DeleteCity(id) {
-    var url = uriCity + id;
+    var url = uriDeleteCity + id;
         $.ajax({
             type: "DELETE",
             url: url,
-            data: form.serialize(), // serializes the form's elements.
             success: function (data, textStatus, jqXHR) {
-                if (jqXHR.status == 201) {
-                    document.getElementById("CityName").value = "";
-                    document.querySelector("#DeliverySum").value = "";
-                    document.querySelector("#DeliveryTime").value = "";
+                if (jqXHR.status == 200) {
                     loadCities();
                 }
             }

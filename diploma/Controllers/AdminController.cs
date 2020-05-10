@@ -394,7 +394,34 @@ namespace diploma.Controllers
             }
         }
 
+        [HttpDelete]
+        [Authorize(Roles = "admin")]
+        public IActionResult DeleteCity(int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _context.DeleteCity(id);
+                    return Ok();
+                }
+                else
+                {
+                    Log.WriteSuccess("/Admin/Cities/[Get] ", "Модель не валидна!");
+                    return Conflict(ModelState);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return BadRequest(ex);
+            }
+        }
+
+
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult EditCity(int id, CityModel city)
         {
             try
@@ -419,7 +446,7 @@ namespace diploma.Controllers
             }
         }
 
-
+        [Authorize(Roles = "admin")]
         public IActionResult GetCitiesTable()
         {
             IEnumerable<CityModel> model = _context.GetAllCities().OrderBy(o=>o.Name);
