@@ -370,6 +370,56 @@ namespace diploma.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult City(int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                  var city = _context.GetCity(id);
+                    return Ok(city);
+                }
+                else
+                {
+                    Log.WriteSuccess("/Admin/Cities/[Get] ", "Модель не валидна!");
+                    return Conflict(ModelState);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPut]
+        public IActionResult EditCity(int id, CityModel city)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    city.Id = id;
+                    _context.UpdateCity(city);
+                    return NoContent();
+                }
+                else
+                {
+                    Log.WriteSuccess("/Admin/Cities/[Get] ", "Модель не валидна!");
+                    return Conflict(ModelState);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return BadRequest(ex);
+            }
+        }
+
+
         public IActionResult GetCitiesTable()
         {
             IEnumerable<CityModel> model = _context.GetAllCities().OrderBy(o=>o.Name);
