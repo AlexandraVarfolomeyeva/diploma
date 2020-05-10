@@ -360,7 +360,7 @@ namespace diploma.Controllers
                 } else
                 {
                     Log.WriteSuccess("/Admin/Cities/[Post] ", "Модель не валидна!");
-                    return BadRequest("Модель не валидна!");
+                    return Conflict(ModelState);
                 }
               
             } catch(Exception ex)
@@ -372,7 +372,7 @@ namespace diploma.Controllers
 
         public IActionResult GetCitiesTable()
         {
-            IEnumerable<CityModel> model = _context.GetAllCities();
+            IEnumerable<CityModel> model = _context.GetAllCities().OrderBy(o=>o.Name);
             return PartialView("_CitiesTable",model);
         }
 

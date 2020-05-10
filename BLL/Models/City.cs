@@ -12,9 +12,11 @@ namespace BLL.Models
         [Key]
         [Required]
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Не указано название города")]
         public string Name { get; set; }
+        [Required(ErrorMessage = "Не указана стоимость доставки")]
         public float DeliverySum { get; set; } //стоимость доставки
+        [Required(ErrorMessage = "Не указано время доставки")]
         public int DeliveryTime { get; set; } //time доставки
         public virtual ICollection<UserModel> Users { get; set; }
     }
