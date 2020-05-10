@@ -157,16 +157,17 @@
             <div id="adminDiv" class="text-right">
                 @if (ViewBag.Role == "admin")
                 {
-                  var parms = new Dictionary<string, string>
-                         {
-                                { "page", "1" },
-                                { "status", "1" },
-                                 { "period", "" },
-                                  { "sort", "" },
-                                   { "search", "" }
-                         };
+                    var parms = new Dictionary<string, string>
+                             {
+                                    { "page", "1" },
+                                    { "status", "1" },
+                                     { "period", "" },
+                                      { "sort", "" },
+                                       { "search", "" }
+                             };
                     <a class="btn btn-dark" asp-area="" asp-controller="Admin" asp-action="UploadPicture">Добавить</a>
                     <a class="btn btn-dark" asp-area="" asp-controller="Admin" asp-action="OrderList" asp-all-route-data="parms">Cписок заказов</a>
+                    <a class="btn btn-dark" asp-area="" asp-controller="Admin" asp-action="Cities">Cписок города</a>
                 }
             </div>
         </div>

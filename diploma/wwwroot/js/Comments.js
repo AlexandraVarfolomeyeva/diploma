@@ -1,4 +1,5 @@
 ﻿const uriComments = "/Admin/Comments/";
+const uriDeleteComment = "/Admin/DeleteComment/"
 
 function Sent(id)
 {
@@ -9,7 +10,22 @@ function Sent(id)
         url: uriComments,
         data: form.serialize(), // serializes the form's elements.
         success: function (data) {
-            $(".js__comments_all").load("/Admin/GetCommentsView/", {id: id});
+            loadComments(id);
+        }
+    });
+}
+
+function loadComments(bookId) {
+    $(".js__comments_all").load("/Admin/GetCommentsView/", { id: bookId });
+}
+
+function DeleteComment(id, bookId) {
+    var url = uriDeleteComment + id
+    $.ajax({
+        type: "DELETE",
+        url: url,
+        success: function (data) {
+            loadComments(bookId);
         }
     });
 }

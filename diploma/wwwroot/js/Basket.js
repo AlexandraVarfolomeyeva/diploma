@@ -5,6 +5,11 @@ const uriDeleteItem = "/Personal/DeleteItem/"
 const uriMakeOrder = "/Personal/MakeOrder/"
 const uriCancelOrder = "/Personal/CancelOrder/"
 
+document.addEventListener("DOMContentLoaded", function () {
+    reloadBasketTable();
+    reloadHistory();
+});
+
 function SureDeleteAll(id) {
     try {
         document.getElementById("message").innerHTML = "Вы уверены, что хотите очистить заказ?";
@@ -66,10 +71,7 @@ function reloadHistory() {
     } catch (e) { }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    reloadBasketTable();
-    reloadHistory();
-});
+
 
 function Increase(id) {
     reloadMessage("");

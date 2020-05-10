@@ -1,0 +1,41 @@
+﻿@model IEnumerable<CityModel>
+@if (Model.Any())
+{
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr class="text-center">
+                <th scope="col">Город</th>
+                <th scope="col">Стоимость доставки</th>
+                <th scope="col">Время доставки</th>
+                <th scope="col">
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CityModel c in Model)
+            {
+                <tr scope="row">
+                    <td class="font-weight-bold"> @c.Name </td>
+                    <td class="text-center"> @c.DeliverySum </td>
+                    <td class="text-center"> @c.DeliveryTime </td>
+                    <td class="text-center">
+                        <div class="btn-group">
+                            <button class="btn btn-dark" onclick="EditCity(@c.Id);">Редактировать</button>
+                            <button class="btn btn-dark" onclick="DeleteCity(@c.Id);">Удалить</button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="nothing-found">
+        <p class="nothing">  По Вашему запросу ничего не найдено! </p>
+    </div>
+}
+<environment include="Development">
+    <script src="~/js/City.js" asp-append-version="true"></script>
+</environment>

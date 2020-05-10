@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewData["Title"] = "Города";
+}
+
+<div class="modal1" data-modal="6">
+    <!--   Svg иконка для закрытия окна  -->
+    <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
+    </svg>
+    <p class="h3">Добавить город</p>
+    <br />
+    <form class="needs-validation comment-form rounded" action="javascript:void(0);" novalidate id="cityForm">
+        <input type="text" id="CityName" name="Name" class="form-control" placeholder="Название" required autocomplete="off">
+        <div class="invalid-feedback" style="width: 100%;">
+            Поле "Название" не было заполнено или было заполнено неверно.
+        </div>
+        <input type="number" id="DeliverySum" name="DeliverySum" class="form-control" autocomplete="off" placeholder="Стоимость доставки (в руб.)" required>
+        <div class="invalid-feedback" style="width: 100%;">
+            Поле "Стоимость доставки (в руб.)" не было заполнено или было заполнено неверно.
+        </div>
+        <input type="number" id="DeliveryTime" name="DeliveryTime" class="form-control" autocomplete="off" placeholder="Время доставки (в днях)" required>
+        <div class="invalid-feedback" style="width: 100%;">
+            Поле "Время доставки (в днях)" не было заполнено или было заполнено неверно.
+        </div>
+        <br>
+        <input class="btn btn-dark" type="submit" id="AddCity" onclick="createNewCity();" value="Добавить" />
+    </form>
+</div>
+
+<h2 class="text-center">Города</h2>
+
+<button class="btn btn-dark btn-outline-light js-open-modal" data-modal="6">Добавить</button>
+
+<div class="js__cities_table">
+
+</div>
+<environment include="Development">
+    <script src="~/js/City.js" asp-append-version="true"></script>
+</environment>

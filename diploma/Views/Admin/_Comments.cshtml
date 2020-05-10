@@ -16,24 +16,29 @@
                     <div class="comment">
                         @c.Content
                     </div>
-                </div>
-            }
-
-            <form class="needs-validation comment-form rounded" id="commentForm" action="javascript:void(0);" novalidate>
-                <input hidden name="IdBook" value="@Model.Book.Id">
-                @{string name;
-                    if (ViewBag.Username == "Войти") { name = "Гость"; }
-                    else
-                    {
-                        name = ViewBag.Username;
+                    @if (ViewBag.Role == "admin")  {
+                    <div> 
+                        <button class="btn btn-dark" onclick="DeleteComment(@c.Id,@Model.Book.Id);">Удалить</button>
+                    </div>
                     }
-                }
-                <input class="form-control" name="UserName" value="@name" readonly />
-                <textarea type="text" name="Content" autocomplete="off" id="content" class="form-control" placeholder="Добавить комментарий" required></textarea>
-                <input class="btn btn-outline-dark btn-light btn-search" type="submit" onclick="Sent(@Model.Book.Id);" value="Отправить" />
-            </form>
-        </div>
-    </div>
+                        </div>
+                        }
+
+                        <form class="needs-validation comment-form rounded" id="commentForm" action="javascript:void(0);" novalidate>
+                            <input hidden name="IdBook" value="@Model.Book.Id">
+                            @{string name;
+                                if (ViewBag.Username == "Войти") { name = "Гость"; }
+                                else
+                                {
+                                    name = ViewBag.Username;
+                                }
+                            }
+                            <input class="form-control" name="UserName" value="@name" readonly />
+                            <textarea type="text" name="Content" autocomplete="off" id="content" class="form-control" placeholder="Добавить комментарий" required></textarea>
+                            <input class="btn btn-outline-dark btn-light btn-search" type="submit" onclick="Sent(@Model.Book.Id);" value="Отправить" />
+                        </form>
+                    </div>
+                </div>
     <environment include="Development">
         <script src="~/js/Comments.js" asp-append-version="true"></script>
     </environment>

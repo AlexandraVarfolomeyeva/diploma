@@ -234,12 +234,28 @@ namespace diploma.Controllers
         {
             BookAdd book = FindBook(id);
             ViewBag.Username = GetUserName().Result;
+            ViewBag.Role = GetRole().Result;
             BookDetails model = new BookDetails()
             {
                 Book = book,
                 Comments = _context.GetAllComments().Where(c=>c.IdBook==book.Id)
             };
             return PartialView("_Comments", model);
+        }
+
+        [HttpDelete] 
+        public IActionResult DeleteComment(int id)
+        {
+            try
+            {
+                _context.DeleteComment(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return BadRequest(ex);
+            }
         }
 
         private BookAdd FindBook(int id)
@@ -323,6 +339,41 @@ namespace diploma.Controllers
         {
             ViewBag.Username = GetUserName().Result;
             return View();
+        }
+
+
+        public IActionResult Cities()
+        {
+            ViewBag.Username = GetUserName().Result;
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public IActionResult Cities(CityModel city)
+        {
+            try {
+                if (ModelState.IsValid)
+                {
+                    _context.CreateCity(city);
+                    return CreatedAtAction("GetAuthor", new { id = city.Id }, city);
+                } else
+                {
+                    Log.WriteSuccess("/Admin/Cities/[Post] ", "Модель не валидна!");
+                    return BadRequest("Модель не валидна!");
+                }
+              
+            } catch(Exception ex)
+            {
+                Log.Write(ex);
+               return BadRequest(ex);
+            }
+        }
+
+        public IActionResult GetCitiesTable()
+        {
+            IEnumerable<CityModel> model = _context.GetAllCities();
+            return PartialView("_CitiesTable",model);
         }
 
 
