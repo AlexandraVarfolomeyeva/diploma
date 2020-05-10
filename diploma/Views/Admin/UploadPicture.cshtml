@@ -10,15 +10,27 @@
     </div>
     <br/>
     @using (Html.BeginForm("UploadPicture",
-                     "Admin",
-                     FormMethod.Post,
-                     new { enctype = "multipart/form-data", id = "ImgForm", @class="div-upload" }))
+               "Admin",
+               FormMethod.Post,
+               new { enctype = "multipart/form-data", id = "ImgForm", @class = "div-upload" }))
     {
         <div class="custom-file">
             @*<input type="file" name="file" id="file" /><br><br>*@
             <input type="file" class="custom-file-input" aria-describedby="inputGroupFileAddon03" name="file" id="file" accept=".png, .jpg, .jpeg" onchange="getImg()">
             <label id="labelImg" class="custom-file-label" for="file">Выбрать файл</label>
-            <input type="submit" class="btn btn-primary btn-lg btn-block">
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="submit" class="btn btn-primary btn-lg btn-block">
+                </div>
+                <div class="col-md-6">
+                    @{var parms = new Dictionary<string, string>
+                        {
+                        { "filename", "empty.png" }
+                        };
+                    }
+                        <a class="btn btn-light btn-lg btn-block" asp-action="AddBook" asp-controller="Admin" asp-area="" asp-all-route-data="parms">Пропустить</a>
+                </div>
+            </div>
         </div>
     }
 </div>

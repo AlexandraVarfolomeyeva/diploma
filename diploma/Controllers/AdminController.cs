@@ -215,7 +215,7 @@ namespace diploma.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Comments(CommentModel comment)
+        public IActionResult Comments(CommentModel comment)
         {
             try
             {
@@ -328,7 +328,7 @@ namespace diploma.Controllers
 
         [HttpPut]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> ChangeStatus(int id, int option)
+        public IActionResult ChangeStatus(int id, int option)
         {
             try
             {
