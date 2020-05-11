@@ -151,6 +151,48 @@ namespace diploma.Controllers
             return b;
         }
 
+/// <summary>
+/// Отфильтровать города
+/// </summary>
+/// <param name="search">название города или id</param>
+/// <param name="order">порядок сортировки</param>
+/// <returns></returns>
+        private List<CityModel> FilterCities(string search, string order)
+        {
+            List<CityModel> model = _context.GetAllCities().ToList();
+            if (!string.IsNullOrEmpty(search))
+            {
+                String[] words = search.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                List<CityModel> newmodel = new List<CityModel>();
+                for (int i = 0; i < words.Length; i++)
+                {  //для каждого слова
+                    List<CityModel> found = model.Where(f => f.Name.Contains(words[i], StringComparison.OrdinalIgnoreCase)).ToList();
+                    newmodel = newmodel.Concat(found).Distinct().ToList();
+
+                    int id;
+                    if (Int32.TryParse(words[i], out id))
+                    {
+                        found = model.Where(f => f.Id == id).ToList();
+                        newmodel = newmodel.Concat(found).Distinct().ToList();
+                    }
+                }
+                model = newmodel;
+            }
+
+            switch (order)
+            {
+                case "alphabet": model = model.OrderBy(d => d.Name).ToList(); break;
+                case "alphabetDesc": model = model.OrderByDescending(d => d.Name).ToList(); break;
+                case "time": model = model.OrderBy(d => d.DeliveryTime).ThenBy(b => b.Name).ToList(); break;
+                case "timeDesc": model = model.OrderByDescending(d => d.DeliveryTime).ThenBy(b=>b.Name).ToList(); break;
+                case "cost": model = model.OrderBy(d => d.DeliverySum).ThenBy(b => b.Name).ToList(); break;
+                case "costDesc": model = model.OrderByDescending(d => d.DeliverySum).ThenBy(b => b.Name).ToList(); break;
+                default: model = model.OrderBy(d => d.Name).ToList(); break;
+            }
+            return model;
+        }
+
+
         /// <summary>
         /// Отфильтровать заказы по заданным параметрам
         /// </summary>
@@ -549,9 +591,11 @@ namespace diploma.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        public IActionResult GetCitiesTable()
+        public IActionResult GetCitiesTable(string search, string order)
         {
-            IEnumerable<CityModel> model = _context.GetAllCities().OrderBy(o=>o.Name);
+            IEnumerable<CityModel> model = FilterCities(search,order);
+            ViewBag.order = order;
+            ViewBag.search = search;
             return PartialView("_CitiesTable",model);
         }
         #endregion

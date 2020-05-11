@@ -7,6 +7,14 @@ body {
     font-family: 'Times New Roman', Times, serif;
 }
 
+.form-orders {
+    text-align: center;
+}
+
+.sort-line {
+    margin: 5px;
+}
+
 .concern-link {
     font-size: 1.2rem;
     font-weight: bold;
@@ -292,8 +300,13 @@ body {
     margin-top: 1em;
 }
 
+.btn-search-orders {
+    width: 70%;
+    margin: 10px;
+}
+
 .btn-search{
-    width:70%;
+    width:100%;
 }
 
 .title{

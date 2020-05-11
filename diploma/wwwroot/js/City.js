@@ -56,6 +56,17 @@ function Edit(id) {
     });
 }
 
+function Addbtn() {
+    var modalElem = document.querySelector('.modal1[data-modal="6"]');
+    document.getElementById("CityName").value = "";
+    document.querySelector("#DeliverySum").value = "";
+    document.querySelector("#DeliveryTime").value = "";
+    modalElem.classList.add('active');
+    var overlay = document.querySelector('#overlay-modal');
+    overlay.classList.add('active');
+    var button = document.getElementById("AddCity");
+    button.setAttribute('onclick', 'createNewCity();');
+}
 
 function SureDeleteCity(id,name) {
     try {
@@ -135,6 +146,8 @@ function createNewCity() {
 
 function loadCities() {
     try {
-        $(".js__cities_table").load("/Admin/GetCitiesTable/");
+        var search = document.getElementById("searchCity").value;
+        var order = document.getElementById("orderCitySort").value;
+        $(".js__cities_table").load("/Admin/GetCitiesTable/", { search: search, order: order});
     } catch (e) { }
 }

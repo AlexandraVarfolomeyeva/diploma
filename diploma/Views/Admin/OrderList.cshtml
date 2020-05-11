@@ -9,11 +9,11 @@
 
 <h2 class="text-center">Список заказов</h2>
 
-<form method="post" asp-controller="Admin" asp-action="Search">
-    <div class="row">
+<form method="post" asp-controller="Admin" asp-action="Search" class="form-orders">
+    <div class="row sort-line">
         <input name="search" class="form-control search-input" autocomplete="off" type="text" id="search" placeholder="Поиск..." aria-label="Search" value="@ViewBag.search">
     </div>
-    <div class="row">
+    <div class="row sort-line">
         <div class="col-md-2">
             <label>Статус заказа: </label>
         </div>
@@ -61,7 +61,7 @@
             </select>
         </div>
             </div>
-    <div class="row">
+    <div class="row sort-line">
         <div class="col-md-2">
             <label>Дата заказа: </label>
         </div>
@@ -96,7 +96,7 @@
             </select>
         </div>
     </div>
-    <div class="row">
+    <div class="row sort-line">
         <div class="col-md-2">
             <label>Сортировать: </label>
         </div>
@@ -148,7 +148,7 @@
             </select>
         </div>
     </div>
-    <input class="btn btn-info btn-search" type="submit" value="Поиск" />
+    <input class="btn btn-info btn-search-orders" type="submit" value="Поиск" />
 </form>
 @if (Model.Any())
 {
