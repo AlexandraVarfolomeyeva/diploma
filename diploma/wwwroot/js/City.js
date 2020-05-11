@@ -56,6 +56,41 @@ function Edit(id) {
     });
 }
 
+
+function SureDeleteCity(id,name) {
+    try {
+        document.getElementById("message").innerHTML = "Вы уверены, что хотите удалить город "+name+"?";
+        var modalElem = document.querySelector('.modal1[data-modal="4"]');
+        modalElem.classList.add('active');
+        var overlay = document.querySelector('#overlay-modal');
+        overlay.classList.add('active');
+        let form = document.getElementById("prompt-form");
+
+        form.submit.onclick = function () {
+            modalElem.classList.remove('active');
+            overlay.classList.remove('active');
+            DeleteCity(id);
+        };
+
+        form.cancel.onclick = function () {
+            modalElem.classList.remove('active');
+            overlay.classList.remove('active');
+        };
+
+        document.onkeydown = function (e) {
+            if (e.key == 'Escape') {
+                modalElem.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            if (e.key === 13) {
+                modalElem.classList.remove('active');
+                overlay.classList.remove('active');
+                deleteAll(id);
+            }
+        };
+    } catch (e) { }
+}
+
 function DeleteCity(id) {
     var url = uriDeleteCity + id;
         $.ajax({

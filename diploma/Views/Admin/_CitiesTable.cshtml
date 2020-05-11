@@ -23,7 +23,9 @@
                     <td class="text-center">
                         <div class="btn-group">
                             <button class="btn btn-dark" onclick="EditCity(@c.Id);" data-modal="6">Редактировать</button>
-                            <button class="btn btn-dark" onclick="DeleteCity(@c.Id);">Удалить</button>
+                            @{string d = "\"" + @c.Name + "\"";
+                            }
+                            <button class="btn btn-dark" onclick="SureDeleteCity(@c.Id,@d);">Удалить</button>
                         </div>
                     </td>
                 </tr>

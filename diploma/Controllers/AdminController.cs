@@ -30,7 +30,135 @@ namespace diploma.Controllers
             _userManager = userManager;
             _appEnvironment = appEnvironment;
         }
+        #region private helping fuctions
+        /// <summary>
+        /// Получить текущего пользователя
+        /// </summary>
+        /// <returns>Пользователь</returns>
+        private Task<User> GetCurrentUserAsync() =>
+            _userManager.GetUserAsync(HttpContext.User);
 
+        /// <summary>
+        /// Получить имя текущего пользователя
+        /// </summary>
+        /// <returns>строка с именем пользователя</returns>
+        private async Task<string> GetUserName()
+        {
+            try
+            {
+                User usr = await _userManager.GetUserAsync(HttpContext.User);
+                if (usr == null)
+                {
+                    return "Войти";
+                }
+                else
+                { return usr.UserName; }
+            }
+            catch (Exception ex)
+            {
+
+                Log.Write(ex);
+                return "Войти";
+            }
+        }
+
+        /// <summary>
+        /// Получить активный заказ текущего пользователя
+        /// </summary>
+        /// <returns>Модель текущего заказа</returns>
+        private async Task<OrderModel> GetCurrentOrder()
+        {
+            try
+            {
+                User usr = await _userManager.GetUserAsync(HttpContext.User);
+                if (usr != null)
+                {
+                    string id = usr.Id;
+                    IEnumerable<OrderModel> orders = _context.GetAllOrders().Where(p => p.UserId == id && p.Active == 1);
+                    return orders.FirstOrDefault();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Log.Write(ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Получить роль текущего пользователя
+        /// </summary>
+        /// <returns>строкус именем роли</returns>
+        private async Task<string> GetRole()
+        {
+            try
+            {
+                User usr = await GetCurrentUserAsync();
+                if (usr != null)
+                {
+                    string role = _userManager.GetRolesAsync(usr).Result.First();
+                    return role;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return "";
+        }
+
+        /// <summary>
+        /// Поиск книги по id и преобразование к нужному типу BookAdd
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private BookAdd FindBook(int id)
+        {
+            BookAdd b = _context.GetBook(id);
+            if (b == null)
+            {
+                Log.WriteSuccess(" AdminController.GetBook", "Книга не найдена.");
+                return null;
+            }
+            ViewBag.image = b.image;
+            List<int> au = new List<int>();
+            List<string> aus = new List<string>();
+            List<int> ge = new List<int>();
+            List<string> ges = new List<string>();
+            IEnumerable<BookAuthorModel> bookauthors = _context.GetAllBookAuthors().Where(f => f.IdBook == b.Id);
+            IEnumerable<BookGenreModel> bookgenres = _context.GetAllBookGenres().Where(f => f.IdBook == b.Id);
+            foreach (BookAuthorModel line in bookauthors)
+            {
+                AuthorModel author = _context.GetAuthor(line.IdAuthor);
+                au.Add(author.Id);
+                aus.Add(author.Name);
+            }
+            b.idAuthors = au.ToArray();
+            b.Authors = aus.ToArray();
+            foreach (BookGenreModel line in bookgenres)
+            {
+                GenreModel genre = _context.GetGenre(line.IdGenre);
+                ge.Add(genre.Id);
+                ges.Add(genre.Name);
+            }
+            b.idGenres = ge.ToArray();
+            b.Genres = ges.ToArray();
+            return b;
+        }
+
+        /// <summary>
+        /// Отфильтровать заказы по заданным параметрам
+        /// </summary>
+        /// <param name="status">Статус</param>
+        /// <param name="period">Период(день, неделя, месяц, год)</param>
+        /// <param name="sort">Порядок сортировки</param>
+        /// <param name="search">Слово(-а) для поиска</param>
+        /// <returns>Список отсортированных заказов для представления администратору AdminOrderView</returns>
         private List<AdminOrderView> GetFiltered(int status, string period, string sort, string search)
         {
             IEnumerable<OrderModel> orders = _context.GetAllOrders().Where(n => n.Active != 1);
@@ -129,11 +257,41 @@ namespace diploma.Controllers
             }
             return modelList;
         }
+        #endregion
 
+        #region Orders list for admin
         [HttpPost]
         public IActionResult Search(int status, string period, string sort, string search)
         {
             return RedirectToAction("OrderList", "Admin", new { page = 1, status = status, period = period, sort = sort, search = search });
+        }
+
+        [HttpPut]
+        [Authorize(Roles = "admin")]
+        public IActionResult ChangeStatus(int id, int option)
+        {
+            try
+            {
+                OrderModel o = _context.GetOrder(id);
+                if (o.Active == 3 && option != 3)
+                {
+                    UserModel usr = _context.GetUser(o.UserId);
+                    CityModel city = _context.GetCity(usr.IdCity);
+                    o.DateDelivery = o.DateOrder.AddDays(city.DeliveryTime);
+                }
+                o.Active = option;
+                switch (option)
+                {
+                    case 2: o.DateSent = DateTime.Now.Date; break;
+                    case 3: o.DateDelivery = DateTime.Now.Date; break;
+                }
+                _context.UpdateOrder(o);
+                return Ok(o.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU")));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         [Authorize(Roles = "admin")]
@@ -144,76 +302,14 @@ namespace diploma.Controllers
             ViewBag.period = period;
             ViewBag.sort = sort;
             ViewBag.search = search;
+            ViewBag.Username = GetUserName().Result;
             IEnumerable<AdminOrderView> model = GetFiltered(status, period, sort, search);
-            return View(model.ToPagedList(pageNumber, 3));
+            return View(model.ToPagedList(pageNumber, 20));
         }
 
-        private Task<User> GetCurrentUserAsync() =>
-            _userManager.GetUserAsync(HttpContext.User);
+        #endregion
 
-        private async Task<string> GetUserName()
-        {
-            try
-            {
-                User usr = await _userManager.GetUserAsync(HttpContext.User);
-                if (usr == null)
-                {
-                    return "Войти";
-                }
-                else
-                { return usr.UserName; }
-            }
-            catch (Exception ex)
-            {
-
-                Log.Write(ex);
-                return "Войти";
-            }
-        }
-
-
-        private async Task<OrderModel> GetCurrentOrder()
-        {
-            try
-            {
-                User usr = await _userManager.GetUserAsync(HttpContext.User);
-                if (usr != null)
-                {
-                    string id = usr.Id;
-                    IEnumerable<OrderModel> orders = _context.GetAllOrders().Where(p => p.UserId == id && p.Active == 1);
-                    return orders.FirstOrDefault();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-
-                Log.Write(ex);
-                return null;
-            }
-        }
-
-        private async Task<string> GetRole()
-        {
-            try
-            {
-                User usr = await GetCurrentUserAsync();
-                if (usr != null)
-                {
-                    string role = _userManager.GetRolesAsync(usr).Result.First();
-                    return role;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return "";
-        }
-
+        #region Comments for User(watch, create) and Admin(delete)
         [HttpPost]
         public IActionResult Comments(CommentModel comment)
         {
@@ -228,7 +324,6 @@ namespace diploma.Controllers
                 return BadRequest(ex);
             }
         }
-
  
         public IActionResult GetCommentsView(int id)
         {
@@ -243,7 +338,8 @@ namespace diploma.Controllers
             return PartialView("_Comments", model);
         }
 
-        [HttpDelete] 
+        [HttpDelete]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteComment(int id)
         {
             try
@@ -258,40 +354,9 @@ namespace diploma.Controllers
             }
         }
 
-        private BookAdd FindBook(int id)
-        {
-            BookAdd b = _context.GetBook(id);
-            if (b == null)
-            {
-                Log.WriteSuccess(" AdminController.GetBook", "Книга не найдена.");
-                return null;
-            }
-            ViewBag.image = b.image;
-            List<int> au = new List<int>();
-            List<string> aus = new List<string>();
-            List<int> ge = new List<int>();
-            List<string> ges = new List<string>();
-            IEnumerable<BookAuthorModel> bookauthors = _context.GetAllBookAuthors().Where(f => f.IdBook == b.Id);
-            IEnumerable<BookGenreModel> bookgenres = _context.GetAllBookGenres().Where(f => f.IdBook == b.Id);
-            foreach (BookAuthorModel line in bookauthors)
-            {
-                AuthorModel author = _context.GetAuthor(line.IdAuthor);
-                au.Add(author.Id);
-                aus.Add(author.Name);
-            }
-            b.idAuthors = au.ToArray();
-            b.Authors = aus.ToArray();
-            foreach (BookGenreModel line in bookgenres)
-            {
-                GenreModel genre = _context.GetGenre(line.IdGenre);
-                ge.Add(genre.Id);
-                ges.Add(genre.Name);
-            }
-            b.idGenres = ge.ToArray();
-            b.Genres = ges.ToArray();
-            return b;
-        }
+        #endregion
 
+        #region Detailed information about book (for User)
         [HttpGet]
         //[Route("/Admin/Book/{id}")][FromRoute]
         public IActionResult Book(int id)
@@ -322,8 +387,9 @@ namespace diploma.Controllers
             }
             return View();
         }
-
-
+        #endregion
+      
+        #region adding book for admin
         [HttpGet]
         [Authorize(Roles = "admin")]
         public IActionResult AddBook(string filename)
@@ -333,6 +399,41 @@ namespace diploma.Controllers
             return View();
         }
 
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult> UploadPicture(IFormFile file)
+        {
+            //Task<ActionResult>
+            if (file != null)
+                try
+                {
+                    string format;
+                    String[] words = file.FileName.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                    format = words[words.Length - 1];
+                    string b = DateTime.Now.ToFileTime() + "." + format;
+                    //Path.GetFileName(file.FileName)
+                    string path = Path.Combine(_appEnvironment.WebRootPath + "\\img\\", b);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                    //RedirectToAction("AddBook","Admin", new { filename = b });
+                    return RedirectToAction("AddBook", new { filename = b });
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Message = "ERROR:" + ex.Message.ToString();
+                }
+            else
+            {
+                ViewBag.Message = "You have not specified a file.";
+            }
+            //return BadRequest();
+            return View();
+            //return RedirectToAction("Index");
+        }
+
+
         [HttpGet]
         [Authorize(Roles = "admin")]
         public IActionResult UploadPicture()
@@ -340,8 +441,9 @@ namespace diploma.Controllers
             ViewBag.Username = GetUserName().Result;
             return View();
         }
-
-
+        #endregion
+        
+        #region cities for admin
         public IActionResult Cities()
         {
             ViewBag.Username = GetUserName().Result;
@@ -452,70 +554,6 @@ namespace diploma.Controllers
             IEnumerable<CityModel> model = _context.GetAllCities().OrderBy(o=>o.Name);
             return PartialView("_CitiesTable",model);
         }
-
-
-        [HttpPut]
-        [Authorize(Roles = "admin")]
-        public IActionResult ChangeStatus(int id, int option)
-        {
-            try
-            {
-                OrderModel o = _context.GetOrder(id);
-                if (o.Active == 3 && option != 3)
-                {
-                    UserModel usr = _context.GetUser(o.UserId);
-                    CityModel city = _context.GetCity(usr.IdCity);
-                    o.DateDelivery = o.DateOrder.AddDays(city.DeliveryTime);
-                }
-                o.Active = option;
-                switch (option)
-                {
-                    case 2: o.DateSent= DateTime.Now.Date; break;
-                    case 3: o.DateDelivery = DateTime.Now.Date; break;
-                }
-                _context.UpdateOrder(o);
-                return Ok(o.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU")));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-
-        [HttpPost]
-        [Authorize(Roles = "admin")]
-        public async Task<ActionResult> UploadPicture(IFormFile file)
-        {
-            //Task<ActionResult>
-            if (file != null)
-                try
-                {
-                    string format;
-                    String[] words = file.FileName.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-                    format = words[words.Length - 1];
-                    string b = DateTime.Now.ToFileTime() + "." + format;
-                    //Path.GetFileName(file.FileName)
-                    string path = Path.Combine(_appEnvironment.WebRootPath + "\\img\\", b);
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-                    //RedirectToAction("AddBook","Admin", new { filename = b });
-                    return RedirectToAction("AddBook", new { filename = b });
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.Message = "ERROR:" + ex.Message.ToString();
-                }
-            else
-            {
-                ViewBag.Message = "You have not specified a file.";
-            }
-            //return BadRequest();
-            return View();
-            //return RedirectToAction("Index");
-        }
-
+        #endregion
     }
 }
