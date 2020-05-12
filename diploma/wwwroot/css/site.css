@@ -59,6 +59,10 @@ body {
     justify-content: center;  
 }
 
+.btn-personal {
+    width: 100%;
+}
+
 .comments {
     width: 100%;
 }

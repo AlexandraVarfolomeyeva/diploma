@@ -54,9 +54,10 @@
                 </div>
             </form>
         </div>
-        <div class="col-md-4 order-md-2 mb-4">
-            <button id="logoffBtn" class="btn btn-primary btn-dark inout" type="submit">Выйти</button><br />
-        </div>
+    <div class="col-md-4 order-md-2 mb-4">
+        <a class="btn btn-primary btn-light btn-personal" asp-area="" asp-controller="Personal" asp-action="ChangePassword">Изменить пароль</a><br />
+        <button id="logoffBtn" class="btn btn-primary btn-dark btn-personal" type="submit">Выйти</button><br />
+    </div>
     </div>
 
     <environment include="Development">
