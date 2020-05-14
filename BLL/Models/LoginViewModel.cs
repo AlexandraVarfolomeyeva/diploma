@@ -9,10 +9,10 @@ namespace BLL.Models
     public class LoginViewModel
     {
 
-        [Required]
+        [Required(ErrorMessage = "Не указано имя пользователя")]
         [Display(Name = "User")]
         public string User { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Не указан пароль")]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }

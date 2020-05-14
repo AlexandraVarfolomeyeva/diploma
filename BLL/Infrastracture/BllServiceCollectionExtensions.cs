@@ -19,7 +19,7 @@ namespace BLL.Infrastracture
     {
         public static IServiceCollection AddBll(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<BookingContext>();
+            services.AddIdentity<User, IdentityRole>().AddErrorDescriber<CustomIdentityErrorDescriber>().AddEntityFrameworkStores<BookingContext>();
             services.AddDbContext<BookingContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
