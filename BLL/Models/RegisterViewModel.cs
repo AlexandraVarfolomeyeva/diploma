@@ -24,7 +24,7 @@ namespace BLL.Models
 
         [Required(ErrorMessage = "Не указано имя пользователя")]
         [Display(Name = "Имя пользователя")]
-        [RegularExpression("[0-9a-z_-]+", ErrorMessage = "Только латинские буквы, цифры, знаки дефиса и нижнего подчеркивания")]
+        [RegularExpression("[0-9a-z_-]+", ErrorMessage = "Только латинские буквы нижнего регистра, цифры, знаки дефиса и нижнего подчеркивания")]
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "Не указан номер телефона")]

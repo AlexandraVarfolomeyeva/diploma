@@ -67,7 +67,7 @@ namespace diploma.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "user")]
+        //[Authorize(Roles = "user")]
         public IActionResult Create([FromBody] BookOrderForm item)
         {//создание новой строки заказа
             try

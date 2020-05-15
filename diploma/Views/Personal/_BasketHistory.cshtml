@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<OrderModel>
 @using System.Globalization;
-@if (Model != null)
+@if (Model != null && Model.Any())
 {
     <h4 class="text-center text-dark">История Ваших заказов</h4>
     <table class="table">

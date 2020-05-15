@@ -197,7 +197,7 @@ namespace diploma.Controllers
                             Id = order.Id,
                             Weight = order.Weight,
                             City = city.Name,
-                            SumDelivery = city.DeliverySum
+                            SumDelivery = order.SumDelivery
                         };
                         IEnumerable<BookOrderModel> bo = _context.GetAllBookOrders().Where(i=>i.IdOrder==order.Id);
                         List<BookOrderView> boo = new List<BookOrderView>();
