@@ -4,7 +4,6 @@ body {
     /*padding-top: 50px;
     padding-bottom: 20px;*/
     font-size: 1.2rem !important;
-    font-family: 'Times New Roman', Times, serif;
 }
 
 .concern {
@@ -85,7 +84,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Times New Roman';
     font-size: 1.2rem;
     text-align: justify;
     margin-left: 15px;
@@ -133,7 +131,6 @@ body {
 
 .table-basket a{
     color:black;
-    font-family:'Times New Roman', Times, serif;
 }
 
 .buy-btn{
@@ -145,7 +142,6 @@ body {
 .buy-btn button{
     font-size:1.4rem;
     width:50%;
-    font-family:'Times New Roman';
     color:white;
    background-color:#021dff;
 }
@@ -155,7 +151,6 @@ body {
     /*position: relative;
         margin-left: 15px;*/
     color: #434343;
-    font-family: 'Times New Roman', Times, serif;
 }
 /*.empty-basket-div .empty-basket:before {
     content: '';
@@ -227,6 +222,7 @@ body {
 .active-cyan-3 input[type=text] {
     border: 1px solid #4dd0e1;
     box-shadow: 0 0 0 1px #4dd0e1;
+    margin: 1em;
 }
 
 
@@ -285,7 +281,6 @@ body {
 
 .annotation-div {
     padding: 3.5em;
-    font-family: 'Times New Roman';
     font-size: 1.3rem;
     background-color: #FEFDFF;
     text-align: justify;
@@ -294,7 +289,6 @@ body {
 
 .title-book {
     text-align: center;
-    font-family: 'Times New Roman';
     font-size: 2rem;
     padding: 1%;
     padding-left:5%;
