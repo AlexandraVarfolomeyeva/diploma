@@ -234,6 +234,44 @@ namespace diploma.Controllers
             return View();
         }
 
+        public IActionResult Company()
+        {
+            ViewBag.Username = GetUserName().Result;
+
+            return View();
+        }
+
+        public IActionResult Discounts()
+        {
+            ViewBag.Username = GetUserName().Result;
+
+            return View();
+        }
+
+        public IActionResult Partners()
+        {
+            ViewBag.Username = GetUserName().Result;
+
+            return View();
+        }
+
+
+
+        public IActionResult Policy()
+        {
+            ViewBag.Username = GetUserName().Result;
+
+            return View();
+        }
+
+
+        public IActionResult Shops()
+        {
+            ViewBag.Username = GetUserName().Result;
+
+            return View();
+        }
+
         public ActionResult GetBasketView()
         {
             BookListViewModel bvm = new BookListViewModel()

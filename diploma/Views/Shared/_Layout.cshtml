@@ -65,24 +65,22 @@
             <div class="row">
                 <div class="col-md-6">
                     <img class="mb-2" src="~/images/fantasia.png" alt="" width="24" height="24">
-                    <small class="d-block mb-3 text-muted">Книжный магазин "Фантазия" &copy; 2020</small>
+                    <small class="d-block mb-3 text-muted">Книжный магазин "Фантазия" &copy; @DateTime.Now.Year</small>
                 </div>
                 <div class="col-md-3">
                     <h5>Магазины</h5>
                     <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Адреса магазинов</a></li>
-                        <li><a class="text-muted" href="#">Услуги</a></li>
-                        <li><a class="text-muted" href="#">Партнеры</a></li>
-                        <li><a class="text-muted" href="#">О компании</a></li>
+                        <li><a class="text-muted"  asp-area="" asp-controller="Home" asp-action="Shops">Адреса магазинов</a></li>
+                        <li><a class="text-muted" asp-area="" asp-controller="Home" asp-action="Partners">Партнеры</a></li>
+                        <li><a class="text-muted" asp-area="" asp-controller="Home" asp-action="Company">О компании</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3">
                     <h5>Интернет-магазины</h5>
                     <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Доставка и оплата</a></li>
-                        <li><a class="text-muted" href="#">Акции</a></li>
-                        <li><a class="text-muted" href="#">Книги</a></li>
-                        <li><a class="text-muted" href="#">Политика конфиденциальности</a></li>
+                        <li><a class="text-muted" asp-area="" asp-controller="Home" asp-action="PriceAndDelivery">Доставка и оплата</a></li>
+                        <li><a class="text-muted" asp-area="" asp-controller="Home" asp-action="Discounts">Акции</a></li>
+                        <li><a class="text-muted" asp-area="" asp-controller="Home" asp-action="Policy">Политика конфиденциальности</a></li>
                     </ul>
                 </div>
             </div>
