@@ -14,7 +14,9 @@ function EditCity(id) {
     var overlay = document.querySelector('#overlay-modal');
     overlay.classList.add('active');
     var button = document.getElementById("AddCity");
-    button.setAttribute('onclick', 'Edit('+id+');');
+    button.setAttribute('onclick', 'Edit(' + id + ');');
+    document.getElementById("titleCity").innerHTML = "Редактировать город";
+
     $.ajax({
         type: "GET",
         url: url,
@@ -61,6 +63,7 @@ function Addbtn() {
     document.getElementById("CityName").value = "";
     document.querySelector("#DeliverySum").value = "";
     document.querySelector("#DeliveryTime").value = "";
+    document.getElementById("titleCity").innerHTML = "Добавить город";
     modalElem.classList.add('active');
     var overlay = document.querySelector('#overlay-modal');
     overlay.classList.add('active');
