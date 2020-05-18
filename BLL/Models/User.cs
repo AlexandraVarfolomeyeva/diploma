@@ -13,7 +13,7 @@ namespace BLL.Models
         public string Address { get; set; }
         public int IdCity { get; set; }
         public virtual CityModel City { get; set; }
-        public virtual ICollection<OrderModel> Orders { get; set; }
+        public virtual IEnumerable<OrderModel> Orders { get; set; }
         public UserModel()
         {
             Orders = new HashSet<OrderModel>();

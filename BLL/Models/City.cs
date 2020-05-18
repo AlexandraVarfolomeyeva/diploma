@@ -18,6 +18,6 @@ namespace BLL.Models
         public float DeliverySum { get; set; } //стоимость доставки
         [Required(ErrorMessage = "Не указано время доставки")]
         public int DeliveryTime { get; set; } //time доставки
-        public virtual ICollection<UserModel> Users { get; set; }
+        public virtual IEnumerable<UserModel> Users { get; set; }
     }
 }

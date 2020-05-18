@@ -27,10 +27,10 @@ namespace BLL.Models
         public string Title { get; set; } //Название книги
         public virtual int IdPublisher { get; set; }
         public virtual PublisherModel Publisher { get; set; }
-        public virtual ICollection<BookOrderModel> BookOrders { get; set; }
-        public virtual ICollection<BookAuthorModel> BookAuthors { get; set; }
-        public virtual ICollection<BookGenreModel> BookGenres { get; set; }
-        public virtual ICollection<CommentModel> Comments { get; set; }
+        public virtual IEnumerable<BookOrderModel> BookOrders { get; set; }
+        public virtual IEnumerable<BookAuthorModel> BookAuthors { get; set; }
+        public virtual IEnumerable<BookGenreModel> BookGenres { get; set; }
+        public virtual IEnumerable<CommentModel> Comments { get; set; }
         public BookModel()
         {
             BookOrders = new HashSet<BookOrderModel>();

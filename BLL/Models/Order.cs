@@ -31,7 +31,7 @@ namespace BLL.Models
         public int Active { get; set; } //является ли заказ активным
         public int Amount { get; set; } //количество книг в заказе
         //public string Url { get; set; }
-        public virtual ICollection<BookOrderModel> BookOrders { get; set; }
+        public virtual IEnumerable<BookOrderModel> BookOrders { get; set; }
         public virtual UserModel User { get; set; }
     }
 }

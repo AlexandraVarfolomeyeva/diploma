@@ -57,9 +57,9 @@ namespace diploma.Controllers
                 if (usr != null)
                 {
                     string id = usr.Id;
-                    IEnumerable<OrderModel> orders = _context.GetAllOrders();
-                    orders = orders.Where(p => p.UserId == id && p.Active == 1);
-                    return orders.FirstOrDefault();
+                    OrderModel order = _context.GetAllOrders().Where(p => p.UserId == id && p.Active == 1).FirstOrDefault();
+                    order.BookOrders = _context.GetAllBookOrders().Where(f=> f.IdOrder==order.Id);
+                    return order;
                 }
                 else
                 {

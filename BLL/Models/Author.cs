@@ -15,6 +15,6 @@ namespace BLL.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        public virtual ICollection<BookAuthorModel> BookAuthors { get; set; }
+        public virtual IEnumerable<BookAuthorModel> BookAuthors { get; set; }
     }
 }
