@@ -59,45 +59,79 @@
         <div class="col-md-3 product__image">
             <img class="center-block img-top-bottom-space" src="~/img/@Model.Book.image" alt="@Model.Book.Title">
         </div>
-        <div class="col-md-9">
-            <h6>
+        <div class="col-md-9 book-details">
+            <h4>
                 @foreach (string c in Model.Book.Authors)
                 {
                     var parms = new Dictionary<string, string>
-                                 {
-                                        { "page", "1" },
-                                        { "searchString", "" },
-                                         { "sortOrder", "" },
-                                          { "Stored", "false" },
-                                           { "Genre", "" },
-                                           { "AuthorSearch", c }
-                                 };
-                    <a class="authors text-muted" asp-area="" asp-controller="Home" asp-action="Index" asp-all-route-data="parms">
+                                                             {
+                                                                    { "page", "1" },
+                                                                    { "searchString", "" },
+                                                                     { "sortOrder", "" },
+                                                                      { "Stored", "false" },
+                                                                       { "Genre", "" },
+                                                                       { "AuthorSearch", c }
+                                                             };
+                    <a class="authors" asp-area="" asp-controller="Home" asp-action="Index" asp-all-route-data="parms">
                         @c;
                     </a>
                 }
-            </h6>
+            </h4>
 
             @*<div id="rating">
-                <span onclick="Rate(@Model.Book.Id,1);">★</span>
-                <span onclick="Rate(@Model.Book.Id,2);">★</span>
-                <span onclick="Rate(@Model.Book.Id,3);">★</span>
-                <span onclick="Rate(@Model.Book.Id,4);">★</span>
-                <span onclick="Rate(@Model.Book.Id,5);">★</span>
-            </div>*@
+            <span onclick="Rate(@Model.Book.Id,1);">★</span>
+            <span onclick="Rate(@Model.Book.Id,2);">★</span>
+            <span onclick="Rate(@Model.Book.Id,3);">★</span>
+            <span onclick="Rate(@Model.Book.Id,4);">★</span>
+            <span onclick="Rate(@Model.Book.Id,5);">★</span>
+        </div>*@
+            <div class="product-prop">
+                <div class="product-prop__title">
+                    Жанр:
+                </div>
+                <div class="product-prop__value">
+                    @foreach (string c in Model.Book.Genres)
+                    {
+                        <span>
+                            @c;
+                        </span>
+                    }
+                </div>
+            </div>
+            <div class="product-prop">
+                <div class="product-prop__title">
+                    В наличии:
+                </div>
+                <div class="product-prop__value">
+                    @Model.Book.Stored шт.
+                </div>
+            </div>
+            <div class="product-prop">
+                <div class="product-prop__title">
+                    Вес:
+                </div>
+                <div class="product-prop__value">
+                    @Model.Book.Weight гр.
+                </div>
+            </div>
+            <div class="product-prop">
+                <div class="product-prop__title">
+                    Год публикации:
+                </div>
+                <div class="product-prop__value">
+                    @Model.Book.Year
+                </div>
+            </div>
 
-            <h6>
-                @foreach (string c in Model.Book.Genres)
-                {
-                    <a href="#">
-                        @c;
-                    </a>
-                }
-            </h6>
-            <h5>
-                Цена:  @Model.Book.Cost
-            </h5>
-            <div>
+            <div class="price">
+                <div class="product-prop__title">
+                    Цена:
+                </div>
+                <div class="product-prop__value">
+                    @Model.Book.Cost руб.
+                </div>
+            </div>
+            <div class="btn-block group-book-add">
                 @if (ViewBag.Role == "admin")
                 {
                     <button onclick="editBook(@Model.Book.Id);" class="btn btn-dark"> Редактировать </button>
@@ -126,17 +160,17 @@
                 }
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="border annotation-div">
-            <p class="text-muted">Аннотация:</p>
-            <p class="text-break">@Model.Book.Content</p>
+            </div>
+            <div class="row">
+                <div class="border annotation-div">
+                    <p class="text-muted">Аннотация:</p>
+                    <p class="text-break">@Model.Book.Content</p>
+                </div>
+            </div>
+            <div class="row comments-section">
+                @{Html.RenderPartial("_Comments", Model);}
+            </div>
         </div>
-    </div>
-    <div class="row comments-section">
-        @{Html.RenderPartial("_Comments", Model);}
-    </div>
-</div>
 
 <environment include="Development">
     <script src="~/js/Rating.js" asp-append-version="true"></script>

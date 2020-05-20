@@ -10,18 +10,22 @@
             @foreach (CommentModel c in Model.Comments)
             {
                 <div>
+                    <div class="comment-author">
                     <div class="username">
                         @c.UserName
+                    </div>
+                    @if (ViewBag.Role == "admin")
+                    {
+                        <div class="delete-comment-btn">
+                            <button class="btn btn-outline-dark" onclick="DeleteComment(@c.Id,@Model.Book.Id);">Удалить</button>
+                        </div>
+                    }
                     </div>
                     <div class="comment">
                         @c.Content
                     </div>
-                    @if (ViewBag.Role == "admin")  {
-                    <div> 
-                        <button class="btn btn-dark" onclick="DeleteComment(@c.Id,@Model.Book.Id);">Удалить</button>
-                    </div>
-                    }
-                        </div>
+
+                </div>
                         }
 
                         <form class="needs-validation comment-form rounded" id="commentForm" action="javascript:void(0);" novalidate>

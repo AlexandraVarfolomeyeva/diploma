@@ -175,8 +175,63 @@ body {
     position: relative;
     text-decoration: none;
 }
+
+.book-details {
+    margin-bottom: 24px;
+    margin-top: 24px;
+}
+
+.product-prop {
+    font-size: 1.3rem !important;
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.delete-comment-btn {
+    margin-right: 0;
+    margin-left: auto;
+}
+
+.comment-author{
+    display:flex;
+}
+
+.price {
+    font-size: 1.6rem !important;
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: black;
+    font-style: normal !important;
+    font-weight: bold;
+}
+
+.product-prop__value {
+    flex-grow: 1;
+    font-weight: bolder;
+}
+
+.product-prop__title {
+    width: 130px;
+    color: rgba(0, 0, 0, 0.66);
+    flex-shrink: 0;
+}
+
+.element-book-details {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.group-book-add button {
+    font-size: 1.5rem !important;
+    font-style: normal !important;
+    text-decoration: none;
+}
+
 .authors {
-    font-size: 1.2rem !important;
+    font-size: 1.5rem !important;
     font-style: normal !important;
     text-decoration: none;
 }

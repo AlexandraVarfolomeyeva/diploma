@@ -61,6 +61,10 @@ function reloadBasketTable() {
 
 function reloadMessage(message) {
     try {
+        var modalElem = document.querySelector('.modal1[data-modal="7"]');
+        modalElem.classList.add('active');
+        var overlay = document.querySelector('#overlay-modal');
+        overlay.classList.add('active');
         $(".js__get_basket_message").load("/Personal/GetView", { viewName: "_AdminMsg", message: message });
     } catch (e) { }
 }
