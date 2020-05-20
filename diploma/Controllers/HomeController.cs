@@ -192,9 +192,9 @@ namespace diploma.Controllers
         }
 
         [HttpPost]
-        public IActionResult Search(string searchString, string sortOrder, bool Stored, int Genre)
+        public IActionResult Search(string searchString, string sortOrder, int Genre, bool StoredBox)
         {
-           return RedirectToAction("Index", "Home", new { page = 1, searchString = searchString, sortOrder = sortOrder, Stored = Stored, Genre = Genre });
+           return RedirectToAction("Index", "Home", new { page = 1, searchString = searchString, sortOrder = sortOrder, Stored = StoredBox, Genre = Genre });
         }
 
 
