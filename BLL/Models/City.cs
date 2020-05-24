@@ -12,6 +12,7 @@ namespace BLL.Models
         [Key]
         [Required]
         public int Id { get; set; }
+        [RegularExpression("[A-Za-zА-Яа-я- ]{2,}", ErrorMessage = "Пожалуйста, введите название города, избегая цифр и знаков.")]
         [Required(ErrorMessage = "Не указано название города")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Не указана стоимость доставки")]

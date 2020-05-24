@@ -14,7 +14,7 @@ namespace BLL.Models
 
         [Required(ErrorMessage = "Не указано ФИО")]
         [Display(Name = "ФИО")]
-        [RegularExpression("[A-Za-zА-Яа-я- ]{6,}", ErrorMessage = "Пожалуйста, введите полное ФИО, избегая цифр и знаков.")]
+        [RegularExpression("[A-Za-zА-Яа-я- ]{3,}", ErrorMessage = "Пожалуйста, введите полное ФИО, избегая цифр и знаков.")]
         public string Fio { get; set; }
 
         [Required(ErrorMessage = "Не указан Email")]

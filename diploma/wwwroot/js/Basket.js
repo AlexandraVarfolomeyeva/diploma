@@ -78,7 +78,7 @@ function reloadHistory() {
 
 
 function Increase(id) {
-    reloadMessage("");
+    //reloadMessage("");
     $.ajax({
             url: uriIncrease+id,
             type: "PUT",
@@ -96,7 +96,7 @@ function Increase(id) {
 }
 
 function Decrease(id) {
-    reloadMessage("");
+    //reloadMessage("");
     $.ajax({
         url: uriDecrease + id,
         type: "PUT",
@@ -111,7 +111,7 @@ function Decrease(id) {
 }
 
 function DeleteItem(id) {
-    reloadMessage("");
+    //reloadMessage("");
     $.ajax({
         url: uriDeleteItem + id,
         type: "PUT",
@@ -159,7 +159,7 @@ function deleteAll(id) {
 }
 
 function OrderBooks(id) {
-    reloadMessage("");
+    //reloadMessage("");
     $.ajax({
         url: uriMakeOrder + id,
         type: "PUT",
@@ -169,7 +169,7 @@ function OrderBooks(id) {
             reloadMessage("Успешно заказано!");
         },
         error: response => {
-            alert("Error" + response.responseText);
+            reloadMessage("Error" + response.responseText);
         }
     });
 }

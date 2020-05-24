@@ -181,6 +181,10 @@ body {
     margin-top: 24px;
 }
 
+    .book-details h4 a {
+       font-size: 1.6rem !important;
+    }
+
 .product-prop {
     font-size: 1.3rem !important;
     display: flex;
@@ -231,7 +235,7 @@ body {
 }
 
 .authors {
-    font-size: 1.5rem !important;
+    font-size: 1.3rem !important;
     font-style: normal !important;
     text-decoration: none;
 }
