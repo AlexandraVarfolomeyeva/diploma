@@ -363,29 +363,29 @@ namespace diploma.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> MakeOrder(int id)
+        public ActionResult MakeOrder(int id)
         {
-            try
+            try//0
             {
-                OrderModel o = _context.GetOrder(id);
+                OrderModel o = _context.GetOrder(id);//1
                 o.Active = 0;
                 o.DateOrder = DateTime.Now;
                 _context.UpdateOrder(o);
                 IEnumerable<BookOrderModel> bo = _context.GetAllBookOrders().Where(b => b.IdOrder == o.Id);
-                foreach (BookOrderModel b in bo)
+                foreach (BookOrderModel b in bo)//2
                 {
-                    BookAdd book = _context.GetBook(b.IdBook);
-                    if (book.Stored >= b.Amount) {
-                        book.Stored -= b.Amount;
+                    BookAdd book = _context.GetBook(b.IdBook);//3
+                    if (book.Stored >= b.Amount) {//4
+                        book.Stored -= b.Amount;//5
                         _context.UpdateBook(book);
                     } else
-                    {
+                    {//6
                         Log.WriteSuccess("PersonalController.MakeOrder", "Не хватает книг на складе! "+ book.Title+ ". Id " + book.Id);
-                        return BadRequest("Не хватает книг на складе!");
-                    }
+                        return BadRequest("Не хватает книг на складе!");//7
+                    }//8
                 }
 
-                User user = await _userManager.GetUserAsync(HttpContext.User);
+                User user = _userManager.GetUserAsync(HttpContext.User).Result;//9
                 CityModel city = _context.GetCity(user.IdCity);
                 OrderModel order = new OrderModel()
                 {
@@ -402,12 +402,12 @@ namespace diploma.Controllers
                 Log.WriteSuccess(" PersonalController.MakeOrder", "Id user" + order.UserId);
                 _context.CreateOrder(order); //добавление заказа в БД    
                 Log.WriteSuccess(" PersonalController.MakeOrder", "Создан новый заказ.");
-                return NoContent();
-            } catch (Exception ex)
+                return NoContent();//10
+            } catch (Exception ex)//11
             {
-                Log.Write(ex);
-                return BadRequest(ex);
-            }
+                Log.Write(ex);//12
+                return BadRequest(ex);//13
+            }//14
         }
 
         [HttpDelete("{id}")]

@@ -67,24 +67,24 @@ namespace diploma.Controllers
 
 
         [HttpPost]
-        //[Authorize(Roles = "user")]
+        [Authorize(Roles = "user")]
         public IActionResult Create([FromBody] BookOrderForm item)
         {//создание новой строки заказа
-            try
+            try //0
             {
-                if (!ModelState.IsValid)
+                if (!ModelState.IsValid)//1
                 {
-                    Log.WriteSuccess("BookOrderController.Create", "Валидация внутри контроллера неудачна.");
+                    Log.WriteSuccess("BookOrderController.Create", "Валидация внутри контроллера неудачна.");//2
                     return BadRequest(ModelState);
                 }
             
-                BookOrderModel book = _context.GetAllBookOrders().Where(a => a.IdBook == item.IdBook && a.IdOrder == item.IdOrder).FirstOrDefault();
-                if (book != null)
+                BookOrderModel book = _context.GetAllBookOrders().Where(a => a.IdBook == item.IdBook && a.IdOrder == item.IdOrder).FirstOrDefault();//3
+                if (book != null)//4
                 {
-                    book.Amount++;
+                    book.Amount++;//5
                     _context.UpdateBookOrder(book);
                 } else { 
-                BookOrderModel bookorder = new BookOrderModel()
+                BookOrderModel bookorder = new BookOrderModel()//6
                     {
                         IdBook = item.IdBook,
                         IdOrder = item.IdOrder,
@@ -92,29 +92,28 @@ namespace diploma.Controllers
                     };
                     _context.CreateBookOrder(bookorder);
                 }
-                BookAdd b = _context.GetBook(item.IdBook);
+                BookAdd b = _context.GetBook(item.IdBook);//7
                 OrderModel order = _context.GetOrder(item.IdOrder);
                 order.SumOrder += b.Cost;
                 int overweight = ((order.Weight - 5000) / 1000) + 1;
                 order.Weight += b.Weight;
-                if (order.Weight > 5000)
+                if (order.Weight > 5000)//8
                 {
-                    int overweight_new = ((order.Weight - 5000) / 1000) + 1;
+                    int overweight_new = ((order.Weight - 5000) / 1000) + 1;//9
                     overweight_new -= overweight;
                     order.SumDelivery += overweight_new * 200;
                 }
-                order.Amount++;
+                order.Amount++;//10
                 _context.UpdateOrder(order);
                 Log.WriteSuccess("BookOrderController.Create", "Добавлена новая строка заказа.");
                 return Ok();
-                //return View("~/Home/Index");
             }
-            catch (Exception ex)
+            catch (Exception ex)//11
             {
-                Log.Write(ex);
-                return BadRequest(ModelState);
+                Log.Write(ex);//12
+                return BadRequest(ex);
             }
-        }
+        }//13
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "user")]

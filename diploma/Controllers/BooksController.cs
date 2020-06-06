@@ -68,7 +68,7 @@ namespace diploma.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Create([FromBody] BookAdd item)
+        public IActionResult Create([FromBody] BookAdd item)
         {//создание новой книги возможно только администратором
             try
             {

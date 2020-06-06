@@ -24,12 +24,12 @@ namespace BLL.Models
 
         [Required(ErrorMessage = "Не указано имя пользователя")]
         [Display(Name = "Имя пользователя")]
-        [RegularExpression("[0-9a-z_-]+", ErrorMessage = "Только латинские буквы нижнего регистра, цифры, знаки дефиса и нижнего подчеркивания")]
+        [RegularExpression("[0-9a-z_-]+", ErrorMessage = "Только латинские буквы нижнего регистра, цифры, знаки дефиса и нижнего подчеркивания.")]
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "Не указан номер телефона")]
         [Display(Name = "Номер телефона")]
-        [Phone(ErrorMessage = "Поле номер телефона заполнено неверно")]
+        [RegularExpression("[0-9]{10}", ErrorMessage = "Пожалуйста, введите свой настоящий номер мобильного телефона.")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Не указан физический адрес")]
@@ -41,13 +41,13 @@ namespace BLL.Models
         public int IdCity { get; set; }
 
         [Required(ErrorMessage = "Не указан пароль")]
-        [DataType(DataType.Password, ErrorMessage = "Пароль должен состоять из латинских букв, цифр, как минимум одной заглавной и одной строчной буквы и одного служебного символа.")]
+        [DataType(DataType.Password, ErrorMessage = "Пароль должен содержать не менее шести символов и состоять из латинских букв, цифр, как минимум одной заглавной и одной строчной буквы и одного служебного символа.")]
         [Display(Name = "Пароль")]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Пароль не был подтвержден")]
-        [Compare("Password", ErrorMessage = "Пароли не совпадают")]
-        [DataType(DataType.Password, ErrorMessage = "Пароль должен состоять из латинских букв, цифр, как минимум одной заглавной и одной строчной буквы и одного служебного символа.")]
+        [Required(ErrorMessage = "Пароль не был подтвержден.")]
+        [Compare("Password", ErrorMessage = "Пароли не совпадают.")]
+        [DataType(DataType.Password, ErrorMessage = "Пароль должен содержать не менее шести символов и состоять из латинских букв, цифр, как минимум одной заглавной и одной строчной буквы и одного служебного символа.")]
         [Display(Name = "Подтвердить пароль")]
         public string PasswordConfirm { get; set; }
     }
