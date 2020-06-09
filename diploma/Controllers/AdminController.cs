@@ -30,7 +30,11 @@ namespace diploma.Controllers
             _userManager = userManager;
             _appEnvironment = appEnvironment;
         }
+     
+        
         #region private helping fuctions
+       
+        
         /// <summary>
         /// Получить текущего пользователя
         /// </summary>
@@ -151,12 +155,12 @@ namespace diploma.Controllers
             return b;
         }
 
-/// <summary>
-/// Отфильтровать города
-/// </summary>
-/// <param name="search">название города или id</param>
-/// <param name="order">порядок сортировки</param>
-/// <returns></returns>
+        /// <summary>
+        /// Отфильтровать города
+        /// </summary>
+        /// <param name="search">название города или id</param>
+        /// <param name="order">порядок сортировки</param>
+        /// <returns></returns>
         private List<CityModel> FilterCities(string search, string order)
         {
             List<CityModel> model = _context.GetAllCities().ToList();
@@ -184,7 +188,7 @@ namespace diploma.Controllers
                 case "alphabet": model = model.OrderBy(d => d.Name).ToList(); break;
                 case "alphabetDesc": model = model.OrderByDescending(d => d.Name).ToList(); break;
                 case "time": model = model.OrderBy(d => d.DeliveryTime).ThenBy(b => b.Name).ToList(); break;
-                case "timeDesc": model = model.OrderByDescending(d => d.DeliveryTime).ThenBy(b=>b.Name).ToList(); break;
+                case "timeDesc": model = model.OrderByDescending(d => d.DeliveryTime).ThenBy(b => b.Name).ToList(); break;
                 case "cost": model = model.OrderBy(d => d.DeliverySum).ThenBy(b => b.Name).ToList(); break;
                 case "costDesc": model = model.OrderByDescending(d => d.DeliverySum).ThenBy(b => b.Name).ToList(); break;
                 default: model = model.OrderBy(d => d.Name).ToList(); break;
@@ -207,7 +211,8 @@ namespace diploma.Controllers
             List<AdminOrderView> modelList = new List<AdminOrderView>();
             foreach (OrderModel o in orders)
             {
-                o.BookOrders = _context.GetAllBookOrders().Where(p=>p.IdOrder==o.Id).ToList();
+                AddressModel ad = _context.GetAddress(o.AddressId);
+                o.BookOrders = _context.GetAllBookOrders().Where(p => p.IdOrder == o.Id).ToList();
                 List<BookOrderView> bol = new List<BookOrderView>();
                 foreach (BookOrderModel b in o.BookOrders)
                 {
@@ -232,7 +237,7 @@ namespace diploma.Controllers
                     bol.Add(bo);
                 }
                 o.User = _context.GetUser(o.UserId);
-                o.User.City = _context.GetCity(o.User.IdCity);
+                CityModel city = _context.GetCity(ad.IdCity);
                 AdminOrderView c = new AdminOrderView()
                 {
                     Active = o.Active,
@@ -241,9 +246,9 @@ namespace diploma.Controllers
                     DateOrder = o.DateOrder,
                     Id = o.Id,
                     SumOrder = o.SumOrder,
-                    City = o.User.City.Name,
-                    SumDelivery = o.User.City.DeliverySum,
-                    Address = o.User.Address,
+                    City = city.Name,
+                    SumDelivery = city.DeliverySum,
+                    Address = ad.Name,
                     Email = o.User.Email,
                     FIO = o.User.Fio,
                     Phone = o.User.PhoneNumber,
@@ -267,7 +272,8 @@ namespace diploma.Controllers
                     newmodel = newmodel.Concat(model).Distinct().ToList();
 
                     int id;
-                    if (Int32.TryParse(words[i], out id)) {
+                    if (Int32.TryParse(words[i], out id))
+                    {
                         model = modelList.Where(f => f.Id == id).ToList();
                         newmodel = newmodel.Concat(model).Distinct().ToList();
                     }
@@ -290,11 +296,11 @@ namespace diploma.Controllers
             switch (sort)
             {
                 case "No": modelList = modelList.OrderBy(f => f.Id).ToList(); break;
-                case "No_desc": modelList=modelList.OrderByDescending(f => f.Id).ToList(); break;
-                case "Order": modelList=modelList.OrderBy(f => f.DateOrder).ToList(); break;
-                case "Order_desc": modelList=modelList.OrderByDescending(f => f.DateOrder).ToList(); break;
-                case "Delivery": modelList=modelList.OrderBy(f => f.DateDelivery).ToList(); break;
-                case "Delivery_desc": modelList=modelList.OrderByDescending(f => f.DateDelivery).ToList(); break;
+                case "No_desc": modelList = modelList.OrderByDescending(f => f.Id).ToList(); break;
+                case "Order": modelList = modelList.OrderBy(f => f.DateOrder).ToList(); break;
+                case "Order_desc": modelList = modelList.OrderByDescending(f => f.DateOrder).ToList(); break;
+                case "Delivery": modelList = modelList.OrderBy(f => f.DateDelivery).ToList(); break;
+                case "Delivery_desc": modelList = modelList.OrderByDescending(f => f.DateDelivery).ToList(); break;
                 default: modelList = modelList.OrderBy(f => f.Id).ToList(); break;
             }
             return modelList;
@@ -309,7 +315,7 @@ namespace diploma.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public IActionResult ChangeStatus(int id, int option)
         {
             try
@@ -318,7 +324,7 @@ namespace diploma.Controllers
                 if (o.Active == 3 && option != 3)
                 {
                     UserModel usr = _context.GetUser(o.UserId);
-                    CityModel city = _context.GetCity(usr.IdCity);
+                    CityModel city = _context.GetCity(_context.GetAddress(o.AddressId).IdCity);
                     o.DateDelivery = o.DateOrder.AddDays(city.DeliveryTime);
                 }
                 o.Active = option;
@@ -336,7 +342,7 @@ namespace diploma.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public IActionResult OrderList(int? page, int status, string period, string sort, string search)
         {
             int pageNumber = page ?? 1;
@@ -366,7 +372,7 @@ namespace diploma.Controllers
                 return BadRequest(ex);
             }
         }
- 
+
         public IActionResult GetCommentsView(int id)
         {
             BookAdd book = FindBook(id);
@@ -375,13 +381,13 @@ namespace diploma.Controllers
             BookDetails model = new BookDetails()
             {
                 Book = book,
-                Comments = _context.GetAllComments().Where(c=>c.IdBook==book.Id)
+                Comments = _context.GetAllComments().Where(c => c.IdBook == book.Id)
             };
             return PartialView("_Comments", model);
         }
 
         [HttpDelete]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public IActionResult DeleteComment(int id)
         {
             try
@@ -419,7 +425,7 @@ namespace diploma.Controllers
                 {
                     Book = b,
                     CurrentOrder = GetCurrentOrder().Result,
-                    Comments = _context.GetAllComments().Where(c=>c.IdBook == b.Id)
+                    Comments = _context.GetAllComments().Where(c => c.IdBook == b.Id)
                 };
                 return View(bd);
             }
@@ -430,10 +436,10 @@ namespace diploma.Controllers
             return View();
         }
         #endregion
-      
+
         #region adding book for admin
         [HttpGet]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public IActionResult AddBook(string filename)
         {
             ViewBag.Username = GetUserName().Result;
@@ -442,7 +448,7 @@ namespace diploma.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public async Task<ActionResult> UploadPicture(IFormFile file)
         {
             //Task<ActionResult>
@@ -477,14 +483,14 @@ namespace diploma.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public IActionResult UploadPicture()
         {
             ViewBag.Username = GetUserName().Result;
             return View();
         }
         #endregion
-        
+
         #region cities for admin
         public IActionResult Cities()
         {
@@ -493,24 +499,27 @@ namespace diploma.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public IActionResult Cities(CityModel city)
         {
-            try {
+            try
+            {
                 if (ModelState.IsValid)
                 {
                     _context.CreateCity(city);
                     return CreatedAtAction("GetAuthor", new { id = city.Id }, city);
-                } else
+                }
+                else
                 {
                     Log.WriteSuccess("/Admin/Cities/[Post] ", "Модель не валидна!");
                     return Conflict(ModelState);
                 }
-              
-            } catch(Exception ex)
+
+            }
+            catch (Exception ex)
             {
                 Log.Write(ex);
-               return BadRequest(ex);
+                return BadRequest(ex);
             }
         }
 
@@ -521,7 +530,7 @@ namespace diploma.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                  var city = _context.GetCity(id);
+                    var city = _context.GetCity(id);
                     return Ok(city);
                 }
                 else
@@ -539,7 +548,7 @@ namespace diploma.Controllers
         }
 
         [HttpDelete]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public IActionResult DeleteCity(int id)
         {
             try
@@ -551,7 +560,7 @@ namespace diploma.Controllers
                 }
                 else
                 {
-                    Log.WriteSuccess("/Admin/Cities/[Get] ", "Модель не валидна!");
+                    Log.WriteSuccess("/Admin/Cities/[delete] ", "Модель не валидна!");
                     return Conflict(ModelState);
                 }
 
@@ -565,7 +574,7 @@ namespace diploma.Controllers
 
 
         [HttpPut]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public IActionResult EditCity(int id, CityModel city)
         {
             try
@@ -578,7 +587,7 @@ namespace diploma.Controllers
                 }
                 else
                 {
-                    Log.WriteSuccess("/Admin/Cities/[Get] ", "Модель не валидна!");
+                    Log.WriteSuccess("/Admin/Cities/[put] ", "Модель не валидна!");
                     return Conflict(ModelState);
                 }
 
@@ -590,13 +599,13 @@ namespace diploma.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public IActionResult GetCitiesTable(string search, string order)
         {
-            IEnumerable<CityModel> model = FilterCities(search,order);
+            IEnumerable<CityModel> model = FilterCities(search, order);
             ViewBag.order = order;
             ViewBag.search = search;
-            return PartialView("_CitiesTable",model);
+            return PartialView("_CitiesTable", model);
         }
         #endregion
     }

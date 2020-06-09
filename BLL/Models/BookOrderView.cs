@@ -9,6 +9,7 @@ namespace BLL.Models
     {
         public int Id;
         public int Amount;
+        public float Price;
         public BookView Book { get; set; }
     }
 }

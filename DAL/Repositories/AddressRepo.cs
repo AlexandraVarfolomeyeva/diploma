@@ -4,25 +4,24 @@ using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace DAL.Repositories
 {
-    public class UserRepo : IRepositoryUser
+    public class AddressRepo : IRepository<Address>
     {
         private BookingContext _context;
 
-        public UserRepo(BookingContext context)
+        public AddressRepo(BookingContext context)
         {
             _context = context;
         }
 
-        public void Create(User item)
+        public void Create(Address item)
         {
             try
             {
-                _context.User.Add(item);
+                _context.Address.Add(item);
             }
             catch (Exception ex)
             {
@@ -30,18 +29,20 @@ namespace DAL.Repositories
             }
         }
 
-        public void Delete(string id)
+        public void Delete(int id)
         {
             try
             {
-                User usr = _context.User.Where(k=>k.Id == id).FirstOrDefault();
-                if (usr != null) {
-                    _context.User.Remove(usr);
-                } else
+                Address item = _context.Address.Find(id);
+                if (item != null)
                 {
-                    Log.WriteSuccess("User Repo delete()","not found");
+                    _context.Address.Remove(item);
                 }
-                
+                else
+                {
+                    Log.WriteSuccess("Address Repo delete()", "not found");
+                }
+
             }
             catch (Exception ex)
             {
@@ -49,24 +50,11 @@ namespace DAL.Repositories
             }
         }
 
-        public User GetItem(string id)
+        public Address GetItem(int id)
         {
             try
             {
-               return _context.User.Where(m => m.Id == id).Include(c=>c.Addresses).FirstOrDefault();
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return null;
-            }
-        }
-
-        public IEnumerable<User> GetList()
-        {
-            try
-            {
-                return _context.User.Include(v=>v.Addresses);
+                return _context.Address.Find(id);
             }
             catch (Exception ex)
             {
@@ -75,11 +63,24 @@ namespace DAL.Repositories
             }
         }
 
-        public void Update(User item)
+        public IEnumerable<Address> GetList()
         {
             try
             {
-                _context.User.Update(item);
+                return _context.Address.Include(v => v.City);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return null;
+            }
+        }
+
+        public void Update(Address item)
+        {
+            try
+            {
+                _context.Address.Update(item);
             }
             catch (Exception ex)
             {

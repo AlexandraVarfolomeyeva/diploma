@@ -21,6 +21,7 @@ namespace DAL.Entities
         [Required]
         [ForeignKey("User")]
         public string UserId { get; set; }
+        public Nullable<int> AddressId { get; set; }
         public DateTime DateDelivery { get; set; }//дата доставки
         public DateTime? DateSubmit { get; set; }//дата подтверждения
         public DateTime? DateSent { get; set; }//дата отправки
@@ -34,5 +35,6 @@ namespace DAL.Entities
         //public string Url { get; set; }
         public virtual ICollection<BookOrder> BookOrders { get; set; }
         public virtual User User { get; set; }
+        public virtual Address Address { get; set; }
     }
 }

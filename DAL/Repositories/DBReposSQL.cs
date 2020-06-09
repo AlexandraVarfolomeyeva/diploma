@@ -22,6 +22,7 @@ namespace DAL.Repositories
         private OrderRepo orderRepo;
         private PublisherRepo publisherRepo;
         private UserRepo userRepo;
+        private AddressRepo addressRepo;
 
         public DBReposSQL(BookingContext context)
         {
@@ -89,6 +90,16 @@ namespace DAL.Repositories
                 if (cityRepo == null)
                     cityRepo = new CityRepo(_context);
                 return cityRepo;
+            }
+        }
+
+        public IRepository<Address> Addresses
+        {
+            get
+            {
+                if (addressRepo == null)
+                    addressRepo = new AddressRepo(_context);
+                return addressRepo;
             }
         }
 

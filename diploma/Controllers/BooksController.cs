@@ -67,8 +67,8 @@ namespace diploma.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Create([FromBody] BookAdd item)
+        [Authorize(Roles = "seller")]
+        public IActionResult Create([FromBody] BookAdd item)
         {//создание новой книги возможно только администратором
             try
             {
@@ -88,7 +88,7 @@ namespace diploma.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public IActionResult Update([FromRoute] int id, [FromBody] BookModel book)
         {//обновление информации о существующей книге возможно только администратором
           try{  if (!ModelState.IsValid)
@@ -107,7 +107,7 @@ namespace diploma.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public IActionResult Delete([FromRoute] int id)
         {//удаление книги из БД возможно только администратором
             try

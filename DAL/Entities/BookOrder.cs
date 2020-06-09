@@ -20,6 +20,7 @@ namespace DAL.Entities
         [ForeignKey("Order")]
         public int IdOrder { get; set; }
         public int Amount { get; set; } //количество книг в заказе
+        public float Price { get; set; } //цена одной книги
         public virtual Book Book { get; set; }
         public virtual Order Order { get; set; }
     }

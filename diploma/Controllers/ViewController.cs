@@ -75,7 +75,7 @@ namespace diploma.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBookView([FromRoute] int id)
+        public IActionResult GetBookView([FromRoute] int id)
         {//получение книги по id
             try
             {
@@ -137,7 +137,7 @@ namespace diploma.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] BookAdd book)
         {//обновление информации о существующей книге возможно только администратором
             try

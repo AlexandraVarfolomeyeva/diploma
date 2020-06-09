@@ -87,5 +87,12 @@ namespace BLL.Interfaces
         void CreateUser(UserModel item);
         void UpdateUser(UserModel item);
         void DeleteUser(string id);
+
+        //Addresses
+        IEnumerable<AddressModel> GetAllAddresses();
+        AddressModel GetAddress(int? id);
+        void CreateAddress(AddressModel item);
+        void UpdateAddress(AddressModel item);
+        void DeleteAddress(int id);
     }
 }

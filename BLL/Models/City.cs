@@ -20,5 +20,10 @@ namespace BLL.Models
         [Required(ErrorMessage = "Не указано время доставки")]
         public int DeliveryTime { get; set; } //time доставки
         public virtual IEnumerable<UserModel> Users { get; set; }
+        public virtual ICollection<AddressModel> Addresses { get; set; }
+        public CityModel()
+        {
+            Addresses = new HashSet<AddressModel>();
+        }
     }
 }

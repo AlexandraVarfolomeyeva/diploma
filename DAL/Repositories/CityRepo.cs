@@ -67,7 +67,7 @@ namespace DAL.Repositories
         {
             try
             {
-                return _context.City.Include(v => v.Users);
+                return _context.City.Include(v => v.Addresses);
             }
             catch (Exception ex)
             {

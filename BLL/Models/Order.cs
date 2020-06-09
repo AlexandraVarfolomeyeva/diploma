@@ -33,5 +33,8 @@ namespace BLL.Models
         //public string Url { get; set; }
         public virtual IEnumerable<BookOrderModel> BookOrders { get; set; }
         public virtual UserModel User { get; set; }
+
+        public int? AddressId { get; set; }
+        public virtual AddressModel Address { get; set; }
     }
 }

@@ -67,7 +67,7 @@ namespace diploma.Controllers
         [HttpGet]
         public ActionResult Register()
         {
-            IEnumerable<CityModel> b = _context.GetAllCities();
+            IEnumerable<CityModel> b = _context.GetAllCities().OrderBy(d=>d.Name);
             ViewBag.Cities = b;
             ViewBag.Username = GetUserName().Result;
             return View();
@@ -92,10 +92,9 @@ namespace diploma.Controllers
                             Email = model.Email,
                             UserName = model.UserName,
                             PhoneNumber = model.PhoneNumber,
-                            PhoneNumberConfirmed = true,
-                            Address = model.Address,
-                            IdCity = model.IdCity
+                            PhoneNumberConfirmed = true
                         };
+                   
                         // Добавление нового пользователя
                         var result = await _userManager.CreateAsync(user,
                         model.Password);
@@ -110,21 +109,28 @@ namespace diploma.Controllers
                             {
                                 message = "Добавлен новый пользователь: " + user.UserName
                             };
-
-                            CityModel b = d.Where(c => c.Id == user.IdCity).First();
-                            OrderModel order = new OrderModel()
+                        AddressModel address = new AddressModel()
+                        {
+                            IdCity = model.IdCity,
+                            IdUser = user.Id,
+                            Name = model.Address,
+                            isDeleted=false
+                        };
+                        CityModel b = d.Where(c => c.Id == model.IdCity).First();
+                        OrderModel order = new OrderModel()
                             {
                                 UserId = user.Id,
                                 Amount = 0,
                                 Active = 1,
-                                SumDelivery = b.DeliverySum,
+                                SumDelivery = 0,
                                 SumOrder = 0,
                                 DateDelivery = DateTime.Now.AddDays(b.DeliveryTime),
-                                DateOrder = DateTime.Now
+                                DateOrder = DateTime.Now,
+                                Weight=0
                             };
-                            //  order.DateDelivery= DateTime.Now.AddMonths(1);
+                            _context.CreateAddress(address);
                             _context.CreateOrder(order); //добавление заказа в БД
-                            Log.WriteSuccess(" OrdersController.Create", "добавление заказа " + order.Id + " в БД");
+                            Log.WriteSuccess(" OrdersController.Create", "добавление заказа в БД");
                         //return Ok(msg);
                         return RedirectToAction("Index", "Home");
                     }

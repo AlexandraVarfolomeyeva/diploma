@@ -67,7 +67,7 @@ namespace DAL.Repositories
         {
             try
             {
-                return _context.Order.Include(o=>o.BookOrders).ThenInclude(b=>b.Book).Include(b=>b.User).ThenInclude(v=>v.City);
+                return _context.Order.Include(o=>o.BookOrders).ThenInclude(b=>b.Book).Include(b=>b.User).ThenInclude(v=>v.Addresses);
             }
             catch (Exception ex)
             {

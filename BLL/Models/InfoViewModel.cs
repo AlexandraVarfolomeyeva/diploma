@@ -31,13 +31,5 @@ namespace BLL.Models
         [Display(Name = "Номер телефона")]
         [Phone(ErrorMessage = "Поле номер телефона заполнено неверно")]
         public string PhoneNumber { get; set; }
-
-        [Required(ErrorMessage = "Не указан физический адрес")]
-        [Display(Name = "Адрес")]
-        public string Address { get; set; }
-
-        [Required(ErrorMessage = "Не указан город")]
-        [Display(Name = "Город")]
-        public int IdCity { get; set; }
     }
 }

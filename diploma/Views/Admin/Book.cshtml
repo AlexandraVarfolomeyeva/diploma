@@ -132,7 +132,7 @@
                 </div>
             </div>
             <div class="btn-block group-book-add">
-                @if (ViewBag.Role == "admin")
+                @if (ViewBag.Role == "seller")
                 {
                     <button onclick="editBook(@Model.Book.Id);" class="btn btn-dark"> Редактировать </button>
                     string passtitle = "\"" + Model.Book.Title + "\"";

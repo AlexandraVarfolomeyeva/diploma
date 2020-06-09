@@ -19,6 +19,7 @@ namespace DAL.Interfaces
         IRepository<Publisher> Publishers { get; }
         IRepositoryUser Users { get; }
         IRepository<City> Cities { get; }
+        IRepository<Address> Addresses { get; }
 
         int Save();
     }

@@ -11,12 +11,7 @@
             <h4>Вес: <span id="Weight">@Html.DisplayFor(model => model.Weight)</span></h4>
             <h4>Сумма заказа: <span id="SumOrder">@Html.DisplayFor(model => model.SumOrder)</span> руб.</h4>
             <p class="text-muted">Сумма заказа не включает в себя стоимость доставки.</p>
-            <p class="text-monospace">
-                @{string date = Model.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
-                Товар прибудет в город @Html.DisplayFor(model => model.City) не позднее @date
 
-                Стоимость доставки @Html.DisplayFor(model => model.SumDelivery) рублей.
-            </p>
             <button class="btn btn-light" onclick="SureDeleteAll(@Model.Id);">Очистить корзину</button>
             <table class="table table-basket">
                 <thead class="thead-dark">
@@ -40,7 +35,7 @@
                                     </a>
                                 }
                             </td>
-                            <td>@i.Book.Cost</td>
+                            <td>@i.Price</td>
                             <td>
                                 <p id=@i.Id>
                                     @i.Amount

@@ -99,7 +99,7 @@ function SureDeleteCity(id,name) {
             if (e.key === 13) {
                 modalElem.classList.remove('active');
                 overlay.classList.remove('active');
-                deleteAll(id);
+                DeleteCity(id);
             }
         };
     } catch (e) { }

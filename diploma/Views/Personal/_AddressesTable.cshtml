@@ -1,0 +1,31 @@
+﻿@model IEnumerable<AddressView>;
+@using System.Globalization;
+
+<table class="table table-basket">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Адрес</th>
+            <th scope="col">Цена доставки</th>
+            <th scope="col">Время доставки</th> 
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (AddressView i in Model)
+        {
+            <tr>
+                <td>
+                    @i.Address, г. @i.City
+                  
+                </td>
+                <td>@i.DeliverySum руб.</td>
+                <td>
+                    <p>
+                        @{string date = DateTime.Now.AddDays(i.DeliveryTime).ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
+                        @date  (@i.DeliveryTime дн.)
+                    </p>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

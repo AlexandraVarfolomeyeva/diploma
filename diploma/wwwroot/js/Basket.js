@@ -8,6 +8,7 @@ const uriCancelOrder = "/Personal/CancelOrder/"
 document.addEventListener("DOMContentLoaded", function () {
     reloadBasketTable();
     reloadHistory();
+    reloadAddresses();
 });
 
 function SureDeleteAll(id) {
@@ -56,6 +57,12 @@ function GetDetails(id) {
 function reloadBasketTable() {
     try {
         $(".js__get_basket_table").load("/Personal/GetView", { viewName: "_BasketTable", message: "" });
+    } catch (e) { }
+}
+
+function reloadAddresses() {
+    try {
+        $(".js__get_addresses_table").load("/Personal/GetView", { viewName: "_AddressesTable", message: "" });
     } catch (e) { }
 }
 

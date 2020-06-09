@@ -24,8 +24,11 @@ namespace diploma.Controllers
             _userManager = userManager;
         }
 
+
+        #region helpers
+
         private Task<User> GetCurrentUserAsync() =>
-            _userManager.GetUserAsync(HttpContext.User);
+         _userManager.GetUserAsync(HttpContext.User);
 
         private async Task<string> GetUserName()
         {
@@ -46,7 +49,6 @@ namespace diploma.Controllers
                 return "Войти";
             }
         }
-
 
         private BookView GetViewByBook(BookModel book)
         {
@@ -84,6 +86,29 @@ namespace diploma.Controllers
             return view;
         }
 
+        private IEnumerable<AddressView> GetAddresses()
+        {
+            User usr = _userManager.GetUserAsync(HttpContext.User).Result;
+            IEnumerable<AddressModel> addresses = _context.GetAllAddresses().Where(p => p.IdUser == usr.Id);
+            List<AddressView> addr = new List<AddressView>();
+            foreach (AddressModel address in addresses)
+            {
+                CityModel c = _context.GetCity(address.IdCity);
+                AddressView add = new AddressView()
+                {
+                    Address = address.Name,
+                    Id = address.Id,
+                    DeliveryTime = c.DeliveryTime,
+                    DeliverySum = c.DeliverySum,
+                    City = c.Name,
+                    IdCity = address.IdCity,
+                    IdUser = address.IdUser
+                };
+                addr.Add(add);
+            }
+            return addr;
+        }
+
         private async Task<OrderView> GetCurrentOrder()
         {
             try
@@ -93,7 +118,8 @@ namespace diploma.Controllers
                 {
                     string id = usr.Id;
                     OrderModel j = _context.GetAllOrders().Where(p => p.UserId == id && p.Active == 1).FirstOrDefault();
-                        OrderView orderView = new OrderView
+                  
+                    OrderView orderView = new OrderView
                                 {
                                     Id = j.Id,
                                     Active = j.Active,
@@ -106,20 +132,20 @@ namespace diploma.Controllers
                                 };
                     IEnumerable<BookOrderModel> bookOrders = _context.GetAllBookOrders().Where(b=>b.IdOrder==j.Id);
                     List<BookOrderView> bo = new List<BookOrderView>();
-                    int sum = 0;
+                    float sum = 0;
                     int amount = 0;
                     int weight=0;
-                    CityModel city = _context.GetCity(usr.IdCity);
                     foreach (BookOrderModel o in bookOrders)
                     {
                         amount += o.Amount;
                         BookOrderView n = new BookOrderView
                         {
                             Id = o.Id,
-                            Amount = o.Amount
+                            Amount = o.Amount,
+                            Price = o.Price
                         };
                         BookView item = _context.GetAllBookViews().Where(book=>book.Id==o.IdBook).FirstOrDefault();
-                        sum += item.Cost * o.Amount;
+                        sum += o.Price * o.Amount;
                         weight+=item.Weight * o.Amount;
                         n.Book = item;
                         bo.Add(n);
@@ -132,13 +158,11 @@ namespace diploma.Controllers
                     if (weight > 5000)
                     {
                         weight = ((weight - 5000) / 1000)+1;//за каждый последующий килограмм
-                        j.SumDelivery = city.DeliverySum + (200 * weight);
+                        j.SumDelivery = (200 * weight);
                     }
                     _context.UpdateOrder(j);
                     orderView.BookOrders = bo;
-                    orderView.City = city.Name;
                     orderView.SumDelivery = j.SumDelivery;
-                    orderView.DateDelivery = DateTime.Now.AddDays(city.DeliveryTime);
                     return orderView;
                 }
                 else
@@ -153,6 +177,8 @@ namespace diploma.Controllers
                 return null;
             }
         }
+
+        #endregion
 
         public ActionResult GetView(string viewName, string message)
         {
@@ -185,8 +211,18 @@ namespace diploma.Controllers
                         OrderModel order = _context.GetOrder(Convert.ToInt32(message));
                 
                         User usr = GetCurrentUserAsync().Result;
-                        CityModel city = _context.GetCity(usr.IdCity);
-
+                        AddressModel address = _context.GetAddress(order.AddressId);
+                        CityModel city =  _context.GetCity(address.IdCity);
+                        AddressView addr = new AddressView()
+                        {
+                            Id = address.Id,
+                            IdUser = address.IdUser,
+                            Address = address.Name,
+                            IdCity = address.IdCity,
+                            City = city.Name,
+                            DeliverySum = city.DeliverySum,
+                            DeliveryTime = city.DeliveryTime
+                        };
                         OrderView model = new OrderView()
                         {
                             Active = order.Active,
@@ -196,9 +232,10 @@ namespace diploma.Controllers
                             SumOrder = order.SumOrder,
                             Id = order.Id,
                             Weight = order.Weight,
-                            City = city.Name,
-                            SumDelivery = order.SumDelivery
+                            SumDelivery = order.SumDelivery,
+                            Address = addr
                         };
+
                         IEnumerable<BookOrderModel> bo = _context.GetAllBookOrders().Where(i=>i.IdOrder==order.Id);
                         List<BookOrderView> boo = new List<BookOrderView>();
                         foreach (BookOrderModel b in bo)
@@ -215,14 +252,60 @@ namespace diploma.Controllers
                         model.BookOrders = boo;
                         return PartialView("_DetailsOrder", model);
                     }
+                case "_AddressesTable":
+                    {
+                        User usr = GetCurrentUserAsync().Result;
+                        IEnumerable<AddressModel> addresses = _context.GetAllAddresses().Where(h => h.IdUser == usr.Id);
+                        List<AddressView> address = new List<AddressView>();
+                        foreach (AddressModel a in addresses)
+                        {
+
+                            CityModel city = _context.GetCity(a.IdCity);
+                            AddressView add = new AddressView()
+                            {
+                                City=city.Name,
+                                DeliverySum=city.DeliverySum,
+                                DeliveryTime=city.DeliveryTime,
+                                Address=a.Name,
+                                Id=a.Id,
+                                IdCity=a.IdCity,
+                                IdUser=a.IdUser
+                            };
+                            address.Add(add);
+                        }
+                        return PartialView("_AddressesTable", address);
+                    }
+                case "_EditAddress":
+                    {
+                        User usr = GetCurrentUserAsync().Result;
+                        IEnumerable<AddressModel> addresses = _context.GetAllAddresses().Where(h => h.IdUser == usr.Id);
+                        List<AddressView> address = new List<AddressView>();
+                        foreach (AddressModel a in addresses)
+                        {
+
+                            CityModel city = _context.GetCity(a.IdCity);
+                            AddressView add = new AddressView()
+                            {
+                                City = city.Name,
+                                DeliverySum = city.DeliverySum,
+                                DeliveryTime = city.DeliveryTime,
+                                Address = a.Name,
+                                Id = a.Id,
+                                IdCity = a.IdCity,
+                                IdUser = a.IdUser
+                            };
+                            address.Add(add);
+                        }
+                        return PartialView("_EditAddress", address);
+                    }
                 default:
                     {
                         return PartialView(viewName, null);
                     }
             }
         }
-
-
+        
+        #region basket
         [HttpPut]
         public ActionResult Decrease(int id)
         {
@@ -235,7 +318,7 @@ namespace diploma.Controllers
                 {
                     _context.UpdateBookOrder(j);
                     OrderModel o = _context.GetOrder(j.IdOrder);
-                    o.SumOrder -= b.Cost;
+                    o.SumOrder -= j.Price;
                     o.Amount -= 1;
                     int overweight = ((o.Weight - 5000) / 1000) + 1; //на сколько перевешивало раньше
                         o.Weight -= b.Weight;
@@ -253,7 +336,7 @@ namespace diploma.Controllers
                 {
                     _context.DeleteBookOrder(j.Id);
                     OrderModel o = _context.GetOrder(j.IdOrder);
-                    o.SumOrder -= b.Cost;
+                    o.SumOrder -= j.Price;
                       int overweight = ((o.Weight - 5000) / 1000) + 1; //на сколько перевешивало раньше
                         o.Weight -= b.Weight;
                     if (o.Weight > 5000)
@@ -285,7 +368,7 @@ namespace diploma.Controllers
                 {
                     
                     OrderModel o = _context.GetOrder(j.IdOrder);
-                    o.SumOrder += b.Cost;
+                    o.SumOrder += j.Price;
                     o.Amount += 1;
                     int overweight = ((o.Weight - 5000) / 1000) + 1; //на сколько перевешивало раньше
                     o.Weight += b.Weight;
@@ -343,7 +426,7 @@ namespace diploma.Controllers
                 BookOrderModel j = _context.GetBookOrder(id);
                 OrderModel o = _context.GetOrder(j.IdOrder);
                 BookAdd b = _context.GetBook(j.IdBook);
-                o.SumOrder -= j.Amount * b.Cost;
+                o.SumOrder -= j.Amount * j.Price;
                 int overweight = ((o.Weight - 5000) / 1000) + 1; //на сколько перевешивало раньше
                     o.Weight -= b.Weight;
                 if (o.Weight > 5000)
@@ -362,52 +445,55 @@ namespace diploma.Controllers
             }
         }
 
+
+
         [HttpPut]
-        public async Task<ActionResult> MakeOrder(int id)
+        public ActionResult MakeOrder(int idOrder)
         {
-            try
+            try//0
             {
-                OrderModel o = _context.GetOrder(id);
-                o.Active = 0;
-                o.DateOrder = DateTime.Now;
-                _context.UpdateOrder(o);
+                OrderModel o = _context.GetOrder(idOrder);//1
                 IEnumerable<BookOrderModel> bo = _context.GetAllBookOrders().Where(b => b.IdOrder == o.Id);
-                foreach (BookOrderModel b in bo)
+                foreach (BookOrderModel b in bo)//2
                 {
-                    BookAdd book = _context.GetBook(b.IdBook);
-                    if (book.Stored >= b.Amount) {
-                        book.Stored -= b.Amount;
+                    BookAdd book = _context.GetBook(b.IdBook);//3
+                    if (book.Stored >= b.Amount) {//4
+                        book.Stored -= b.Amount;//5
                         _context.UpdateBook(book);
                     } else
-                    {
+                    {//6
                         Log.WriteSuccess("PersonalController.MakeOrder", "Не хватает книг на складе! "+ book.Title+ ". Id " + book.Id);
-                        return BadRequest("Не хватает книг на складе!");
-                    }
+                        return BadRequest("Не хватает книг на складе!");//7
+                    }//8
                 }
 
-                User user = await _userManager.GetUserAsync(HttpContext.User);
-                CityModel city = _context.GetCity(user.IdCity);
+                User user = _userManager.GetUserAsync(HttpContext.User).Result;//9
+                AddressModel ad = _context.GetAddress(o.AddressId);
+                CityModel city = _context.GetCity(ad.IdCity);
+                o.Active = 0;
+                o.SumDelivery += city.DeliverySum;
+                o.DateOrder = DateTime.Now;
+                _context.UpdateOrder(o);
                 OrderModel order = new OrderModel()
                 {
                     UserId = user.Id,
                     Active = 1,
                     Amount = 0,
                     Weight=0,
-                    SumDelivery=city.DeliverySum,
+                    SumDelivery=0,
                     DateDelivery = DateTime.Now.AddDays(city.DeliveryTime),
                     DateOrder = DateTime.Now,
                     SumOrder=0
                 };
-              
                 Log.WriteSuccess(" PersonalController.MakeOrder", "Id user" + order.UserId);
                 _context.CreateOrder(order); //добавление заказа в БД    
                 Log.WriteSuccess(" PersonalController.MakeOrder", "Создан новый заказ.");
-                return NoContent();
-            } catch (Exception ex)
+                return NoContent();//10
+            } catch (Exception ex)//11
             {
-                Log.Write(ex);
-                return BadRequest(ex);
-            }
+                Log.Write(ex);//12
+                return BadRequest(ex);//13
+            }//14
         }
 
         [HttpDelete("{id}")]
@@ -433,11 +519,10 @@ namespace diploma.Controllers
                     _context.DeleteBookOrder(i.Id);
                 }
                 User usr = GetCurrentUserAsync().Result;
-                CityModel city = _context.GetCity(usr.IdCity);
-                item.Amount = 0;
+               item.Amount = 0;
                 item.SumOrder = 0;
                 item.Weight = 0;
-                item.SumDelivery = city.DeliverySum;
+                item.SumDelivery = 0;
                 _context.UpdateOrder(item);
                 OrderView j = await GetCurrentOrder();
                 //return RedirectToAction("Basket", new { j });
@@ -456,6 +541,118 @@ namespace diploma.Controllers
             return View();
         }
 
+        #endregion
+
+        #region private information about user
+
+        [HttpGet]
+        public IEnumerable<CityModel> GetCities()
+        {
+            try
+            {
+                return _context.GetAllCities();
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return null;
+            }
+        }
+
+        [HttpPost]
+        public IActionResult AddAddress(AddressModel address)
+        {
+            try
+            {
+                address.IdUser = _userManager.GetUserAsync(HttpContext.User).Result.Id;
+                address.isDeleted = false;
+                if (ModelState.IsValid)
+                {
+                    _context.CreateAddress(address);
+                    return CreatedAtAction("GetAuthor", new { id = address.Id }, address);
+                }
+                else
+                {
+                    Log.WriteSuccess("/Admin/AddAddress/[Post] ", "Модель не валидна!");
+                    return Conflict(ModelState);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        public AddressModel GetAddress(int id)
+        {
+            try {
+                return _context.GetAddress(id);
+            } catch (Exception ex)
+            {
+                Log.Write(ex);
+                return null;
+            }
+        }
+
+        [HttpPut]
+        public IActionResult EditAddress(int id,AddressModel address)
+        {
+            try
+            {
+                address.IdUser = _userManager.GetUserAsync(HttpContext.User).Result.Id;
+                if (ModelState.IsValid)
+                {
+                    address.Id = id;
+                    _context.UpdateAddress(address);
+                    return NoContent();
+                }
+                else
+                {
+                    Log.WriteSuccess("/Personal/EditAddress/[put] ", "Модель не валидна!");
+                    return Conflict(ModelState);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteAddress(int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    string usrId = _userManager.GetUserAsync(HttpContext.User).Result.Id;
+                    if (_context.GetAllAddresses().Where(d => d.IdUser == usrId && d.isDeleted == false).Count() > 1)
+                    {
+                        _context.DeleteAddress(id);
+                        return Ok();
+                    } else
+                    {
+                        return NoContent();
+                    }
+                }
+                else
+                {
+                    Log.WriteSuccess("/Personal/DeleteAddress/[delete] ", "Модель не валидна!");
+                    return Conflict(ModelState);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return BadRequest(ex);
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> Info()
         {
@@ -471,10 +668,8 @@ namespace diploma.Controllers
             }
             InfoViewModel user = new InfoViewModel()
             {
-                Address = usr.Address,
                 Fio = usr.Fio,
                 Email = usr.Email,
-                IdCity = usr.IdCity,
                 PhoneNumber = usr.PhoneNumber,
                 UserName = usr.UserName
             };
@@ -494,10 +689,8 @@ namespace diploma.Controllers
                 if (ModelState.IsValid)
                 {
                     User usr = await _userManager.GetUserAsync(HttpContext.User);
-                    usr.Address = model.Address;
                     usr.Email = model.Email;
                     usr.Fio = model.Fio;
-                    usr.IdCity = model.IdCity;
                     usr.PhoneNumber = model.PhoneNumber;
                     usr.UserName = model.UserName;
                   
@@ -519,9 +712,7 @@ namespace diploma.Controllers
                 return View(model);
             }
         }
-
-
-
+        
         public async Task<IActionResult> ChangePassword()
         {
             User user = await _userManager.GetUserAsync(HttpContext.User);
@@ -563,12 +754,12 @@ namespace diploma.Controllers
             }
             return View(model);
         }
-
+        #endregion
 
 
     }
 
 
- 
+
 
 }

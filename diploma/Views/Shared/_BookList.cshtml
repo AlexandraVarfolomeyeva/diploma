@@ -52,7 +52,7 @@
                         Цена:  @s.Cost
                     </h5>
                     <div class="button-gr-book">
-                        @if (ViewBag.Role == "admin")
+                        @if (ViewBag.Role == "seller")
                         {
                             <button onclick="editBook(@s.Id);" class="btn btn-dark"> Редактировать </button>
                             string passtitle = "\"" + s.Title + "\"";

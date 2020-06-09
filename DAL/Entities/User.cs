@@ -11,13 +11,13 @@ namespace DAL.Entities
     {
        
         public string Fio { get; set; }
-        public string Address { get; set; }
-        public int IdCity { get; set; }
-        public virtual City City { get; set; }
+        public int Discount { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Address> Addresses { get; set; }
         public User()
         {
             Orders = new HashSet<Order>();
+            Addresses = new HashSet<Address>();
         }
     }
 }

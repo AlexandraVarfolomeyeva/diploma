@@ -14,8 +14,8 @@ namespace BLL.Models
         public float SumDelivery { get; set; } //стоимость доставки
         public int Active { get; set; } //является ли заказ активным
         public int Amount { get; set; } //количество книг в заказе
-        public string City { get; set; }
         public int Weight { get; set; }
+        public AddressView Address { get; set; }
         public IEnumerable<BookOrderView> BookOrders { get; set; }
     }
 }

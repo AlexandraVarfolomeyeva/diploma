@@ -29,6 +29,7 @@ namespace DAL.EF
         public virtual DbSet<Publisher> Publisher { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<BookOrder> BookOrder { get; set; }
+        public virtual DbSet<Address> Address { get; set; }
 
         protected override void OnModelCreating(ModelBuilder
         modelBuilder)
@@ -46,7 +47,11 @@ namespace DAL.EF
             });
             modelBuilder.Entity<City>(entity =>
             {
-                entity.HasMany(a => a.Users).WithOne(a => a.City).HasForeignKey(a => a.IdCity);
+                entity.HasMany(a => a.Addresses).WithOne(a => a.City).HasForeignKey(a => a.IdCity);
+            });
+            modelBuilder.Entity<Address>(entity =>
+            {
+                entity.HasMany(a => a.Orders).WithOne(a => a.Address).HasForeignKey(a => a.AddressId);
             });
             modelBuilder.Entity<Book>(entity =>
             {
@@ -62,6 +67,7 @@ namespace DAL.EF
             
             modelBuilder.Entity<User>(entity =>
             {
+                entity.HasMany(a => a.Addresses).WithOne(b => b.User).HasForeignKey(c => c.IdUser);
                 entity.HasMany(a => a.Orders).WithOne(b => b.User).HasForeignKey(c => c.UserId);
             });
 

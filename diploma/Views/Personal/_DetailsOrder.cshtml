@@ -11,7 +11,7 @@
             <div class="col-md-9 text-left">
                 <p> <b>Количество книг в заказе:</b> @Model.Amount</p>
                 <p>
-                    <b> Доставка в город: </b>  @Model.City
+                    <b> Доставка по адресу: </b>  @Model.Address.Address, г. @Model.Address.City
                 </p>
                 @{string date = Model.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"));}
                 <p><b>Дата доставки:</b>  @date </p>

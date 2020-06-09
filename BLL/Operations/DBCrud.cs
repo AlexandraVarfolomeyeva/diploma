@@ -364,6 +364,7 @@ namespace BLL.Operations
         private BookOrder toBookOrder(BookOrderModel bm, BookOrder a)
         {
             a.IdBook = bm.IdBook;
+            a.Price = bm.Price;
             a.Amount = bm.Amount;
             a.IdOrder = bm.IdOrder;
             return a;
@@ -375,6 +376,7 @@ namespace BLL.Operations
                 Id = bm.Id,
                 IdBook = bm.IdBook,
                 Amount = bm.Amount,
+                Price = bm.Price,
                 IdOrder = bm.IdOrder
             };
         }
@@ -420,6 +422,7 @@ namespace BLL.Operations
             or.DateCancel = o.DateCancel;
             or.Amount = o.Amount;
             or.Active = o.Active;
+            or.AddressId = o.AddressId;
             return or;
         }
         private  OrderModel toOrderModel(Order o)
@@ -437,9 +440,8 @@ namespace BLL.Operations
                 SumDelivery = o.SumDelivery,
                 SumOrder = o.SumOrder,
                 UserId = o.UserId,
-                Weight = o.Weight
-                //BookOrders = o.BookOrders.Select(i=>toBookOrderModel(i)).ToList(),
-                //User = toUserModel(o.User)
+                Weight = o.Weight,
+                AddressId=o.AddressId
             };
         }
         #endregion
@@ -830,12 +832,11 @@ namespace BLL.Operations
         }
         private User toUser(UserModel u, User d)
         {
-            d.Address = u.Address;
                 d.Fio = u.Fio;
                 d.Email = u.Email;
-                d.IdCity = u.IdCity;
                 d.PhoneNumber=u.PhoneNumber;
             d.UserName = u.UserName;
+            d.Discount = u.Discount;
             return d;
         }
         private UserModel toUserModel(User u)
@@ -843,12 +844,60 @@ namespace BLL.Operations
             return new UserModel()
             {
                 Id = u.Id,
-                Address = u.Address,
                 Fio = u.Fio,
                 Email = u.Email,
-                IdCity = u.IdCity,
+                Discount = u.Discount,
                 PhoneNumber = u.PhoneNumber,
                 UserName = u.UserName
+            };
+        }
+        #endregion
+
+        #region Addresses
+        public IEnumerable<AddressModel> GetAllAddresses()
+        {
+            IEnumerable<Address> address = db.Addresses.GetList().Where(s=>s.isDeleted==false);
+            return address.Select(f => toAddressModel(f));
+        }
+        public AddressModel GetAddress(int? id)
+        {
+            int Id = id ?? 1;
+            return toAddressModel(db.Addresses.GetItem(Id));
+        }
+        public void CreateAddress(AddressModel item)
+        {
+            db.Addresses.Create(toAddress(item, new Address()));
+            db.Save();
+        }
+        public void UpdateAddress(AddressModel item)
+        {
+            db.Addresses.Update(toAddress(item, db.Addresses.GetItem(item.Id)));
+            db.Save();
+        }
+        public void DeleteAddress(int id)
+        {
+            Address o = db.Addresses.GetItem(id);
+            if (o != null)
+                o.isDeleted = true;
+                db.Addresses.Update(o);
+            db.Save();
+        }
+        private Address toAddress(AddressModel u, Address d)
+        {
+            d.Id = u.Id;
+            d.IdCity = u.IdCity;
+            d.IdUser = u.IdUser;
+            d.Name = u.Name;
+            return d;
+        }
+        private AddressModel toAddressModel(Address u)
+        {
+            return new AddressModel()
+            {
+                Id = u.Id,
+                IdCity = u.IdCity,
+                IdUser = u.IdUser,
+                Name = u.Name
             };
         }
         #endregion

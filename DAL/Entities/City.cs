@@ -17,6 +17,10 @@ namespace DAL.Entities
         public string Name { get; set; }
         public float DeliverySum { get; set; } //стоимость доставки
         public int DeliveryTime { get; set; } //time доставки
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<Address> Addresses { get; set; }
+        public City()
+        {
+            Addresses = new HashSet<Address>();
+        }
     }
 }

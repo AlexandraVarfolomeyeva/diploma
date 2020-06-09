@@ -14,7 +14,7 @@
                     <div class="username">
                         @c.UserName
                     </div>
-                    @if (ViewBag.Role == "admin")
+                    @if (ViewBag.Role == "seller")
                     {
                         <div class="delete-comment-btn">
                             <button class="btn btn-outline-dark" onclick="DeleteComment(@c.Id,@Model.Book.Id);">Удалить</button>

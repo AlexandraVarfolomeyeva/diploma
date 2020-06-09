@@ -1,0 +1,30 @@
+﻿@model IEnumerable<AddressView>;
+
+<table class="table table-basket">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Адрес</th>
+            <th scope="col">  <button class="btn btn-light btn-outline-dark" onclick="AddAddressbtn();">Добавить</button></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (AddressView i in Model)
+        {
+            <tr>
+                <td>
+                    @i.Address, г. @i.City</td>
+                <td>
+                    <div class="btn-group">
+                        <button class="btn btn-light btn-outline-dark" onclick="EditAddress(@i.Id);">Редактировать</button>
+                        @{string d = "\"" + i.Address + ", г." + i.City + "\"";
+                        }
+                      @if (Model.Count() > 1) {
+                          <button class="btn btn-light btn-outline-dark" onclick="SureDeleteAddress(@i.Id,@d);">Удалить</button>
+                      }
+                    </div>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

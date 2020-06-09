@@ -70,7 +70,7 @@ namespace diploma.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public IActionResult Create([FromBody] PublisherModel publisher)
         {//добавить нового автора
          //получаем данные о заказе во входных параметрах
@@ -100,7 +100,7 @@ namespace diploma.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public IActionResult Update([FromRoute] int id, [FromBody] PublisherModel publisher)
         {//обновить существующий заказ
             try
@@ -122,7 +122,7 @@ namespace diploma.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "seller")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {//удаление заказа
             try

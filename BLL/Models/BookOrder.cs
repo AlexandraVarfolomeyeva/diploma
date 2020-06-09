@@ -20,6 +20,7 @@ namespace BLL.Models
         [ForeignKey("Order")]
         public int IdOrder { get; set; }
         public int Amount { get; set; } //количество книг в заказе
+        public float Price { get; set; } //цена одной книги
         public virtual BookModel Book { get; set; }
         public virtual OrderModel Order { get; set; }
     }
