@@ -331,7 +331,36 @@ namespace diploma.Controllers
                 switch (option)
                 {
                     case 2: o.DateSent = DateTime.Now.Date; break;
-                    case 3: o.DateDelivery = DateTime.Now.Date; break;
+                    case 3:
+                        o.DateDelivery = DateTime.Now.Date;
+                        UserModel user = _context.GetUser(o.UserId);
+                        if (o.SumOrder >= 5000 && o.SumOrder < 10000 && user.Discount<5)
+                        {
+                            user.Discount = 5;
+                            _context.UpdateUser(user);
+                            OrderModel order = _context.GetAllOrders().Where(a=>a.Active==1 && a.UserId==user.Id).First();
+                            IEnumerable<BookOrderModel> bo = _context.GetAllBookOrders().Where(d => d.IdOrder == order.Id);
+                            foreach (BookOrderModel bod in bo)
+                            {
+                                BookModel book = _context.GetBookModel(bod.Id);
+                                bod.Price = (book.Cost * (float)(100 - user.Discount)) / 100;
+                                _context.UpdateBookOrder(bod);
+                            }
+                        }
+                        else if (o.SumOrder >= 10000 && user.Discount < 7)
+                        {
+                            user.Discount = 7;
+                            _context.UpdateUser(user);
+                            OrderModel order = _context.GetAllOrders().Where(a => a.Active == 1 && a.UserId == user.Id).First();
+                            IEnumerable<BookOrderModel> bo = _context.GetAllBookOrders().Where(d => d.IdOrder == order.Id);
+                            foreach (BookOrderModel bod in bo)
+                            {
+                                BookModel book = _context.GetBookModel(bod.Id);
+                                bod.Price = (book.Cost * (float)(100 - user.Discount)) / 100;
+                                _context.UpdateBookOrder(bod);
+                            }
+                        }
+                        break;
                 }
                 _context.UpdateOrder(o);
                 return Ok(o.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU")));
