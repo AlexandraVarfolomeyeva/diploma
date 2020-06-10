@@ -4,12 +4,39 @@ const uriIncrease = "/Personal/Increase/"
 const uriDeleteItem = "/Personal/DeleteItem/"
 const uriMakeOrder = "/Personal/MakeOrder/"
 const uriCancelOrder = "/Personal/CancelOrder/"
+const uriChooseAddress = "/Personal/ChooseAddress/"
 
 document.addEventListener("DOMContentLoaded", function () {
     reloadBasketTable();
     reloadHistory();
     reloadAddresses();
 });
+
+
+function ChooseAddress(id) {
+    var rows = document.querySelectorAll('.row-table-address');
+    {
+        rows.forEach(function (item) {
+            item.classList.remove('active');
+        }); // end foreach
+    }
+    var chosen = document.getElementById(id);
+    $.ajax({
+        type: "PUT",
+        url: uriChooseAddress + id,
+        success: function (data, textStatus, jqXHR) {
+            if (jqXHR.status == 200) {
+                chosen.classList.add('active');
+            }
+        },
+        error: function (data) {
+            console.log(data);
+            if (data.status == 409) {
+                alert("Адрес или заказ не найдены!");
+            }
+        }
+    });
+}
 
 function SureDeleteAll(id) {
     try {
@@ -82,23 +109,21 @@ function reloadHistory() {
     } catch (e) { }
 }
 
-
-
 function Increase(id) {
     //reloadMessage("");
     $.ajax({
-            url: uriIncrease+id,
-            type: "PUT",
+        url: uriIncrease + id,
+        type: "PUT",
         success: response => {
             reloadBasketTable();
             if (response == true) {
                 reloadMessage("На складе больше нет!");
-                    }
-            },
+            }
+        },
         error: response => {
             console.log("Error " + response.responseText);
-            }
-        });
+        }
+    });
 
 }
 
@@ -108,7 +133,7 @@ function Decrease(id) {
         url: uriDecrease + id,
         type: "PUT",
         success: response => {
-                reloadBasketTable();
+            reloadBasketTable();
         },
         error: response => {
             console.log("Error" + response.responseText);
@@ -123,7 +148,7 @@ function DeleteItem(id) {
         url: uriDeleteItem + id,
         type: "PUT",
         success: response => {
-                reloadBasketTable();
+            reloadBasketTable();
         },
         error: response => {
             console.log("Error" + response.responseText);
@@ -165,8 +190,41 @@ function deleteAll(id) {
     } catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!" + e); }
 }
 
+function MakeOrder(id) {
+    try {
+        var modalElem = document.querySelector('.modal1[data-modal="9"]');
+        modalElem.classList.add('active');
+        var overlay = document.querySelector('#overlay-modal');
+        overlay.classList.add('active');
+        reloadAddresses();
+        var button = document.getElementById("OrderBooks");
+        button.onclick = function () {
+            modalElem.classList.remove('active');
+            overlay.classList.remove('active');
+            OrderBooks(id);
+        };
+
+        form.cancel.onclick = function () {
+            modalElem.classList.remove('active');
+            overlay.classList.remove('active');
+        };
+
+        document.onkeydown = function (e) {
+            if (e.key == 'Escape') {
+                modalElem.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            if (e.key === 13) {
+                modalElem.classList.remove('active');
+                overlay.classList.remove('active');
+                OrderBooks(id);
+            }
+        };
+    }
+    catch (e) { }
+}
+
 function OrderBooks(id) {
-    //reloadMessage("");
     $.ajax({
         url: uriMakeOrder + id,
         type: "PUT",

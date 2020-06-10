@@ -119,7 +119,6 @@ function DeleteAddress(id) {
 }
 
 
-
 function downloadCities() {
     let request = new XMLHttpRequest();
     request.open("GET", uriGetCities, true);

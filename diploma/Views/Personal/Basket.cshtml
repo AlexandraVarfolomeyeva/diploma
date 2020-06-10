@@ -16,6 +16,23 @@
     </div>
 </div>
 
+<div class="modal1" data-modal="9">
+    <!--   Svg иконка для закрытия окна  -->
+    <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
+    </svg>
+    <p class="h3" id="titleCity">Выберете адрес, на который будет осуществляться доставка:</p>
+    <br />
+    <div class="js__get_addresses_table">
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Пожалуйста, подождите, идет загрузка...</span>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-dark" type="submit" id="OrderBooks"> Заказать</button>
+</div>
+
     <div class="modal1" data-modal="3">
         <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
@@ -31,13 +48,7 @@
     </div>
 
     <div class="content" id="BasketContent">
-        <div class="js__get_addresses_table">
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border" role="status">
-                    <span class="sr-only">Пожалуйста, подождите, идет загрузка...</span>
-                </div>
-            </div>
-        </div>
+        
         <div class="js__get_basket_table">
             @*@{Html.Partial("_BasketTable");}*@
             <div class="d-flex justify-content-center">

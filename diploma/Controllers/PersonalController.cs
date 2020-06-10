@@ -244,6 +244,7 @@ namespace diploma.Controllers
                             BookOrderView o = new BookOrderView()
                             {
                                 Amount = b.Amount,
+                                Price = b.Price,
                                 Id = b.Id,
                                 Book = GetViewByBook(book)
                             };
@@ -255,7 +256,15 @@ namespace diploma.Controllers
                 case "_AddressesTable":
                     {
                         User usr = GetCurrentUserAsync().Result;
+                       
                         IEnumerable<AddressModel> addresses = _context.GetAllAddresses().Where(h => h.IdUser == usr.Id);
+
+                        OrderModel order = _context.GetAllOrders().Where(d => d.UserId == usr.Id && d.Active == 1).First();
+                        if (order != null)
+                        {
+                            order.AddressId = addresses.First().Id;
+                            _context.UpdateOrder(order);
+                        }
                         List<AddressView> address = new List<AddressView>();
                         foreach (AddressModel a in addresses)
                         {
@@ -417,7 +426,38 @@ namespace diploma.Controllers
             }
         }
 
-
+        [HttpPut]
+        public IActionResult ChooseAddress(int id)
+        {
+            try
+            {
+                AddressModel address = _context.GetAddress(id);
+                if (address != null) {
+                    OrderModel order = _context.GetAllOrders().Where(a => a.UserId == address.IdUser && a.Active == 1).First();
+                    if (order != null)
+                    {
+                        order.AddressId = id;
+                        _context.UpdateOrder(order);
+                        return Ok();
+                    }
+                    else
+                    {
+                        Log.WriteSuccess("/Personal/ChooseAddress/[put] ", "Заказ не найден!");
+                        return Conflict();
+                    }
+                }
+                else
+                {
+                        Log.WriteSuccess("/Personal/ChooseAddress/[put] ", "Адрес не найден!");
+                        return Conflict();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return BadRequest(ex);
+            }
+        }
 
         [HttpPut]
         public ActionResult DeleteItem(int id)
@@ -448,11 +488,11 @@ namespace diploma.Controllers
 
 
         [HttpPut]
-        public ActionResult MakeOrder(int idOrder)
+        public ActionResult MakeOrder(int id)
         {
             try//0
             {
-                OrderModel o = _context.GetOrder(idOrder);//1
+                OrderModel o = _context.GetOrder(id);//1
                 IEnumerable<BookOrderModel> bo = _context.GetAllBookOrders().Where(b => b.IdOrder == o.Id);
                 foreach (BookOrderModel b in bo)//2
                 {

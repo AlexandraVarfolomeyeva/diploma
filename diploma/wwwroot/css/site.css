@@ -6,10 +6,19 @@ body {
     font-size: 1.2rem !important;
 }
 
-.concern {
-    font-size: 1.2rem;
-    text-align: justify;
+.row-table-address {
+    text-decoration: none;
+    font-weight:normal;
 }
+
+.row-table-address.active {
+        font-weight: bold;
+}
+
+    .concern {
+        font-size: 1.2rem;
+        text-align: justify;
+    }
 
 .form-orders {
     text-align: center;

@@ -9,10 +9,12 @@
             <th scope="col">Время доставки</th> 
         </tr>
     </thead>
-    <tbody>
+    <tbody id="data">
         @foreach (AddressView i in Model)
         {
-            <tr>
+            string classname = "row-table-address";
+            if (Model.First().Id == i.Id) { classname += " " + "active"; }
+            <tr id="@i.Id" class=@classname onclick="ChooseAddress(@i.Id);">
                 <td>
                     @i.Address, г. @i.City
                   
