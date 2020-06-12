@@ -1,9 +1,17 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
 for details on configuring this project to bundle and minify static web assets. */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 body {
     /*padding-top: 50px;
     padding-bottom: 20px;*/
     font-size: 1.2rem !important;
+    overflow: auto; /* добавить полосу прокрутки */
 }
 
 .row-table-address {

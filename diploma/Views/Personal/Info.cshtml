@@ -67,13 +67,16 @@
                 <input class="btn btn-primary btn-lg btn-block" type="submit" value="Сохранить изменения">
             </div>
         </form>
-        <div class="js__edit_addresses_table">
+        @if (ViewBag.Role == "user")
+        {
+         <div class="js__edit_addresses_table">
             <div class="d-flex justify-content-center">
                 <div class="spinner-border" role="status">
                     <span class="sr-only">Пожалуйста, подождите, идет загрузка...</span>
                 </div>
             </div>
         </div>
+        }
     </div>
     <div class="col-md-4 order-md-2 mb-4">
         <a class="btn btn-primary btn-light btn-personal" asp-area="" asp-controller="Personal" asp-action="ChangePassword">Изменить пароль</a><br />

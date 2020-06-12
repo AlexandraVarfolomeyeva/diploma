@@ -699,6 +699,7 @@ namespace diploma.Controllers
             IEnumerable<CityModel> b = _context.GetAllCities();
             ViewBag.Cities = b;
             User usr = await _userManager.GetUserAsync(HttpContext.User);
+            ViewBag.Role = _userManager.GetRolesAsync(usr).Result.First();
             if (usr == null)
             {
                 ViewBag.Username = "Войти";

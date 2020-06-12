@@ -42,6 +42,9 @@
     visibility: hidden;
     /*  Установаем ширину окна  */
     width: 100%;
+    max-height: 95%;
+    display: inline-block;
+    overflow: auto;
     max-width: 500px;
     /*  Центрируем и задаем z-index */
     position: fixed;
