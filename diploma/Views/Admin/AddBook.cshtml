@@ -17,7 +17,7 @@
         Поле "Название издательства" не было заполнено или было заполнено неверно.
     </div>
     <br>
-    <button class="btn btn-dark" onclick="createPublisher();">Добавить</button>
+    <button class="btn btn-dark" id="createPublisher" onclick="createPublisher();">Добавить</button>
 </div>
 
 <div class="modal1" data-modal="2">
@@ -32,7 +32,7 @@
         Поле "ФИО автора" не было заполнено или было заполнено неверно.
     </div>
     <br>
-    <button class="btn btn-dark" onclick="createAuthor();">Добавить</button>
+    <button class="btn btn-dark" id="createAuthor" onclick="createAuthor();">Добавить</button>
 </div>
 
 <!-- Подложка под модальным окном -->
@@ -52,7 +52,7 @@
                 <label for="title">Название: </label>
                <input type="text" autocomplete="off" id="title" name="title" class="form-control" placeholder="Название" required>
                 <div class="invalid-feedback" style="width: 100%;">
-                    Поле "Название" не было заполнено или было заполнено неверно.
+                    Поле "Название" не было заполнено.
                 </div>
             </div>
             <div class="mb-3">
@@ -60,7 +60,7 @@
                 <div id="authorDiv">  </div>
                 <select class="custom-select" id="authorSelect"></select>
                 <!--<input type="text" id="author" name="author" class="form-control" placeholder="Иванов Иван Иванович" required>-->
-                <button class="btn btn-light js-open-modal" onclick="newauthor();">Добавить еще одного автора</button>
+                <button class="btn btn-light " onclick="newauthor();">Добавить еще одного автора</button>
 
                 <button class="btn btn-dark js-open-modal" data-modal="2">Создать</button>
                 <div class="invalid-feedback" style="width: 100%;">
@@ -71,7 +71,7 @@
                 <label for="Genre">Жанр: </label>
                 <div id="GenreDiv">  </div>
                 <select class="custom-select" id="GenreSelect"></select>
-                <button class="btn btn-light js-open-modal" onclick="newgenre();">Добавить еще один жанр</button>
+                <button class="btn btn-light " onclick="newgenre();">Добавить еще один жанр</button>
 
                 <div class="invalid-feedback" style="width: 100%;">
                     Поле "Автор" не было заполнено или было заполнено неверно.
@@ -80,6 +80,9 @@
             <div class="mb-3">
                 <label for="content">Описание: </label>
                 <textarea type="text" autocomplete="off" id="content" name="content" class="form-control" placeholder="Добавить описание" required></textarea>
+                <div class="invalid-feedback" style="width: 100%;">
+                    Поле "Описание" не было заполнено.
+                </div>
             </div>
             <div class="mb-3">
                 <label for="year">Год: </label>
@@ -101,7 +104,7 @@
             <div class="mb-3">
                 <label for="cost"> Цена в рублях: </label>
 
-                <input type="number" id="cost" name="cost" class="form-control" value="400" required>
+                <input type="number" id="cost" name="cost" class="form-control" placeholder="400" required>
                 <div class="invalid-feedback" style="width: 100%;">
                     Поле "Цена" не было заполнено или было заполнено неверно.
                 </div>
@@ -113,6 +116,13 @@
                     Поле "Количество на складе" не было заполнено или было заполнено неверно.
                 </div>
             </div>
+            <div class="mb-3">
+                <label for="Weight"> Вес книги (гр.): </label>
+                <input type="number" id="Weight" name="Weight" class="form-control" placeholder="200" required>
+                <div class="invalid-feedback" style="width: 100%;">
+                    Поле "Вес книги" не было заполнено или было заполнено неверно.
+                </div>
+            </div>
             <hr class="mb-4">
             <br />
 
@@ -120,26 +130,15 @@
     </div>
     <div class="col-md-4 order-md-2 mb-4">
         <div class="text-center">
-            <img src="~/img/empty.png" id="bookImg" class="rounded" alt="Обложка" width="150" height="215">
+            <img src="~/img/@ViewBag.FileName" id="bookImg" class="rounded" alt="Обложка" width="150" height="215">
         </div>
 
         <hr class="mb-4">
         <div class="input-group mb-3">
-            @*<div class="custom-file">
-            <input type="file" class="custom-file-input" aria-describedby="inputGroupFileAddon03" id="inputImg" accept=".png, .jpg, .jpeg" onchange="getImg()">
-            <label id="labelImg" class="custom-file-label" for="inputImg">Выбрать файл</label>
-        </div>*@
-            @using (Html.BeginForm("AddBook",
-                     "Admin",
-                     FormMethod.Post,
-                     new { enctype = "multipart/form-data", id = "ImgForm" })){
                 <div class="custom-file">
-                    @*<input type="file" name="file" id="file" /><br><br>*@
-                    <input type="file" class="custom-file-input" aria-describedby="inputGroupFileAddon03" name="file" id="file" accept=".png, .jpg, .jpeg" onchange="getImg()">
-                    <label id="labelImg" class="custom-file-label" for="file">Выбрать файл</label>
+                    <input type="file" class="custom-file-input" aria-describedby="inputGroupFileAddon03" name="file" id="file" accept=".png, .jpg, .jpeg" onchange="getImg()" disabled>
+                    <label id="labelImg" class="custom-file-label" for="file">@ViewBag.FileName</label>
                 </div>
-            }
-        
         </div>
         
     </div>

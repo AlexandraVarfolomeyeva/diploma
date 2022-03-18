@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using diploma.Models;
+using BLL.Interfaces;
+using BLL.Models;
+using DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +15,10 @@ namespace diploma.Controllers
     {
             private readonly UserManager<User> _userManager;
             private readonly SignInManager<User> _signInManager;
-            private readonly BookingContext _context;
+        private readonly IDBCrud _context;
 
         public AccountController(UserManager<User> userManager,
-            SignInManager<User> signInManager, BookingContext context)
+            SignInManager<User> signInManager, IDBCrud context)
             {
 
                 _context = context; // получаем контекст базы данных
@@ -47,12 +49,14 @@ namespace diploma.Controllers
             }
         }
 
-        public IActionResult Index(string message, IEnumerable<string> error)
+        public IActionResult LoginForm(string message, IEnumerable<string> error)
         {
-            if (message!="" && message !=null) {
+            if (message != "" && message != null)
+            {
                 ViewBag.Message = message;
                 ViewBag.Error = error;
-            } else
+            }
+            else
             {
                 ViewBag.Message = "";
                 ViewBag.Error = "";
@@ -63,7 +67,7 @@ namespace diploma.Controllers
         [HttpGet]
         public ActionResult Register()
         {
-            IEnumerable<City> b = _context.City;
+            IEnumerable<CityModel> b = _context.GetAllCities().OrderBy(d=>d.Name);
             ViewBag.Cities = b;
             ViewBag.Username = GetUserName().Result;
             return View();
@@ -75,7 +79,7 @@ namespace diploma.Controllers
         public async Task<IActionResult> Register(
             RegisterViewModel model)
             {
-            IEnumerable<City> d = _context.City;
+            IEnumerable<CityModel> d = _context.GetAllCities();
             ViewBag.Cities = d;
             ViewBag.Username = GetUserName().Result;
             try
@@ -88,10 +92,9 @@ namespace diploma.Controllers
                             Email = model.Email,
                             UserName = model.UserName,
                             PhoneNumber = model.PhoneNumber,
-                            PhoneNumberConfirmed = true,
-                            Address = model.Address,
-                            IdCity = model.IdCity
+                            PhoneNumberConfirmed = true
                         };
+                   
                         // Добавление нового пользователя
                         var result = await _userManager.CreateAsync(user,
                         model.Password);
@@ -106,22 +109,28 @@ namespace diploma.Controllers
                             {
                                 message = "Добавлен новый пользователь: " + user.UserName
                             };
-
-                            IEnumerable<City> b = d.Where(c => c.Id == user.IdCity);
-                            Order order = new Order()
+                        AddressModel address = new AddressModel()
+                        {
+                            IdCity = model.IdCity,
+                            IdUser = user.Id,
+                            Name = model.Address,
+                            isDeleted=false
+                        };
+                        CityModel b = d.Where(c => c.Id == model.IdCity).First();
+                        OrderModel order = new OrderModel()
                             {
-                                User = user,
                                 UserId = user.Id,
                                 Amount = 0,
                                 Active = 1,
+                                SumDelivery = 0,
                                 SumOrder = 0,
-                                DateDelivery = DateTime.Now.AddDays(b.FirstOrDefault().DeliveryTime),
-                                DateOrder = DateTime.Now
+                                DateDelivery = DateTime.Now.AddDays(b.DeliveryTime),
+                                DateOrder = DateTime.Now,
+                                Weight=0
                             };
-                            //  order.DateDelivery= DateTime.Now.AddMonths(1);
-                            _context.Order.Add(order); //добавление заказа в БД
-                            await _context.SaveChangesAsync();//асинхронное сохранение изменений
-                            Log.WriteSuccess(" OrdersController.Create", "добавление заказа " + order.Id + " в БД");
+                            _context.CreateAddress(address);
+                            _context.CreateOrder(order); //добавление заказа в БД
+                            Log.WriteSuccess(" OrdersController.Create", "добавление заказа в БД");
                         //return Ok(msg);
                         return RedirectToAction("Index", "Home");
                     }
@@ -167,13 +176,14 @@ namespace diploma.Controllers
             }
             }
 
-        public class Msg
+
+
+        [HttpGet]
+        public ActionResult Concern()
         {
-            public string message;
-            public IEnumerable<string> error;
+            return PartialView("_Concern");
         }
 
-        Msg mess = null;
         [HttpGet]
         public ActionResult ErrorMsg()
         {
@@ -205,35 +215,33 @@ namespace diploma.Controllers
                     {//если неудачно
                         ModelState.AddModelError("", "Неправильный логин и (или) пароль");
                         Log.WriteSuccess("AccountController.Login", "Неправильный логин и (или) пароль.");
-                    Msg msg = new Msg()
+                    MessageError msg = new MessageError()
                     {
                             message = "Вход не выполнен.",
                             error = ModelState.Values.SelectMany(e =>
                             e.Errors.Select(er => er.ErrorMessage))
                         };
-                    mess = msg;
-                    return RedirectToAction("Index", "Account", new { mess.message, mess.error });
+                   return RedirectToAction("LoginForm", "Account", new { msg.message, msg.error });
                 }
                 }
                 else
                 {
                     Log.WriteSuccess("AccountController.Login", "Вход не выполнен.");
-                Msg msg = new Msg()
+                MessageError msg = new MessageError()
                 {
                         message = "Вход не выполнен.",
                         error = ModelState.Values.SelectMany(e =>
                         e.Errors.Select(er => er.ErrorMessage))
                     };
-                mess = msg;
-                return RedirectToAction("Index", "Account", new { mess.message, mess.error });
+                return RedirectToAction("LoginForm", "Account", new { msg.message, msg.error });
             }
             }
 
 
-            [HttpPost]
-            //[Route("api/Account/LogOff")]
-            //[ValidateAntiForgeryToken]
-            public async Task<IActionResult> LogOff()
+        [HttpPost]
+        //[Route("/api/Account/LogOff")]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOff()
             {//выход из системы
              // Удаление куки
                 await _signInManager.SignOutAsync();

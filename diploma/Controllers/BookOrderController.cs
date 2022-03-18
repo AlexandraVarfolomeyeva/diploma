@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using diploma.Models;
+using BLL.Interfaces;
+using BLL.Models;
+using DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,17 +19,21 @@ namespace diploma.Controllers
     [ApiController]
     public class BookOrderController : Controller
     {//Base
-        private readonly BookingContext _context;
-        public BookOrderController(BookingContext context)
+        private readonly IDBCrud _context;
+        private readonly UserManager<User> _userManager;
+
+        public BookOrderController(IDBCrud context, UserManager<User> userManager)
         {
             _context = context;
-            
+            _userManager = userManager;
         }
 
         [HttpGet]
-        public IEnumerable<BookOrder> GetAll()
+        public IEnumerable<BookOrderModel> GetAll()
         {//получение всех строк заказа
-            try {  return _context.BookOrder;} catch (Exception ex)
+            try {  return _context.GetAllBookOrders();
+            }
+            catch (Exception ex)
             {
                 Log.Write(ex);
                 return null;
@@ -36,7 +42,7 @@ namespace diploma.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBookOrder([FromRoute] int id)
+        public IActionResult GetBookOrder([FromRoute] int id)
         {//получение конкретной строки заказа по id
             try
             {
@@ -46,7 +52,7 @@ namespace diploma.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var item = await _context.BookOrder.SingleOrDefaultAsync(m => m.Id == id);
+                var item = _context.GetBookOrder(id);
 
                 if (item == null)
                 {
@@ -62,54 +68,65 @@ namespace diploma.Controllers
             }
         }
 
+        private Task<User> GetCurrentUserAsync() =>
+_userManager.GetUserAsync(HttpContext.User);
 
-    [HttpPost]
-        [Authorize(Roles = "user")]
-        public async Task<IActionResult> Create([FromBody] BookOrderForm item)
+        [HttpPost]
+     //[Authorize(Roles = "user")]
+        public IActionResult Create([FromBody] BookOrderForm item)
         {//создание новой строки заказа
-            try
+            try //0
             {
-                if (!ModelState.IsValid)
+
+                if (!ModelState.IsValid)//1
                 {
-                    Log.WriteSuccess("BookOrderController.Create", "Валидация внутри контроллера неудачна.");
+                    Log.WriteSuccess("BookOrderController.Create", "Валидация внутри контроллера неудачна.");//2
                     return BadRequest(ModelState);
                 }
             
-                IEnumerable<BookOrder> books = _context.BookOrder.Where(a => a.IdBook == item.IdBook);
-                foreach (BookOrder book  in books)
+                BookOrderModel book = _context.GetAllBookOrders().Where(a => a.IdBook == item.IdBook && a.IdOrder == item.IdOrder).FirstOrDefault();//3
+                if (book != null)//4
                 {
-                    book.Amount++;
-                    _context.BookOrder.Update(book);
-                }
-                BookOrder bookorder = new BookOrder()
+                    book.Amount++;//5
+                    _context.UpdateBookOrder(book);
+                } else {
+                User usr = _userManager.GetUserAsync(HttpContext.User).Result;
+                BookModel bm = _context.GetBookModel(item.IdBook);
+                book = new BookOrderModel()//6
                     {
                         IdBook = item.IdBook,
                         IdOrder = item.IdOrder,
-                        Amount = 1
-                    };
-                if (!books.Any()) {
-               
-                    _context.BookOrder.Add(bookorder);
+                        Amount = 1,
+                        Price = (bm.Cost * (float)(100 - usr.Discount))/100
+                };
+                    _context.CreateBookOrder(book);
                 }
-                Order order = _context.Order.Find(item.IdOrder);
-                order.SumOrder += item.Sum;
-                order.Amount++;
-                _context.Order.Update(order);
-                await _context.SaveChangesAsync();
+                BookAdd b = _context.GetBook(item.IdBook);//7
+                OrderModel order = _context.GetOrder(item.IdOrder);
+                order.SumOrder += book.Price;
+                int overweight = ((order.Weight - 5000) / 1000) + 1;
+                order.Weight += b.Weight;
+                if (order.Weight > 5000)//8
+                {
+                    int overweight_new = ((order.Weight - 5000) / 1000) + 1;//9
+                    overweight_new -= overweight;
+                    order.SumDelivery += overweight_new * 200;
+                }
+                order.Amount++;//10
+                _context.UpdateOrder(order);
                 Log.WriteSuccess("BookOrderController.Create", "Добавлена новая строка заказа.");
-                return CreatedAtAction("GetBookOrder", new { id = bookorder.Id }, bookorder);
-                //return View("~/Home/Index");
+                return Ok();
             }
-            catch (Exception ex)
+            catch (Exception ex)//11
             {
-                Log.Write(ex);
-                return BadRequest(ModelState);
+                Log.Write(ex);//12
+                return BadRequest(ex);
             }
-        }
+        }//13
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "user")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public IActionResult Delete([FromRoute] int id)
         {//удаление существующей строки заказа
             try
             {
@@ -118,14 +135,7 @@ namespace diploma.Controllers
                     Log.WriteSuccess("BookOrderController.Delete", "Валидация внутри контроллера неудачна.");
                     return BadRequest(ModelState);
                 }
-                var item = _context.BookOrder.Find(id);
-                if (item == null)
-                {
-                    Log.WriteSuccess("BookOrderController.Delete", "Элемент не найден.");
-                    return NotFound();
-                }
-                _context.BookOrder.Remove(item);
-                await _context.SaveChangesAsync();
+                _context.DeleteBookOrder(id);
                 Log.WriteSuccess("BookOrderController.Delete", "Элемент удален.");
                 return NoContent();
             } catch (Exception ex)

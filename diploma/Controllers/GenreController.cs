@@ -1,4 +1,5 @@
-﻿using diploma.Models;
+﻿using BLL.Interfaces;
+using BLL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,21 +13,21 @@ namespace diploma.Controllers
     [ApiController]
     public class GenreController : ControllerBase
     {
-        // GET: /<controller>/
-        private readonly BookingContext _context;
+        private readonly IDBCrud _context;
 
-        public GenreController(BookingContext context)
+
+        public GenreController(IDBCrud context)
         {
             _context = context; // получаем контекст базы данных
         }
 
         [HttpGet]
-        public IEnumerable<Genre> GetAll() //получить все заказы
+        public IEnumerable<GenreModel> GetAll() //получить все заказы
         {
             try
             {//возвращаем список всех заказов для текущего пользователя
                 Log.WriteSuccess("Genres.GetAll", "возвращаем список всех авторов.");
-                return _context.Genre.Include(p => p.BookGenres).OrderBy(b=>b.Name);
+                return _context.GetAllGenres().OrderBy(b=>b.Name);
             }
             catch (Exception ex)
             {//если что-то пошло не так, выводим исключение в консоль
@@ -38,7 +39,7 @@ namespace diploma.Controllers
 
         [HttpGet("{id}")]
         //получить автора по его id
-        public async Task<IActionResult> GetGenre([FromRoute] int id)
+        public IActionResult GetGenre([FromRoute] int id)
         {
             try
             {
@@ -48,7 +49,7 @@ namespace diploma.Controllers
                     Log.WriteSuccess(" GenresController.GetAuthor", "Валидация внутри контроллера неудачна.");
                     return BadRequest(ModelState);
                 }
-                var genre = await _context.Genre.SingleOrDefaultAsync(m => m.Id == id);
+                var genre =  _context.GetGenre(id);
                 if (genre == null)//если ничего не получили -- не найдено
                 {
                     Log.WriteSuccess(" GenreController.GetGenre ", "ничего не получили.");

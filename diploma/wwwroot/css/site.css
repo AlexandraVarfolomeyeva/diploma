@@ -1,9 +1,260 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
 for details on configuring this project to bundle and minify static web assets. */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 body {
     /*padding-top: 50px;
     padding-bottom: 20px;*/
+    font-size: 1.2rem !important;
+    overflow: auto; /* добавить полосу прокрутки */
+}
+
+.row-table-address {
+    text-decoration: none;
+    font-weight:normal;
+}
+
+.row-table-address.active {
+        font-weight: bold;
+}
+
+    .concern {
+        font-size: 1.2rem;
+        text-align: justify;
+    }
+
+.form-orders {
+    text-align: center;
+}
+
+.sort-line {
+    margin: 5px;
+}
+
+.concern-link {
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+/*#rating {
+    text-align: center;
+    perspective: 250px;
+    //position: absolute;
+    //top: 40%;
+    //width: 100%;
+}
+
+    #rating span {
+        cursor: pointer;
+        font-size: 50px;
+        padding: 0 10px;
+        color: #000;
+        opacity: .5;
+        transition: all 150ms;
+        display: inline-block;
+        transform: rotateX(45deg);
+        transform-origin: center bottom;
+    }
+
+        #rating span.hover {
+            color: #ff0;
+            opacity: 1;
+            transform: rotateX(0deg);
+            text-shadow: 0 0 30px #ffc;
+        }
+*/
+.comment-form {
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+
+.comments-section {
+    justify-content: center;  
+}
+
+.btn-personal {
+    width: 100%;
+}
+
+.comments {
+    width: 100%;
+}
+
+.username {
+    color: #434343;
+    font-size: 1.3rem;
+    margin-top: 5px;
+    margin-left: 35px;
+}
+
+.comment {
+    background-color: #fafafa;
+    min-height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    text-align: justify;
+    margin-left: 15px;
+    margin-bottom: 5px;
+}
+
+.div-upload {
+    width: 70% !important;
+    text-align: center;
+    margin: auto;
+}
+
+.nothing-found {
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    min-height: 150px;
+    background-color: #f7f7f7;
+    padding: 1em;
+    width: 100%;
+}
+
+.nothing {
+    align-self: center;
+}
+
+.div-basket {
+    background-color: #f7f7f7;
+    width: 90%;
+    padding: 1em;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+.empty-basket-div {
+    justify-content: center !important;
+    display: flex;
+    align-items: center;
+    min-height: 150px;
+    text-align: center;
+}
+
+.table-basket {
+    font-size: 1.2rem;
+}
+
+.table-basket a{
+    color:black;
+}
+
+.buy-btn{
+    text-align:center;
     font-size:1.2rem;
+    align-items:center;
+}
+
+.buy-btn button{
+    font-size:1.4rem;
+    width:50%;
+    color:white;
+   background-color:#021dff;
+}
+
+.empty-basket-div .empty-basket {
+    /*margin: 2em;*/
+    /*position: relative;
+        margin-left: 15px;*/
+    color: #434343;
+}
+/*.empty-basket-div .empty-basket:before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 0;
+    display: block;
+    width: 46px;
+    height: 32px;
+    background-image: url(/images/shopping-cart.png);
+}*/
+    .front {
+    z-index: 40 !important;
+}
+.button-gr-book {
+    position: absolute; /* добавили */
+    bottom: 5px; /* добавили */
+}
+
+.div-container-book {
+    padding-bottom: 30px;
+    position: relative;
+    text-decoration: none;
+}
+
+.book-details {
+    margin-bottom: 24px;
+    margin-top: 24px;
+}
+
+    .book-details h4 a {
+       font-size: 1.6rem !important;
+    }
+
+.product-prop {
+    font-size: 1.3rem !important;
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.delete-comment-btn {
+    margin-right: 0;
+    margin-left: auto;
+}
+
+.comment-author{
+    display:flex;
+}
+
+.price {
+    font-size: 1.6rem !important;
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: black;
+    font-style: normal !important;
+    font-weight: bold;
+}
+
+.product-prop__value {
+    flex-grow: 1;
+    font-weight: bolder;
+}
+
+.product-prop__title {
+    width: 130px;
+    color: rgba(0, 0, 0, 0.66);
+    flex-shrink: 0;
+}
+
+.element-book-details {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.group-book-add button {
+    font-size: 1.5rem !important;
+    font-style: normal !important;
+    text-decoration: none;
+}
+
+.authors {
+    font-size: 1.3rem !important;
+    font-style: normal !important;
+    text-decoration: none;
 }
 
 .textNav {
@@ -15,23 +266,41 @@ body {
     padding-left: 15%;
     padding-right: 15%;
 }
-
-
+.basket {
+    /*padding: 10px !important;*/
+    justify-content: center !important;
+    display: flex;
+}
 .left-space {
     padding-left: 15px;
 }
 
-.img-top-bottom-space {
-    padding-top: 5px;
-    padding-bottom: 15px;
+.div-register-info {
+    background-color: #FEFDFF;
+    justify-content: center !important;
+    display: flex;
+    padding:1em;
 }
+.header-div {
+    text-align: center;
+}
+.div-register-info p {
+    color: #474747;
+    font-size: 1.2rem !important;
+    font-style: normal !important;
+    text-decoration: none;
+}
+
+.img-top-bottom-space {
+        padding-top: 5px;
+        padding-bottom: 15px;
+    }
 .active-cyan-3 input[type=text] {
     border: 1px solid #4dd0e1;
     box-shadow: 0 0 0 1px #4dd0e1;
+    margin: 1em;
 }
-.div-container-book{
-    padding-bottom:5px;
-}
+
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
@@ -62,4 +331,82 @@ body {
     .carousel-caption {
         display: none;
     }
+}
+
+.basket-div {
+    padding: 0.5em;
+    margin: 0;
+    background-color: white;
+}
+
+.search-div{
+    padding: 2em;
+}
+
+.search-input{
+    width:70%;
+}
+
+.basket-login {
+    padding: 0.5em;
+    margin: 1em;
+    background-color: #f7f7f7;
+    margin-left: 10% !important;
+    border: 1px solid #dee2e6 !important;
+}
+
+.annotation-div {
+    padding: 3.5em;
+    font-size: 1.3rem;
+    background-color: #FEFDFF;
+    text-align: justify;
+    width: 100%;
+}
+
+.title-book {
+    text-align: center;
+    font-size: 2rem;
+    padding: 1%;
+    padding-left:5%;
+}
+
+.product__image img {
+    max-width: 100%;
+    max-height: 700px;
+}
+
+.space {
+    margin-top: 1em;
+}
+
+.btn-search-orders {
+    width: 70%;
+    margin: 10px;
+}
+
+.btn-search{
+    width:100%;
+}
+
+.title{
+  padding:15px;
+}
+
+.stored-label {
+    margin-bottom: 0;
+    margin-left: 15px;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.basket-content {
+    align-self: center;
+}
+.basket-div-middle {
+    align-items: center;
+    vertical-align:middle !important;
+}
+
+.exclamator {
+    display: contents;
 }

@@ -1,27 +1,177 @@
-﻿@model BookAdd;
+﻿@model BookDetails;
 @{
-    ViewData["Title"] = Model.Title;
+    ViewData["Title"] = Model.Book.Title;
 }
+<div>
+    <div class="row basket-div center-block" id="partialViewDiv">
+        <div class="col-md-9 active-cyan-3 search-div">
+            <form method="post" asp-controller="Home" asp-action="Search">
+                <div class="row">
+                    <input name="searchString" class="form-control search-input" autocomplete="off" type="text" id="search" placeholder="Поиск..." aria-label="Search">
+                </div>
+                <div class="row space">
+                    <div class="col-md-3">
+                        <select class="custom-select" id="Order" name="sortOrder">
 
-<h2>Book</h2>
-<img class="center-block img-top-bottom-space" src="~/img/@Model.image" width="150" height="215" alt="@Model.Title">
-<h3>@Model.Title</h3>
-<h6>
-    @foreach (string c in Model.Authors)
-    {
-        <a>
-            @c;
-        </a>
-    }
-</h6>
-<h6>
-    @foreach (string c in Model.Genres)
-    {
-        <a>
-            @c;
-        </a>
-    }
-</h6>
-<h5>
-    Цена:  @Model.Cost
-</h5>
+                            <option value="new_first">Сначала новые</option>
+
+                            <option value="name_desc">По названию (По убыванию)</option>
+
+                            <option value="name">По названию (По возрастанию)</option>
+
+                            <option value="cost_desc">По цене (По убыванию)</option>
+
+                            <option value="cost">По цене (По возрастанию)</option>
+
+                            <option value="Date">По дате выпуска (По возрастанию)</option>
+
+                            <option value="date_desc">По дате выпуска (По убыванию)</option>
+
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="custom-select" id="Genre" name="Genre">
+                            <option value="0">Все жанры</option>
+                            @foreach (GenreModel g in ViewBag.Genres)
+                            {
+                                <option value="@g.Id">@g.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group form-check col-md-3">
+                            <input type="checkbox" class="form-check-input" id="Stored" name="StoredBox" value="true">
+                        <label class="stored-label" for="Stored">В наличии</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input class="btn btn-info btn-search" type="submit" value="Поиск">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-3 basket js___basket">
+        </div>
+    </div>
+
+    <div class="row">
+        <h3 class="title-book">@Model.Book.Title</h3>
+    </div>
+    <div class="row">
+        <div class="col-md-3 product__image">
+            <img class="center-block img-top-bottom-space" src="~/img/@Model.Book.image" alt="@Model.Book.Title">
+        </div>
+        <div class="col-md-9 book-details">
+            <h4>
+                @foreach (string c in Model.Book.Authors)
+                {
+                    var parms = new Dictionary<string, string>
+                                                             {
+                                                                    { "page", "1" },
+                                                                    { "searchString", "" },
+                                                                     { "sortOrder", "" },
+                                                                      { "Stored", "false" },
+                                                                       { "Genre", "" },
+                                                                       { "AuthorSearch", c }
+                                                             };
+                    <a asp-area="" asp-controller="Home" asp-action="Index" asp-all-route-data="parms">
+                        @c;
+                    </a>
+                }
+            </h4>
+
+            @*<div id="rating">
+            <span onclick="Rate(@Model.Book.Id,1);">★</span>
+            <span onclick="Rate(@Model.Book.Id,2);">★</span>
+            <span onclick="Rate(@Model.Book.Id,3);">★</span>
+            <span onclick="Rate(@Model.Book.Id,4);">★</span>
+            <span onclick="Rate(@Model.Book.Id,5);">★</span>
+        </div>*@
+            <div class="product-prop">
+                <div class="product-prop__title">
+                    Жанр:
+                </div>
+                <div class="product-prop__value">
+                    @foreach (string c in Model.Book.Genres)
+                    {
+                        <span>
+                            @c;
+                        </span>
+                    }
+                </div>
+            </div>
+            <div class="product-prop">
+                <div class="product-prop__title">
+                    В наличии:
+                </div>
+                <div class="product-prop__value">
+                    @Model.Book.Stored шт.
+                </div>
+            </div>
+            <div class="product-prop">
+                <div class="product-prop__title">
+                    Вес:
+                </div>
+                <div class="product-prop__value">
+                    @Model.Book.Weight гр.
+                </div>
+            </div>
+            <div class="product-prop">
+                <div class="product-prop__title">
+                    Год публикации:
+                </div>
+                <div class="product-prop__value">
+                    @Model.Book.Year
+                </div>
+            </div>
+
+            <div class="price">
+                <div class="product-prop__title">
+                    Цена:
+                </div>
+                <div class="product-prop__value">
+                    @Model.Book.Cost руб.
+                </div>
+            </div>
+            <div class="btn-block group-book-add">
+                @if (ViewBag.Role == "seller")
+                {
+                    <button onclick="editBook(@Model.Book.Id);" class="btn btn-dark"> Редактировать </button>
+                    string passtitle = "\"" + Model.Book.Title + "\"";
+                    <button onclick="areYouSure(@Model.Book.Id, @passtitle);" class="btn btn-dark"> Удалить </button>
+                    <a></a>
+                }
+                else if (ViewBag.Role == "user" && Model.CurrentOrder != null)
+                {
+                    if (Model.Book.Stored > 0)
+                    {
+                        if (!Model.CurrentOrder.BookOrders.Where(i => i.IdBook == Model.Book.Id).Any())
+                        {
+                            <button id=@Model.Book.Id onclick="add(@Model.Book.Id,@Model.CurrentOrder.Id);" class="btn btn-dark"> Купить </button> <br />
+                        }
+                        else
+                        {
+                            <button class="btn btn-light" onclick="GetBasket();">Перейти к корзине</button>
+                        }
+                    }
+                    else
+                    { <p class="text-muted">
+                            Нет на складе
+                        </p>
+                    }
+                }
+            </div>
+        </div>
+            </div>
+            <div class="row">
+                <div class="border annotation-div">
+                    <p class="text-muted">Аннотация:</p>
+                    <p class="text-break">@Model.Book.Content</p>
+                </div>
+            </div>
+            <div class="row comments-section">
+                @{Html.RenderPartial("_Comments", Model);}
+            </div>
+        </div>
+
+<environment include="Development">
+    <script src="~/js/Rating.js" asp-append-version="true"></script>
+</environment>

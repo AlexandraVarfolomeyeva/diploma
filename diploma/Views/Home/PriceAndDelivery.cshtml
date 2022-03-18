@@ -1,0 +1,38 @@
+﻿@model IEnumerable<CityModel>
+@{
+    ViewData["Title"] = "Доставка и оплата";
+}
+
+<h2 class="text-center">Доставка и оплата</h2>
+
+<p>Стоимость доставки рассчитывается исходя из города, в который осуществляется доставка, и общего веса заказа.</p>
+
+<p>Стоимость доставки в различные города России представлена в таблице ниже.</p>
+<table class="table">
+    <thead class="thead-dark text-center">
+        <tr>
+            <th scope="col">Город</th>
+            <th scope="col">Примерное время доставки</th>
+            <th scope="col">Стоимость доставки</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (CityModel c in Model)
+        {
+            <tr scope="row">
+                <td class="font-weight-bold">
+                    @c.Name
+                </td>
+                <td class="text-center">
+                    @c.DeliveryTime дн.
+                </td>
+                <td class="text-center">
+                    @c.DeliverySum руб.
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+<p>Доставка заказа весом меньше 5-ти килограмм осуществляется за указанную в таблице цену. 
+    За каждый последующий киллограмм к стоимости доставки добавляется 200 р. <span class="text-muted">(Округление кг производится в большую сторону).</span></p>

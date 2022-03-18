@@ -23,54 +23,64 @@
     </environment>
 </head>
 <body>
-
-    <div class="container">
-        <div class=" d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-                <img class="mb-2" src="~/images/fantasia.png" alt="" width="24" height="24">
-                <a class="h1 my-2 left-space mr-md-auto font-weight-normal align-items-center text-dark" asp-area="" asp-controller="Home" asp-action="Index">Фантазия</a>
-                <nav class="my-2 my-md-0 mr-md-3 right">
-                    <a class="p-2 text-dark textNav" asp-area="" asp-controller="Home" asp-action="PriceAndDelivery">Доставка и оплата</a>
-                    <a class="p-2 text-dark textNav" asp-area="" asp-controller="Home" asp-action="Contact">Контакты</a>
-                    @if (ViewBag.Username == "Войти")
-                    {
-                        <a class="p-2 text-dark textNav" asp-area="" asp-controller="Account" asp-action="Index">  @ViewBag.Username </a>
-                    }
-                    else
-                    {
-                    <a class="p-2 text-dark textNav" asp-area="" asp-controller="Personal" asp-action="Info">  @ViewBag.Username </a>
-                }
-                </nav>
-            </div>
-        </div>
-
+    <div class="modal1 front" data-modal="4">
+        <!--   Svg иконка для закрытия окна  -->
+        <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
+        </svg>
+        <form id="prompt-form">
+            <p class="h3" id="message"></p>
+            <br />
+            <br>
+            <input type="button" class="btn btn-dark" name="submit" value="Ok">
+            <input type="button" class="btn btn-dark" name="cancel" value="Отмена">
+        </form>
+    </div>
+    <!-- Подложка под модальным окном -->
+    <div class="overlay  js-overlay-modal" id="overlay-modal"></div>
 
     <partial name="_CookieConsentPartial" />
 
+    <div class="container">
+        <div class=" d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+            <img class="mb-2" src="~/images/fantasia.png" alt="" width="24" height="24">
+            <a class="h1 my-2 left-space mr-md-auto font-weight-normal align-items-center text-dark" asp-area="" asp-controller="Home" asp-action="Index">Фантазия</a>
+            <nav class="my-2 my-md-0 mr-md-3 right">
+                <a class="p-2 text-dark textNav" asp-area="" asp-controller="Home" asp-action="PriceAndDelivery">Доставка и оплата</a>
+                <a class="p-2 text-dark textNav" asp-area="" asp-controller="Home" asp-action="Contact">Контакты</a>
+                @if (ViewBag.Username == "Войти")
+                {
+                    <a class="p-2 text-dark textNav" asp-area="" asp-controller="Account" asp-action="LoginForm">  @ViewBag.Username </a>
+                }
+                else
+                {
+                    <a class="p-2 text-dark textNav" asp-area="" asp-controller="Personal" asp-action="Info">  @ViewBag.Username </a>
+                }
+            </nav>
+        </div>
+    </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
         <footer class="pt-4 my-md-5 pt-md-5 border-top">
             <div class="row">
                 <div class="col-md-6">
                     <img class="mb-2" src="~/images/fantasia.png" alt="" width="24" height="24">
-                    <small class="d-block mb-3 text-muted">Книжный магазин "Фантазия" &copy; 2020</small>
+                    <small class="d-block mb-3 text-muted">Книжный магазин "Фантазия" &copy; @DateTime.Now.Year</small>
                 </div>
                 <div class="col-md-3">
                     <h5>Магазины</h5>
                     <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Адреса магазинов</a></li>
-                        <li><a class="text-muted" href="#">Услуги</a></li>
-                        <li><a class="text-muted" href="#">Партнеры</a></li>
-                        <li><a class="text-muted" href="#">О компании</a></li>
+                        <li><a class="text-muted"  asp-area="" asp-controller="Home" asp-action="Shops">Адреса магазинов</a></li>
+                        <li><a class="text-muted" asp-area="" asp-controller="Home" asp-action="Partners">Партнеры</a></li>
+                        <li><a class="text-muted" asp-area="" asp-controller="Home" asp-action="Company">О компании</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3">
                     <h5>Интернет-магазины</h5>
                     <ul class="list-unstyled text-small">
-                        <li><a class="text-muted" href="#">Доставка и оплата</a></li>
-                        <li><a class="text-muted" href="#">Акции</a></li>
-                        <li><a class="text-muted" href="#">Книги</a></li>
-                        <li><a class="text-muted" href="#">Политика конфиденциальности</a></li>
+                        <li><a class="text-muted" asp-area="" asp-controller="Home" asp-action="PriceAndDelivery">Доставка и оплата</a></li>
+                        <li><a class="text-muted" asp-area="" asp-controller="Home" asp-action="Discounts">Акции</a></li>
+                        <li><a class="text-muted" asp-area="" asp-controller="Home" asp-action="Policy">Политика конфиденциальности</a></li>
                     </ul>
                 </div>
             </div>
@@ -79,6 +89,7 @@
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/js/Modal.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
@@ -98,7 +109,6 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
         <script src="~/js/bootstrap.js" asp-append-version="true"></script>
     </environment>
-
     @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using diploma.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using BLL.Interfaces;
+using BLL.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,21 +16,21 @@ namespace diploma.Controllers
     [ApiController]
     public class AuthorsController : ControllerBase
     {
-        // GET: /<controller>/
-        private readonly BookingContext _context;
+        private readonly IDBCrud _context;
 
-        public AuthorsController(BookingContext context)
+
+        public AuthorsController(IDBCrud context)
         {
             _context = context; // получаем контекст базы данных
         }
    
         [HttpGet]
-        public IEnumerable<Author> GetAll() //получить все заказы
+        public IEnumerable<AuthorModel> GetAll() //получить все заказы
         {
           try
             {//возвращаем список всех заказов для текущего пользователя
              Log.WriteSuccess("AuthorsController.GetAll", "возвращаем список всех авторов.");
-             return _context.Author.Include(p => p.BookAuthors).OrderBy(p=>p.Name);
+             return _context.GetAllAuthors().OrderBy(p=>p.Name);
             }
             catch (Exception ex)
             {//если что-то пошло не так, выводим исключение в консоль
@@ -42,7 +43,7 @@ namespace diploma.Controllers
 
         [HttpGet("{id}")]
         //получить автора по его id
-        public async Task<IActionResult> GetAuthor([FromRoute] int id)
+        public IActionResult GetAuthor([FromRoute] int id)
         {
             try
             {
@@ -52,7 +53,7 @@ namespace diploma.Controllers
                     Log.WriteSuccess(" AuthorsController.GetAuthor", "Валидация внутри контроллера неудачна.");
                     return BadRequest(ModelState);
                 }
-                var author = await _context.Author.SingleOrDefaultAsync(m => m.Id == id);
+                var author = _context.GetAuthor(id);
                 if (author == null)//если ничего не получили -- не найдено
                 {
                     Log.WriteSuccess(" AuthorsController.GetAuthor ", "ничего не получили.");
@@ -68,8 +69,8 @@ namespace diploma.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Create([FromBody] Author author)
+        [Authorize(Roles = "seller")]
+        public IActionResult Create([FromBody] AuthorModel author)
         {//добавить нового автора
          //получаем данные о заказе во входных параметрах
             try
@@ -80,13 +81,17 @@ namespace diploma.Controllers
                     return BadRequest(ModelState);
                 }
                 Log.WriteSuccess(" AuthorsController.Create", "Данные валидны.");
-                IEnumerable<Author> authors = _context.Author.Include(p => p.BookAuthors).Where(d => d.Name == author.Name);
-                if (!authors.Any()) { _context.Author.Add(author); } //добавление автора в БД
-                else {
+                IEnumerable<AuthorModel> authors = _context.GetAllAuthors().Where(d => d.Name == author.Name);
+                if (!authors.Any())
+                {
+                    _context.CreateAuthor(author);
+                }//добавление автора в БД
+                else
+                {
                     Log.WriteSuccess(" AuthorsController.Create", "Попытка добавить существующего автора!");
                     return Conflict();
                 }
-                await _context.SaveChangesAsync();//асинхронное сохранение изменений
+                author = _context.GetAllAuthors().Where(d => d.Name == author.Name).FirstOrDefault();
                 Log.WriteSuccess(" AuthorsController.Create", "добавление автора " + author.Id + " в БД");
                 return CreatedAtAction("GetAuthor", new { id = author.Id }, author);
             }
@@ -98,8 +103,8 @@ namespace diploma.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] Author author)
+        [Authorize(Roles = "seller")]
+        public IActionResult Update([FromRoute] int id, [FromBody] AuthorModel author)
         {//обновить существующий заказ
             try
             {
@@ -108,15 +113,7 @@ namespace diploma.Controllers
                     Log.WriteSuccess(" AuthorsController.Update", "Валидация внутри контроллера неудачна.");
                     return BadRequest(ModelState);
                 }
-                var item = _context.Author.Find(id);
-                if (item == null)
-                {
-                    Log.WriteSuccess(" AuthorsController.Update", "Элемент для обновления не найден в БД.");
-                    return NotFound();
-                }
-                item.Name = author.Name;
-                _context.Author.Update(item);
-                await _context.SaveChangesAsync();
+                _context.UpdateAuthor(author);
                 Log.WriteSuccess(" AuthorsController.Update", "обновление автора " + author.Id + " в БД.");
                 return NoContent();
             }
@@ -128,8 +125,8 @@ namespace diploma.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [Authorize(Roles = "seller")]
+        public IActionResult Delete([FromRoute] int id)
         {//удаление заказа
             try
             {
@@ -138,14 +135,7 @@ namespace diploma.Controllers
                     Log.WriteSuccess(" AuthorsController.Delete", "Валидация внутри контроллера неудачна.");
                     return BadRequest(ModelState);
                 }
-                var item = _context.Author.Find(id);
-                if (item == null)
-                {
-                    Log.WriteSuccess(" AuthorsController.Delete", "Элемент для удаления не найден в БД.");
-                    return NotFound();
-                }
-                _context.Author.Remove(item);
-                await _context.SaveChangesAsync();
+                _context.DeleteAuthor(id);
                 Log.WriteSuccess(" AuthorsController.Delete", "удаление автора " + id + " в БД.");
                 return NoContent();
             }

@@ -1,0 +1,39 @@
+﻿@model IEnumerable<OrderModel>
+@using System.Globalization;
+@if (Model != null && Model.Any())
+{
+    <h4 class="text-center text-dark">История Ваших заказов</h4>
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Дата заказа</th>
+                <th scope="col">Дата доставки</th>
+                <th scope="col">Количество книг</th>
+                <th scope="col">Стоимость заказа (без доставки), руб.</th>
+                <th scope="col">Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (OrderModel o in Model)
+            {
+            <tr onclick="GetDetails(@o.Id);">
+
+                <td>@o.DateOrder.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"))</td>
+                <td>@o.DateDelivery.ToString("D", CultureInfo.CreateSpecificCulture("ru-RU"))</td>
+                <td>@o.Amount</td>
+                <td>@o.SumOrder</td>
+                <td>
+               @switch (o.Active)
+                       {
+                           case 0: <p>Обрабатывается</p> break;
+                           case 2: <p>Отправлен</p> break;
+                           case 3: <p class="text-success">Доставлен</p> break;
+                           case 4: <p class="text-danger">Отменен</p> break;
+                       }
+
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}

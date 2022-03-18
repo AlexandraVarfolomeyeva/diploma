@@ -1,0 +1,97 @@
+﻿@model BookListViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Mvc.Common;
+@using X.PagedList;
+
+@if (Model.Books != null)
+{
+<div class="row">
+    @if (Model.Books.Count() == 0)
+    {
+        <div class="nothing-found">
+            <p class="nothing"> Извините, ничего не найдено! </p>
+        </div>
+            }
+            @foreach (BookView s in Model.Books)
+            {
+                <div class="col-md-3 col-sm bg-white border-bottom shadow-sm div-container-book">
+                    <a href="~/Admin/Book/@s.Id">
+                        <img class="center-block img-top-bottom-space" src="~/img/@s.image" width="150" height="215" alt="@s.Title">
+                    </a>
+                    <div class="text-center title">
+                        <a href="~/Admin/Book/@s.Id" class="h3 js__clap_text">
+                            @s.Title
+                        </a>
+                    </div>
+                    <h6>
+                        @foreach (string c in s.Authors)
+                        {
+                            var parms = new Dictionary<string, string>
+                             {
+                                    { "page", "1" },
+                                    { "searchString", "" },
+                                     { "sortOrder", "" },
+                                      { "Stored", "false" },
+                                       { "Genre", "" },
+                                       { "AuthorSearch", c }
+                             };
+                            <a class="authors text-muted" asp-area="" asp-controller="Home" asp-action="Index" asp-all-route-data="parms">
+                                @c;
+                            </a>
+                        }
+                    </h6>
+                    <h6>
+                        @foreach (string c in s.Genres)
+                        {
+                            <p class="authors text-muted" >
+                                @c;
+                            </p>
+                        }
+                    </h6>
+                    <h5>
+                        Цена:  @s.Cost
+                    </h5>
+                    <div class="button-gr-book">
+                        @if (ViewBag.Role == "seller")
+                        {
+                            <button onclick="editBook(@s.Id);" class="btn btn-dark"> Редактировать </button>
+                            string passtitle = "\"" + s.Title + "\"";
+                            <button onclick="areYouSure(@s.Id, @passtitle);" class="btn btn-dark"> Удалить </button>
+                            
+                        }
+                        else if (ViewBag.Role == "user" && Model.CurrentOrder != null)
+                        {
+                            if (s.Stored > 0)
+                            {
+                                if (!Model.CurrentOrder.BookOrders.Where(i => i.IdBook == s.Id).Any())
+                                {
+                                    <button id=@s.Id onclick="add(@s.Id,@Model.CurrentOrder.Id);" class="btn btn-dark"> Купить </button> <br />
+                                }
+                                else
+                                {
+                                    <button class="btn btn-light" onclick="GetBasket();">Перейти к корзине</button>
+                                }
+                            }
+                            else
+                            { <p class="text-muted">
+                                    Нет на складе
+                                </p>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+
+        </div>
+        <div class="row justify-content-center">
+            @*@{ Model.Books = (IPagedList)Model.Books;}*@
+            @Html.PagedListPager(Model.Books, page => Url.Action("Index", "Home", new { model = Model, page = page, searchString = Model.searchString, sortOrder = Model.sortOrder, Stored = Model.Stored, Genre = Model.Genre, AuthorSearch= Model.AuthorSearch }))
+        </div>
+    }
+    <div class="hidden">
+        <p id="pageHidden">@Model.page</p>
+        <p id="searchHidden">@Model.searchString</p>
+        <p id="orderHidden">@Model.sortOrder</p>
+        <p id="storedHidden">@Model.Stored</p>
+        <p id="genreHidden">@Model.Genre</p>
+    </div>

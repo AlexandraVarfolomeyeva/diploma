@@ -1,75 +1,71 @@
-﻿@model OrderView;
-@{
+﻿@{
     ViewData["Title"] = "Ваша корзина";
 }
-<div class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Modal body text goes here.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+
+<div class="modal1" data-modal="7">
+    <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
+    </svg>
+    <div class="js__get_basket_message">
+        @{Html.Partial("_AdminMsg");}
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Пожалуйста, подождите, идет загрузка...</span>
             </div>
         </div>
     </div>
 </div>
-<div class="content">
-    <h2>Корзина</h2>
 
-    @if (Model.Amount != 0)
-    {
-        <h4>Количество: @Html.DisplayFor(model => model.Amount)</h4>
-        <h4>Сумма заказа: @Html.DisplayFor(model => model.SumOrder)</h4>
-        <p>Сумма заказа не включает в себя стоимость доставки.</p>
-        <p>
-            Доставка в город  @Html.DisplayFor(model => model.City) прибудет ориентировочно  @Html.DisplayFor(model => model.DateDelivery).
-            Стоимость доставки @Html.DisplayFor(model => model.SumDelivery) рублей.
-        </p>
-        <button onclick="deleteAll(@Model.Id);">Очистить корзину</button>
-        <table class="table">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Книга</th>
-                    <th scope="col">Цена</th>
-                    <th scope="col">Стоимость</th>
-                    <th scope="col">Количество</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (BookOrderView i in Model.BookOrders)
-                {
-                <tr>
-                    <td>
-                        <a>  @i.Book.Title</a> <br />
-                        @foreach (string c in i.Book.Authors)
-                        {
-                            <a>
-                                @c;
-                            </a>
-                        }
-                    </td>
-                    <td>@i.Book.Cost</td>
-                    <td>@{int a = i.Book.Cost * i.Amount;}</td>
-                    <td>@i.Amount</td>
-                    <td><button>+</button></td>
-                </tr>
-
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <h4>Корзина пуста!</h4>
-    }
+<div class="modal1" data-modal="9">
+    <!--   Svg иконка для закрытия окна  -->
+    <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
+    </svg>
+    <p class="h3" id="titleCity">Выберете адрес, на который будет осуществляться доставка:</p>
+    <br />
+    <div class="js__get_addresses_table">
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Пожалуйста, подождите, идет загрузка...</span>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-dark" type="submit" id="OrderBooks"> Заказать</button>
 </div>
-<script src="~/js/Basket.js" asp-append-version="true"></script>
+
+    <div class="modal1" data-modal="3">
+        <svg class="modal__cross js-modal-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
+        </svg>
+        <div class="js__details_history">
+            @*@{Html.Partial("_DetailsOrder");}*@
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Пожалуйста, подождите, идет загрузка...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content" id="BasketContent">
+        
+        <div class="js__get_basket_table">
+            @*@{Html.Partial("_BasketTable");}*@
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Пожалуйста, подождите, идет загрузка...</span>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <div class="js__get_basket_history">
+            @*@{Html.Partial("_BasketHistory");}*@
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Пожалуйста, подождите, идет загрузка...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/Basket.js" asp-append-version="true"></script>

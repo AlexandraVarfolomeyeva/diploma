@@ -1,0 +1,32 @@
+﻿@model BookListViewModel;
+
+        @if (@Model.CurrentOrder != null)
+        {
+            <div class="row">
+                <div class="col-md-4">
+                    <a asp-area="" asp-controller="Personal" asp-action="Basket">
+                        @*   <img src="~/images/corzina.png" alt="Корзина" height="80" wight="80">*@
+                        <img src="~/images/unnamed.png" alt="Корзина" height="104" wight="80">
+                    </a>
+                </div>
+
+                <div class="col-md-8 text-center basket-content">
+                    <p>
+                        <a class="h3" asp-area="" asp-controller="Personal" asp-action="Basket">Корзина</a>
+                    </p>
+                    <p><b>Количество:</b> @Model.CurrentOrder.Amount</p>
+                    <p><b>Сумма:</b> @Model.CurrentOrder.SumOrder</p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="rounded basket-login basket-div-middle row">
+                <div class="col-md-2 col-sm-12 exclamator align-content-center">
+                    <img src="~/images/attention.png" alt="Корзина" height="80" wight="20">
+                </div>
+                <div class="col-md-10 basket-div-middle">
+                    <p class="align-middle text-center">Пожалуйста, авторизируйтесь, чтобы заказывать книги.</p>
+                </div>
+            </div>
+        }

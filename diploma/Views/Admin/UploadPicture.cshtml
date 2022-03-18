@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewData["Title"] = "Загрузить обложку";
+}
+
+<h2 class="text-center">Сначала загрузите обложку книги!</h2><br />
+<div class="container ">
+    <div class="text-center">
+        <img src="~/img/empty.png" id="bookImg" class="rounded" alt="Обложка" width="300" height="430">
+    </div>
+    <br/>
+    @using (Html.BeginForm("UploadPicture",
+               "Admin",
+               FormMethod.Post,
+               new { enctype = "multipart/form-data", id = "ImgForm", @class = "div-upload" }))
+    {
+        <div class="custom-file">
+            @*<input type="file" name="file" id="file" /><br><br>*@
+            <input type="file" class="custom-file-input" aria-describedby="inputGroupFileAddon03" name="file" id="file" accept=".png, .jpg, .jpeg" onchange="getImg()">
+            <label id="labelImg" class="custom-file-label" for="file">Выбрать файл</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="submit" class="btn btn-primary btn-lg btn-block">
+                </div>
+                <div class="col-md-6">
+                    @{var parms = new Dictionary<string, string>
+                        {
+                        { "filename", "empty.png" }
+                        };
+                    }
+                        <a class="btn btn-light btn-lg btn-block" asp-action="AddBook" asp-controller="Admin" asp-area="" asp-all-route-data="parms">Пропустить</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<environment include="Development">
+    <script src="~/js/Admin.js" asp-append-version="true"></script>
+</environment>

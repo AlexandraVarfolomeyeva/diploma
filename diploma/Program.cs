@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using diploma.Data;
-using diploma.Models;
+using DAL.EF;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +14,6 @@ namespace diploma
 {
     public class Program
     {
-
         public static void Main(string[] args)
         {
             var host = CreateWebHostBuilder(args).Build();
@@ -24,8 +22,7 @@ namespace diploma
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var context =
-                    services.GetRequiredService<BookingContext>();
+                    var context = services.GetRequiredService<BookingContext>();
                     DbInitializer.Initialize(context);
                 }
                 catch (Exception ex)

@@ -1,11 +1,11 @@
 ﻿!function (e) { "function" != typeof e.matches && (e.matches = e.msMatchesSelector || e.mozMatchesSelector || e.webkitMatchesSelector || function (e) { for (var t = this, o = (t.document || t.ownerDocument).querySelectorAll(e), n = 0; o[n] && o[n] !== t;)++n; return Boolean(o[n]) }), "function" != typeof e.closest && (e.closest = function (e) { for (var t = this; t && 1 === t.nodeType;) { if (t.matches(e)) return t; t = t.parentNode } return null }) }(window.Element.prototype);
 
-
 const uriBooks = "/api/Books/";
 const uriView = "/api/View/";
 const uriAuthors = "/api/Authors/";
 const uriPublishers = "/api/Publisher/";
 const uriGenres = "/api/Genre/";
+
 var idBook;
 var selectedPub;
 var authors = [];
@@ -43,37 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
             elForm.classList.add('was-validated')
         });
     }
-    var modalButtons = document.querySelectorAll('.js-open-modal'),
-        overlay = document.querySelector('#overlay-modal'),
-        closeButtons = document.querySelectorAll('.js-modal-close');
-
-    overlay.addEventListener('click', function () {
-        document.querySelector('.modal1.active').classList.remove('active');
-        this.classList.remove('active');
-    });
-
-    modalButtons.forEach(function (item) {
-
-        item.addEventListener('click', function (e) {
-            e.preventDefault();
-            var modalId = this.getAttribute('data-modal'),
-                modalElem = document.querySelector('.modal1[data-modal="' + modalId + '"]');
-
-            modalElem.classList.add('active');
-            overlay.classList.add('active');
-        }); // end click
-    }); // end foreach
-
-    closeButtons.forEach(function (item) {
-
-        item.addEventListener('click', function (e) {
-            var parentModal = this.closest('.modal1');
-
-            parentModal.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-
-    }); // end foreach  
 });
 
 function downloadAuthors() {
@@ -163,6 +132,8 @@ function deletegenreoption(index) {
 
 function createAuthor() {
     try {
+        var button = document.getElementById("createAuthor");
+        button.setAttribute('onclick', '');
         var AuthorName = document.querySelector("#AuthorName").value;
         var request = new XMLHttpRequest();
         request.open("POST", uriAuthors);
@@ -175,11 +146,13 @@ function createAuthor() {
                 var author = JSON.parse(request.response);
                 var newOption = new Option(author.name, author.id);
                 addForm.authorSelect.options[addForm.authorSelect.options.length] = newOption;
+                $("#authorSelect").val(author.id);
             } else if (request.status == 409) {
                 alert("Автор с таким именем уже существует!");
             } else {
                 alert("Error " + request.status + ": " + request.responseText);
             }
+            button.setAttribute('onclick', 'createAuthor();');
         };
         request.setRequestHeader("Accepts", "application/json;charset=UTF-8");
         request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -191,6 +164,8 @@ function createAuthor() {
 
 function createPublisher() {
     try {
+        var button = document.getElementById("createPublisher");
+        button.setAttribute('onclick', '');
         var PublisherTitle = document.querySelector("#PublisherTitle").value;
         var request = new XMLHttpRequest();
         request.open("POST", uriPublishers);
@@ -203,12 +178,14 @@ function createPublisher() {
                 var publisher = JSON.parse(request.response);
                 var newOption = new Option(publisher.name, publisher.id);
                 addForm.publisherSelect.options[addForm.publisherSelect.options.length] = newOption;
+                $("#publisherSelect").val(publisher.id);
             } else if (request.status == 409) {
                 alert("Издательство с таким названием уже существует!");
             }
             else {
                 alert("Error " + request.status + ": " + request.responseText);
             }
+            button.setAttribute('onclick', 'createPublisher();');
         };
         request.setRequestHeader("Accepts", "application/json;charset=UTF-8");
         request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -219,7 +196,7 @@ function createPublisher() {
 }
 
 function getImg() {
-    document.getElementById("ImgForm").submit();
+    //document.getElementById("ImgForm").submit();
     var x = document.getElementById("file");
     document.getElementById('labelImg').innerHTML = x.files[0].name;
     document.getElementById('bookImg').src = window.URL.createObjectURL(x.files[0]);
@@ -241,10 +218,13 @@ function downloadPublishers() {
     request.send();
 }
 
+
 function addBook() {
     //добавление к заказу книги
     //добавляем новое поле в промежуточную таблицу
     try {
+        var button = document.getElementById("addBtn");
+        button.setAttribute('onclick', '');
         var title = document.querySelector("#title").value;
         var authorSelect = document.querySelector("#authorSelect").value; ///authorSelect
         var genreSelect = document.querySelector("#GenreSelect").value; ///authorSelect
@@ -253,18 +233,11 @@ function addBook() {
         var publisherSelect = document.querySelector("#publisherSelect").value; ///publisherSelect
         var cost = document.querySelector("#cost").value;
         var stored = document.querySelector("#Stored").value;
-        var x = document.getElementById("file");
-
-        var file = document.getElementById("ImgForm");
-
+        var weight = document.querySelector("#Weight").value;
+        
+        var inputImg = document.getElementById("labelImg").innerHTML;
         var author = [];
         var genre = [];
-        if (x.files.length == 0) {
-            var inputImg = "empty.png";
-        }
-        else {
-            var inputImg = + x.files[0].name;
-        }
         for (i in authors) {
             author.push(authors[i].value);
         }
@@ -282,6 +255,7 @@ function addBook() {
             } else {
                 alert("Error");
             }
+            button.setAttribute('onclick', 'addBook();');
         };
         request.setRequestHeader("Accepts", "application/json;charset=UTF-8");
         request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -294,7 +268,8 @@ function addBook() {
             title: title,
             publisher: publisherSelect,
             idAuthors: author,
-            idGenres: genre
+            idGenres: genre,
+            weight: weight
         }));//добавление строки заказа
     } catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!"); }
 }
@@ -311,7 +286,8 @@ function getBookData() {
             document.querySelector("#year").value = book.year;
             document.querySelector("#cost").value = book.cost;
             document.querySelector("#Stored").value = book.stored;
-            document.getElementById("bookImg").src = book.image;
+            document.querySelector("#Weight").value = book.weight;
+            document.getElementById("bookImg").src = "../img/" + book.image;
             document.getElementById('labelImg').innerHTML = book.image;
             selectedPub = book.publisher;
             for (i in book.authors) {
@@ -338,6 +314,7 @@ function saveBook() {
         var publisherSelect = document.querySelector("#publisherSelect").value; ///publisherSelect
         var cost = document.querySelector("#cost").value;
         var stored = document.querySelector("#Stored").value;
+        var weight = document.querySelector("#Weight").value;
 
         var author = [];
         var genre = [];
@@ -374,7 +351,9 @@ function saveBook() {
             title: title,
             publisher: publisherSelect,
             idAuthors: author,
-            idGenres: genre
+            idGenres: genre,
+            weight: weight
         }));//добавление строки заказа
     } catch (e) { alert("Возникла непредвиденая ошибка! Попробуйте позже!"); }
 }
+
